@@ -223,7 +223,6 @@ void	Mesh::BufferData() {
 	/*
 	To more efficiently bind and unbind the states required to draw a mesh,
 	we can encapsulate them all inside a Vertex Array Object.
-
 	When a VAO is bound, all further changes to vertex buffers and vertex
 	attributes are cached inside the VAO, and will be reapplied whenever
 	that VAO is later bound again
@@ -232,26 +231,21 @@ void	Mesh::BufferData() {
 
 	/*
 	To put some vertex data on the GPU, we must create a buffer object to store it.
-
 	To upload data to a vertex buffer, it must be bound, with a specific 'target',
 	which defines what the buffer is to be used for.
-
 	Then, once bound, data can be uploaded using the glBufferData function, which
 	takes a pointer to the data to be sent, and the size of that data, as well as
 	a usage parameter - this lets OpenGL know how the data will be accessed.
-
 	To turn a vertex buffer into a vertex attribute suitable for sending to a
 	vertex shader, the glVertexAttribPointer function must be called.
 	This takes in an attribute 'slot', how many elements each data entry has
 	(i.e 2 for a vector2 etc), and what datatype (usually float) it is.
 	This will bind the currently bound vertex buffer to that attribute slot.
 	To actually enable that attribute slot, the glEnableVertexAttribArray is called.
-
 	Note that we use the value VERTEX_BUFFER for the 'slot' parameter - this is just
 	an enum value, that equates to 0. It's common to use enums as indices into arrays
 	in this way, as it keeps everything consistent. It's also pretty sensible to always
 	bind the same data types to the same attribute slots, it makes life much easier!
-
 	These last two functions, along with the glBindBuffer call, are examples of
 	functionality that is cached in the actual VAO.
 	*/
@@ -259,7 +253,7 @@ void	Mesh::BufferData() {
 	//Buffer vertex data
 	glGenBuffers(1, &bufferObject[VERTEX_BUFFER]);
 	glBindBuffer(GL_ARRAY_BUFFER, bufferObject[VERTEX_BUFFER]);
-	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vector3), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, numVertices * sizeof(Vector3), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(VERTEX_BUFFER);
 
@@ -267,7 +261,7 @@ void	Mesh::BufferData() {
 	if (textureCoords) {
 		glGenBuffers(1, &bufferObject[TEXTURE_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, bufferObject[TEXTURE_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vector2), textureCoords, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, numVertices * sizeof(Vector2), textureCoords, GL_STATIC_DRAW);
 		glVertexAttribPointer(TEXTURE_BUFFER, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(TEXTURE_BUFFER);
 	}
@@ -276,7 +270,7 @@ void	Mesh::BufferData() {
 	if (colours) {
 		glGenBuffers(1, &bufferObject[COLOUR_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, bufferObject[COLOUR_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vector4), colours, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, numVertices * sizeof(Vector4), colours, GL_STATIC_DRAW);
 		glVertexAttribPointer(COLOUR_BUFFER, 4, GL_FLOAT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(COLOUR_BUFFER);
 	}
@@ -285,7 +279,7 @@ void	Mesh::BufferData() {
 	if (indices) {
 		glGenBuffers(1, &bufferObject[INDEX_BUFFER]);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject[INDEX_BUFFER]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices*sizeof(GLuint), indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(GLuint), indices, GL_STATIC_DRAW);
 	}
 
 	//Once we're done with the vertex buffer binding, we can unbind the VAO,

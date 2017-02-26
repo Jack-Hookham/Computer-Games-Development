@@ -1,5 +1,5 @@
 #pragma once
-#include "../../nclgl/OGLRenderer.h"
+#include "../../Graphics/nclgl/OGLRenderer.h"
 #include "RenderObject.h"
 
 #include <vector>
@@ -58,4 +58,3 @@ protected:
 
 	Light currentLight;
 };
-

@@ -10,7 +10,6 @@ compile for some reason, it will revert to using a default vertex and fragment
 program, that transforms the cube correctly, but makes it bright pink, to make
 it obvious that something's gone wrong! You can test in your code whether a
 shader has failed in such a way using the UsingDefaultShader function.
-
 If you really want, you can disable this by commenting out the define below.
 */
 
@@ -53,11 +52,9 @@ vertex/fragment/geometry/tcs/tes, so I've made a combined constructor that can
 handle this. Just use "" as the parameter for any shader stage you aren't using,
 as the code checks for non-empty strings. As you must always have a vertex and
 fragment shader stage, these come first, while the others are defaulted to "".
-
 Unlike most other OpenGL objects, you can't create multiple programs at once,
 you just receive a program name from the glCreateProgram function - I'm not
 sure why they did this!
-
 I've done a trick both in here and in the Mesh class involving how enums are
 created - by default a new enum will be 1 larger than the previous entry. This
 means that if you start your first enum entry with a value of 0, the last entry
@@ -110,7 +107,6 @@ projects it probably doesn't matter (all objects will be destroyed when
 the parent OpenGL context is destroyed), but its conceivable that you
 could have some system that deletes and constructs shaders at runtime
 (such as a button to reload all your shaders - this can be a time saver!)
-
 */
 Shader::~Shader(void) {
 	if (program) {
@@ -154,10 +150,8 @@ bool	Shader::LoadShaderFile(string from, string &into) {
 /*
 The shader files you create are just text - they must be compiled into
 machine code compatible with your graphics card, just as with your C++ code.
-
 All shader objects are of a specific 'type' (vertex/fragment/geometry etc),
 so when you create a shader object using glCreateShader, you must set this.
-
 One you have loaded a shader file, you can tell OpenGL about it using the
 glShaderSource function - you can send multiple text files at once using this
 function, so you could create your own #include system by parsing your text
@@ -228,23 +222,19 @@ bool Shader::LinkProgram() {
 When a vertex buffer is bound to the pipeline, it is attached to a
 specific generic 'attribute', numbered between 0 and whatever the max
 your driver implementation can do (generally this is at least 15).
-
 Your shader needs to know how to interpret these generic attributes, and it
 can do this in one of two ways - either 'layout qualifiers' in the vertex
 shader itself, or by using the glBindAttribLocation function. For basic vertex
 data that is used across lots of shaders, I prefer the latter method, as it acts
 as a generic interface that any shader will work with as long as it uses the same
 variable names, without having to really care about how the data is sent to it.
-
 The glBindAttribLocation takes 3 parameters, a shader program, a generic attribute
 index, and a string variable name, which will be an 'in' value in the vertex shader.
-
 As you can see, I've matched up these generic attribute indices to the mesh class vertex
 buffers, so the connecting of vertex buffers to any shader loaded via my class happens
 'automagically'. It's perfectly safe to attempt to bind a non-existant input variable,
 so it's generally a good idea to just attempt to bind all of your commonly used vertex
 attributes
-
 */
 void	Shader::SetDefaultAttributes() {
 	glBindAttribLocation(program, VERTEX_BUFFER, "position");
@@ -256,12 +246,10 @@ void	Shader::SetDefaultAttributes() {
 
 
 /*
-
 If your shader all goes wrong, this function will be called, to create the
 emergency 'default' shader. It goes through all of the stages outlined in
 the tutorial notes, but instead of reading from a file, it uses some const
 strings I defined at the top
-
 */
 void	Shader::LoadDefaultShader() {
 	for (int i = 0; i < SHADER_MAX; ++i) {

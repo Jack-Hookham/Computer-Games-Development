@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../nclgl/Matrix4.h"
+#include "../../Graphics/nclgl/Matrix4.h"
 #include "Mesh.h"
 #include "Shader.h"
-#include "../../nclgl/OGLRenderer.h"
+#include "../../Graphics/nclgl/OGLRenderer.h"
 
 class RenderObject {
 public:
@@ -54,4 +54,3 @@ protected:
 	RenderObject*			parent;
 	vector<RenderObject*>	children;
 };
-
