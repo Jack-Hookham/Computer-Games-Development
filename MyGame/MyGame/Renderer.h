@@ -57,4 +57,6 @@ protected:
 	}
 
 	Light currentLight;
+
+	Mesh* triangle;
 };

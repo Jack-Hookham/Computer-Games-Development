@@ -1,28 +1,53 @@
 #include "Renderer.h"
 
-Renderer::Renderer(Window &parent) : OGLRenderer(parent) {
+//Renderer::Renderer(Window &parent) : OGLRenderer(parent) {
+//
+//	glEnable(GL_DEPTH_TEST);
+//	glEnable(GL_BLEND);
+//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//
+//	mod = 0.0f;
+//	//particleSize = 0.5f;
+//	step = false;
+//
+//	smileyTex = loadTexture("smiley.png");
+//	staticTex = loadTexture("noise.png");
+//}
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
-	mod = 0.0f;
-	//particleSize = 0.5f;
-	step = false;
+//Renderer::~Renderer(void) {
+//	glDeleteTextures(1, &smileyTex);
+//	glDeleteTextures(1, &staticTex);
+//}
 
-	smileyTex = loadTexture("smiley.png");
-	staticTex = loadTexture("noise.png");
+Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
+	triangle = Mesh::GenerateTriangle();
+
+	currentShader = new Shader("../Shaders/basicVertex.glsl",
+		"../Shaders/colourFragment.glsl");
+
+	if (!currentShader->LinkProgram()) {
+		return;
+
+	}
+
+	init = true;
 }
 
-Renderer::~Renderer(void) {
-	glDeleteTextures(1, &smileyTex);
-	glDeleteTextures(1, &staticTex);
-}
+Renderer ::~Renderer(void) {
+	delete triangle;}
 
 void	Renderer::RenderScene() {
 	for (vector<RenderObject*>::iterator i = renderObjects.begin(); i != renderObjects.end(); ++i) {
 		Render(*(*i));
+
+
 	}
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);	glClear(GL_COLOR_BUFFER_BIT);
+	glUseProgram(currentShader->GetProgram());
+	triangle->Draw();
+	glUseProgram(0);	SwapBuffers();
 }
 
 void	Renderer::Render(const RenderObject &o) {

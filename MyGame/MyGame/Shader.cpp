@@ -127,6 +127,8 @@ buffer will only be made once, and never resized.
 bool	Shader::LoadShaderFile(string from, string &into) {
 	ifstream	file;
 
+	cout << " Loading shader text from " << from << endl << endl;
+
 	file.open(from);
 	if (!file) {
 		cout << "File does not exist!" << endl;
