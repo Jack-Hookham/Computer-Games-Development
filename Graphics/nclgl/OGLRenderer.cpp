@@ -176,11 +176,16 @@ bool OGLRenderer::HasInitialised() const{
 	return init;
 }
 
+void	OGLRenderer::ClearBuffers() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 /*
 Resizes the rendering area. Should only be called by the Window class!
 Does lower bounds checking on input values, so should be reasonably safe
 to call.
 */
+
 void OGLRenderer::Resize(int x, int y)	{
 	width	= max(x,1);	
 	height	= max(y,1);
@@ -193,16 +198,16 @@ every frame, at the end of RenderScene(), or whereever appropriate for
 your application.
 */
 void OGLRenderer::SwapBuffers() {
-	if(debugDrawingRenderer == this) {
-		if(!drawnDebugOrtho) {
-			DrawDebugOrtho();
-		}
-		if(!drawnDebugPerspective) {
-			DrawDebugPerspective();
-		}
-		drawnDebugOrtho			= false;
-		drawnDebugPerspective	= false;
-	}
+	//if(debugDrawingRenderer == this) {
+	//	if(!drawnDebugOrtho) {
+	//		DrawDebugOrtho();
+	//	}
+	//	if(!drawnDebugPerspective) {
+	//		DrawDebugPerspective();
+	//	}
+	//	drawnDebugOrtho			= false;
+	//	drawnDebugPerspective	= false;
+	//}
 
 	//We call the windows OS SwapBuffers on win32. Wrapping it in this 
 	//function keeps all the tutorial code 100% cross-platform (kinda).
@@ -229,13 +234,13 @@ projMatrix, and textureMatrix. Updates them with the relevant
 matrix data. Sanity checks currentShader, so is always safe to
 call.
 */
-void OGLRenderer::UpdateShaderMatrices()	{
-	if(currentShader) {
-		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"),	1,false, (float*)&modelMatrix);
-		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "viewMatrix") ,	1,false, (float*)&viewMatrix);
-		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "projMatrix") ,	1,false, (float*)&projMatrix);
-		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "textureMatrix")  ,1,false, (float*)&textureMatrix);
-	}
+void OGLRenderer::UpdateShaderMatrices(GLuint program)	{
+	//if(currentShader) {
+		glUniformMatrix4fv(glGetUniformLocation(program, "modelMatrix"),	1,false, (float*)&modelMatrix);
+		glUniformMatrix4fv(glGetUniformLocation(program, "viewMatrix") ,	1,false, (float*)&viewMatrix);
+		glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix") ,	1,false, (float*)&projMatrix);
+		glUniformMatrix4fv(glGetUniformLocation(program, "textureMatrix")  ,1,false, (float*)&textureMatrix);
+	//}
 }
 
 void OGLRenderer::SetCurrentShader(Shader*s) {

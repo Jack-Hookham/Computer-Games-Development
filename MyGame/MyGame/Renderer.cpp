@@ -1,53 +1,22 @@
 #include "Renderer.h"
 
-//Renderer::Renderer(Window &parent) : OGLRenderer(parent) {
-//
-//	glEnable(GL_DEPTH_TEST);
-//	glEnable(GL_BLEND);
-//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//
-//	mod = 0.0f;
-//	//particleSize = 0.5f;
-//	step = false;
-//
-//	smileyTex = loadTexture("smiley.png");
-//	staticTex = loadTexture("noise.png");
-//}
+Renderer::Renderer(Window &parent) : OGLRenderer(parent) {
 
-
-
-//Renderer::~Renderer(void) {
-//	glDeleteTextures(1, &smileyTex);
-//	glDeleteTextures(1, &staticTex);
-//}
-
-Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
-	triangle = Mesh::GenerateTriangle();
-
-	currentShader = new Shader("../Shaders/basicVertex.glsl",
-		"../Shaders/colourFragment.glsl");
-
-	if (!currentShader->LinkProgram()) {
-		return;
-
-	}
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	init = true;
 }
 
-Renderer ::~Renderer(void) {
-	delete triangle;}
+Renderer::~Renderer(void) {
+
+}
 
 void	Renderer::RenderScene() {
 	for (vector<RenderObject*>::iterator i = renderObjects.begin(); i != renderObjects.end(); ++i) {
 		Render(*(*i));
-
-
 	}
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);	glClear(GL_COLOR_BUFFER_BIT);
-	glUseProgram(currentShader->GetProgram());
-	triangle->Draw();
-	glUseProgram(0);	SwapBuffers();
 }
 
 void	Renderer::Render(const RenderObject &o) {
@@ -58,22 +27,7 @@ void	Renderer::Render(const RenderObject &o) {
 
 		glUseProgram(program);
 
-		UpdateShaderMatrices();
-		ApplyShaderLight(program);
-
-		glUniform1f(glGetUniformLocation(program, "mod"), mod);
-		//glUniform1f(glGetUniformLocation(program, "particleSize"), particleSize);
-
-		glUniform1i(glGetUniformLocation(program, "smileyTex"), 0);
-		glUniform1i(glGetUniformLocation(program, "staticTex"), 1);
-
-		UpdateShaderMatrices();
-
-		glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, o.GetTexture());
-		glBindTexture(GL_TEXTURE_2D, smileyTex);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, staticTex);
+		UpdateShaderMatrices(program);
 
 		o.Draw();
 	}
@@ -86,16 +40,6 @@ void	Renderer::Render(const RenderObject &o) {
 void	Renderer::UpdateScene(float msec) {
 	for (vector<RenderObject*>::iterator i = renderObjects.begin(); i != renderObjects.end(); ++i) {
 		(*i)->Update(msec);
-	}
-
-	//increment step values based on msec
-	if (step)
-	{
-		mod += msec * 0.4f;
-		if (mod > 2000)
-		{
-			mod = 0.0f;
-		}
 	}
 }
 

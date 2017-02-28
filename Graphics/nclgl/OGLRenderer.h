@@ -106,6 +106,14 @@ public:
 	void			SwapBuffers();
 
 	bool			HasInitialised() const;	
+
+	void			SetProjectionMatrix(Matrix4 m) {
+		projMatrix = m;
+	}
+
+	void			SetViewMatrix(Matrix4 m) {
+		viewMatrix = m;
+	}
 	
 	static void		DrawDebugLine  (DebugDrawMode mode, const Vector3 &from,const Vector3 &to,const Vector3 &fromColour = Vector3(1,1,1),const Vector3 &toColour = Vector3(1,1,1));
 	static void		DrawDebugBox   (DebugDrawMode mode, const Vector3 &at,const Vector3 &scale,const Vector3 &colour = Vector3(1,1,1));
@@ -120,9 +128,11 @@ public:
 		return currentShader;
 	}
 
+	void	ClearBuffers();
+
 protected:
 	virtual void	Resize(int x, int y);	
-	void			UpdateShaderMatrices();
+	void			UpdateShaderMatrices(GLuint program);
 	void			SetCurrentShader(Shader*s);
 
 	void			SetTextureRepeating(GLuint target, bool state);
