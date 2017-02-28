@@ -23,6 +23,8 @@ void	Renderer::Render(const RenderObject &o) {
 	modelMatrix = o.GetWorldTransform();
 
 	if (o.GetShader() && o.GetMesh()) {
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		GLuint program = o.GetShader()->GetProgram();
 
 		glUseProgram(program);
@@ -54,4 +56,15 @@ GLuint Renderer::loadTexture(const char* textIn)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	return texture;
+}
+
+void Renderer::SwitchToPerspective()
+{
+	projMatrix = Matrix4::Perspective(1.0f, 10000.0f, (float)width / (float)height, 45.0f);
+}
+
+void Renderer::SwitchToOrthographic()
+{
+	projMatrix = Matrix4::Orthographic(-1.0f, 10000.0f, width / 2.0f,
+		-width / 2.0f, height / 2.0f, -height / 2.0f);
 }

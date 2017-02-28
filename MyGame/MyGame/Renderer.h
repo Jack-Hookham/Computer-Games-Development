@@ -35,6 +35,13 @@ public:
 
 	GLuint loadTexture(const char* textIn);
 
+	void SwitchToPerspective();
+	void SwitchToOrthographic();
+
+	inline void SetScale(float s) { scale = s; }
+	inline void SetRotation(float r) { rotation = r; }
+	inline void SetPosition(Vector3 p) { position = p; }
+
 	float mod;
 	//float particleSize;
 	bool step;
@@ -43,9 +50,12 @@ protected:
 
 	GLuint(smileyTex);
 	GLuint(staticTex);
+
 	vector<RenderObject*> renderObjects;
 
-
+	float scale;
+	float rotation;
+	Vector3 position;
 
 	void ApplyShaderLight(GLuint program) {
 		glUniform3fv(glGetUniformLocation(program, "lightColour"),
@@ -57,6 +67,4 @@ protected:
 	}
 
 	Light currentLight;
-
-	Mesh* triangle;
 };
