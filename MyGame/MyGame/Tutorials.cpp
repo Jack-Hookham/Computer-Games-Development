@@ -138,6 +138,7 @@ void Tutorials::tutorialOne()
 	}
 
 	Mesh*	m = Mesh::GenerateTriangle();
+	//Mesh*	m = Mesh::GenerateQuadPatch();
 	Shader* s = new Shader("../Shaders/basicVert.glsl", "../Shaders/basicFrag.glsl");
 	//Shader* s = new Shader("../Shaders/basicVertex.glsl", "../Shaders/colourFragment.glsl");
 	//Shader* s = new Shader("basicVert.glsl", "basicFrag.glsl", "pointCubeGeom.glsl");
@@ -153,7 +154,7 @@ void Tutorials::tutorialOne()
 
 	Vector3 position(0.0f, 0.0f, 0.0f);
 
-	r.SetViewMatrix(Matrix4::BuildViewMatrix(Vector3(0, 0, 0), Vector3(0, 0, 10)));
+	r.SetViewMatrix(Matrix4::BuildViewMatrix(Vector3(0, 0, 0), Vector3(0, 0, 30)));
 
 	while (w.UpdateWindow())
 	{
@@ -178,6 +179,16 @@ void Tutorials::tutorialOne()
 			if (Window::GetKeyboard()->KeyDown(KEYBOARD_D)) {
 				//position.x -= 1.0f * msec;
 				o->SetModelMatrix(o->GetModelMatrix() * Matrix4::Translation(Vector3(-0.01, 0, 0)));
+			}
+
+			if (Window::GetKeyboard()->KeyDown(KEYBOARD_SHIFT)) {
+				//position.x -= 1.0f * msec;
+				o->SetModelMatrix(o->GetModelMatrix() * Matrix4::Translation(Vector3(0, 0, 0.01)));
+			}
+
+			if (Window::GetKeyboard()->KeyDown(KEYBOARD_SPACE)) {
+				//position.x -= 1.0f * msec;
+				o->SetModelMatrix(o->GetModelMatrix() * Matrix4::Translation(Vector3(0, 0, -0.01)));
 			}
 
 			//r.SetViewMatrix(Matrix4::Translation(position));
