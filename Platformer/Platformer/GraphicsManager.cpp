@@ -6,6 +6,11 @@ GraphicsManager::GraphicsManager()
 
 GraphicsManager::~GraphicsManager()
 {
+	//Destroy window	
+	SDL_DestroyRenderer(mRenderer);
+	SDL_DestroyWindow(mWindow);
+	mWindow = NULL;
+	mRenderer = NULL;
 }
 
 bool GraphicsManager::initGraphics()
@@ -16,7 +21,8 @@ bool GraphicsManager::initGraphics()
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
+		const std::string text = "SDL could not initialize! SDL Error: " + std::string(SDL_GetError());
+		log(text);
 		success = false;
 	}
 	else
@@ -24,35 +30,38 @@ bool GraphicsManager::initGraphics()
 		//Set texture filtering to linear
 		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
 		{
-			printf("Warning: Linear texture filtering not enabled!");
+			log("Warning: Linear texture filtering not enabled!");
 		}
 
 		//Create window
-		gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-		if (gWindow == NULL)
+		mWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+		if (mWindow == NULL)
 		{
-			printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
+			const std::string text = "Window could not be created! SDL Error: " + std::string(SDL_GetError());
+			log(text);
 			success = false;
 		}
 		else
 		{
 			//Create renderer for window
-			gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-			if (gRenderer == NULL)
+			mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
+			if (mRenderer == NULL)
 			{
-				printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+				const std::string text = "Renderer could not be created! SDL Error: " + std::string(SDL_GetError());
+				log(text);
 				success = false;
 			}
 			else
 			{
 				//Initialize renderer color
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
 				//Initialize PNG loading
 				int imgFlags = IMG_INIT_PNG;
 				if (!(IMG_Init(imgFlags) & imgFlags))
 				{
-					printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+					const std::string text = "SDL_image could not initialize! SDL_image Error: " + std::string(IMG_GetError());
+					log(text);
 					success = false;
 				}
 			}
@@ -71,6 +80,11 @@ bool GraphicsManager::loadMedia()
 	return success;
 }
 
+void GraphicsManager::log(const std::string text)
+{
+	std::cout << "[GraphicsManager] " << text << std::endl;
+}
+
 SDL_Texture* GraphicsManager::loadTexture(std::string path)
 {
 	//The final texture
@@ -80,15 +94,18 @@ SDL_Texture* GraphicsManager::loadTexture(std::string path)
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (loadedSurface == NULL)
 	{
-		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+		const std::string text = "Unable to load image " + path + "! SDL_image Error: " + std::string(IMG_GetError());
+		log(text);
 	}
 	else
 	{
 		//Create texture from surface pixels
-		newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
+		newTexture = SDL_CreateTextureFromSurface(mRenderer, loadedSurface);
+		newTexture = NULL;
 		if (newTexture == NULL)
 		{
-			printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+			const std::string text = "Unable to create texture from " + path + "! SDL Error: " + std::string(SDL_GetError());
+			log(text);
 		}
 
 		//Get rid of old loaded surface
@@ -96,4 +113,9 @@ SDL_Texture* GraphicsManager::loadTexture(std::string path)
 	}
 
 	return newTexture;
+}
+
+void GraphicsManager::updateGraphics()
+{
+
 }

@@ -6,6 +6,7 @@ int main(int argc, char* args[])
 
 	gm.init();
 	//gm.loadMedia();
+	gm.gameLoop();
 
 	return 0;
 }

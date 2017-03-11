@@ -7,7 +7,6 @@
 #include <cmath>
 #include <iostream>
 
-#include "GameLoop.h"
 #include "PhysicsManager.h"
 #include "GraphicsManager.h"
 #include "Player.h"
@@ -21,8 +20,12 @@ public:
 	//Start up SDL and create window
 	bool init();
 
+	//Main loop for the game
+	int gameLoop();
+
+	void log(const char* text);
+
 private:
-	GameLoop* mGameLoop;
 	PhysicsManager* mPhysicsManager;
 	GraphicsManager* mGraphicsManager;
 	Player* mPlayer;
