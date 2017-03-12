@@ -15,6 +15,7 @@ bool PhysicsManager::initPhysics()
 
 void PhysicsManager::updatePhysics()
 {
+
 }
 
 void PhysicsManager::log(const std::string text)

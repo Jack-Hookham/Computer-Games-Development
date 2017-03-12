@@ -2,9 +2,9 @@
 
 GameManager::GameManager()
 {
+	mPlayer = new Player(SCREEN_WIDTH/2, SCREEN_WIDTH/2);
 	mPhysicsManager = new PhysicsManager();
-	mGraphicsManager = new GraphicsManager();
-	mPlayer = new Player();
+	mGraphicsManager = new GraphicsManager(mPlayer, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 GameManager::~GameManager()
@@ -16,7 +16,6 @@ GameManager::~GameManager()
 	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit();
-
 }
 
 bool GameManager::init()
@@ -47,30 +46,56 @@ int GameManager::gameLoop()
 	bool quit = false;
 
 	//Event handler
-	SDL_Event event;
+	SDL_Event e;
 
 	while (!quit)
 	{
 		//Handle events on queue
-		while (SDL_PollEvent(&event) != 0)
+		while (SDL_PollEvent(&e) != 0)
 		{
 			//User requests quit
-			if (event.type == SDL_QUIT)
+			if (e.type == SDL_QUIT)
 			{
 				quit = true;
 			}
 
-			mPhysicsManager->updatePhysics();
+			//User presses a key
+			else if (e.type == SDL_KEYDOWN)
+			{
+				//Select surfaces based on key press
+				switch (e.key.keysym.sym)
+				{
+				case SDLK_a:
+					mPlayer->moveLeft();
+					break;
 
-			//mGraphicsManager->loadTexture("PATH");
-			mGraphicsManager->updateGraphics();
+				case SDLK_d:
+					mPlayer->moveRight();
+					break;
+
+				case SDLK_SPACE:
+					mPlayer->jump();
+					break;
+
+				/*default:
+					gCurrentSurface = gKeyPressSurfaces[KEY_PRESS_SURFACE_DEFAULT];
+					break;*/
+				}
+			}
 		}
+
+
+
+		mPhysicsManager->updatePhysics();
+
+		//mGraphicsManager->loadTexture("PATH");
+		mGraphicsManager->updateGraphics();
 	}
 
 	return 0;
 }
 
-void GameManager::log(const char* text)
+void GameManager::log(const std::string text)
 {
 	std::cout << "[GameManager] " << text << std::endl;
 }

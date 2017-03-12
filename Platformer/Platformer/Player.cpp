@@ -33,3 +33,67 @@ void Player::setPosition(const Vector3 position)
 {
 	mPosition = position;
 }
+
+float Player::getHealth()
+{
+	return mHealth;
+}
+
+void Player::setHealth(float health)
+{
+	mHealth = health;
+}
+
+float Player::getSpeed()
+{
+	return mSpeed;
+}
+
+void Player::setSpeed(float speed)
+{
+	mSpeed = speed;
+}
+
+float Player::getHeight()
+{
+	return mHeight;
+}
+
+void Player::setHeight(float height)
+{
+	mHeight = height;
+}
+
+float Player::getWidth()
+{
+	return mWidth;
+}
+
+void Player::setWidth(float width)
+{
+	mWidth = width;
+}
+
+void Player::moveLeft()
+{
+	log("Move Left");
+	mPosition += Vector3(-mSpeed, 0, 0);
+	cout << mPosition << endl;
+};
+
+void Player::moveRight()
+{
+	log("Move Right");
+	mPosition += Vector3(mSpeed, 0, 0);
+	cout << mPosition << endl;
+}
+
+void Player::jump()
+{
+	log("Move Jump");
+}
+
+void Player::log(const std::string text)
+{
+	std::cout << "[Player] " << text << std::endl;
+}

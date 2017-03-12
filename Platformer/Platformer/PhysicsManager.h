@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 
+#include "Player.h"
+
 class PhysicsManager
 {
 public:
@@ -13,7 +15,7 @@ public:
 
 	void updatePhysics();
 
-	//Log physics errors
+	//Log for PhysicsManager
 	void log(const std::string text);
 };
 

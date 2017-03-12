@@ -23,11 +23,17 @@ public:
 	//Main loop for the game
 	int gameLoop();
 
-	void log(const char* text);
+	//Log for GameManager
+	void log(const std::string text);
 
 private:
+	const int SCREEN_WIDTH = 1280;
+	const int SCREEN_HEIGHT = 720;
+
+	Player* mPlayer;
 	PhysicsManager* mPhysicsManager;
 	GraphicsManager* mGraphicsManager;
-	Player* mPlayer;
+
+
 };
 

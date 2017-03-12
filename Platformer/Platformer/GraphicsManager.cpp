@@ -1,7 +1,12 @@
 #include "GraphicsManager.h"
 
-GraphicsManager::GraphicsManager()
+GraphicsManager::GraphicsManager(Player* player, const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
 {
+	mPlayer = player;
+	this->SCREEN_WIDTH = SCREEN_WIDTH;
+	this->SCREEN_HEIGHT = SCREEN_HEIGHT;
+
+	
 }
 
 GraphicsManager::~GraphicsManager()
@@ -117,5 +122,38 @@ SDL_Texture* GraphicsManager::loadTexture(std::string path)
 
 void GraphicsManager::updateGraphics()
 {
+	//Clear screen
+	SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_RenderClear(mRenderer);
 
+	//Render red filled quad
+	SDL_Rect fillRect = { SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
+	SDL_SetRenderDrawColor(mRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	SDL_RenderFillRect(mRenderer, &fillRect);
+
+	//Render green outlined quad
+	SDL_Rect outlineRect = { SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, SCREEN_WIDTH * 2 / 3, SCREEN_HEIGHT * 2 / 3 };
+	SDL_SetRenderDrawColor(mRenderer, 0x00, 0xFF, 0x00, 0xFF);
+	SDL_RenderDrawRect(mRenderer, &outlineRect);
+
+	//Draw blue horizontal line
+	SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
+	SDL_RenderDrawLine(mRenderer, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2);
+
+	//Draw vertical line of yellow dots
+	SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0x00, 0xFF);
+	for (int i = 0; i < SCREEN_HEIGHT; i += 4)
+	{
+		SDL_RenderDrawPoint(mRenderer, SCREEN_WIDTH / 2, i);
+	}
+
+	//Render player
+	SDL_Rect playerRect = { mPlayer->getPosition().getX(), mPlayer->getPosition().getY(),
+							mPlayer->getWidth() * WORLD_TO_SCREEN, mPlayer->getHeight() * WORLD_TO_SCREEN };
+	SDL_SetRenderDrawColor(mRenderer, 0x66, 0x00, 0xFF, 0xFF);
+	SDL_RenderFillRect(mRenderer, &playerRect);
+	//mPlayer
+
+	//Update screen
+	SDL_RenderPresent(mRenderer);
 }
