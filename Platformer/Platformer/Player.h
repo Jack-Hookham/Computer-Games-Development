@@ -36,6 +36,10 @@ public:
 	void moveRight();
 	void jump();
 
+	bool movingLeft = false;
+	bool movingRight = false;
+	bool jumping = false;
+
 	//Log for Player
 	void log(const std::string text);
 
@@ -48,5 +52,7 @@ private:
 
 	float mHeight = 2.0f;
 	float mWidth = 2.0f;
+
+
 };
 

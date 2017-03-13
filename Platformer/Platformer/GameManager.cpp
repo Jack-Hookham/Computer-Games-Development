@@ -57,20 +57,25 @@ int GameManager::gameLoop()
 			if (e.type == SDL_QUIT)
 			{
 				quit = true;
+				break;
 			}
 
 			//User presses a key
 			else if (e.type == SDL_KEYDOWN)
 			{
-				//Select surfaces based on key press
+				//Select action based on key press
 				switch (e.key.keysym.sym)
 				{
+				case SDLK_ESCAPE:
+					quit = true;
+					break;
+
 				case SDLK_a:
-					mPlayer->moveLeft();
+					mPlayer->movingLeft = true;
 					break;
 
 				case SDLK_d:
-					mPlayer->moveRight();
+					mPlayer->movingRight = true;
 					break;
 
 				case SDLK_SPACE:
@@ -81,6 +86,37 @@ int GameManager::gameLoop()
 					gCurrentSurface = gKeyPressSurfaces[KEY_PRESS_SURFACE_DEFAULT];
 					break;*/
 				}
+			}
+			else if (e.type == SDL_KEYUP)
+			{
+				//Select action based on key release
+				switch (e.key.keysym.sym)
+				{
+				case SDLK_a:
+					mPlayer->movingLeft = false;
+					break;
+
+				case SDLK_d:
+					mPlayer->movingRight = false;
+					break;/*
+
+				case SDLK_SPACE:
+					mPlayer->jump();
+					break;*/
+
+					/*default:
+					gCurrentSurface = gKeyPressSurfaces[KEY_PRESS_SURFACE_DEFAULT];
+					break;*/
+				}
+			}
+
+			if (mPlayer->movingLeft)
+			{
+				mPlayer->moveLeft();
+			}
+			else if (mPlayer->movingRight)
+			{
+				mPlayer->moveRight();
 			}
 		}
 
