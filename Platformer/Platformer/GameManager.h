@@ -2,11 +2,13 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <stdio.h>
 #include <string>
 #include <cmath>
 #include <iostream>
 
+//#include "PlatformerCommon.h"
 #include "PhysicsManager.h"
 #include "GraphicsManager.h"
 #include "Player.h"
@@ -33,7 +35,5 @@ private:
 	Player* mPlayer;
 	PhysicsManager* mPhysicsManager;
 	GraphicsManager* mGraphicsManager;
-
-
 };
 

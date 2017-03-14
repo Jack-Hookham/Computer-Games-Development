@@ -3,6 +3,7 @@
 GameManager::GameManager()
 {
 	mPlayer = new Player(SCREEN_WIDTH/2, SCREEN_WIDTH/2);
+
 	mPhysicsManager = new PhysicsManager();
 	mGraphicsManager = new GraphicsManager(mPlayer, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
@@ -12,10 +13,6 @@ GameManager::~GameManager()
 	delete mPhysicsManager;
 	delete mGraphicsManager;
 	delete mPlayer;
-
-	//Quit SDL subsystems
-	IMG_Quit();
-	SDL_Quit();
 }
 
 bool GameManager::init()
@@ -50,6 +47,8 @@ int GameManager::gameLoop()
 
 	while (!quit)
 	{
+		SDL_GetTicks();
+
 		//Handle events on queue
 		while (SDL_PollEvent(&e) != 0)
 		{

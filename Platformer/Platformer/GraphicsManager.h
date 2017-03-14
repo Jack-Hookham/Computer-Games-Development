@@ -2,10 +2,13 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <string>
 #include <cmath>
 
+//#include "PlatformerCommon.h"
 #include "Player.h"
+#include "Texture.h"
 //#include "GameManager.h"
 
 class GraphicsManager
@@ -29,7 +32,6 @@ public:
 
 	void updateGraphics();
 
-
 private:
 	int SCREEN_WIDTH;
 	int SCREEN_HEIGHT;
@@ -43,5 +45,8 @@ private:
 	SDL_Renderer* mRenderer = NULL;
 
 	Player* mPlayer;
+
+	TTF_Font* mMainFont;
+	Texture* mTextTexture;
 };
 
