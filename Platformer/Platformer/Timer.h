@@ -10,6 +10,7 @@ public:
 	//Clock actions
 	void start();
 	void stop();
+	void restart();
 	void pause();
 	void unpause();
 

@@ -12,6 +12,7 @@
 #include "PhysicsManager.h"
 #include "GraphicsManager.h"
 #include "Player.h"
+#include "Timer.h"
 
 class GameManager
 {

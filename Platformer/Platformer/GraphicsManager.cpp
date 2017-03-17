@@ -179,7 +179,7 @@ SDL_Texture* GraphicsManager::loadTexture(std::string path)
 	return newTexture;
 }
 
-void GraphicsManager::updateGraphics(Uint32 startTime)
+void GraphicsManager::updateGraphics(Timer timer)
 {
 	//Clear screen
 	SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -219,7 +219,7 @@ void GraphicsManager::updateGraphics(Uint32 startTime)
 	mPromptTextTexture->render((SCREEN_WIDTH - mPromptTextTexture->getWidth()) / 2, 0);
 
 	timeText.str("");
-	timeText << "Milliseconds since start time " << SDL_GetTicks() - startTime;
+	timeText << "Milliseconds since start time " << timer.getTicks();
 
 	//Update time texture with new time
 	if (!mTimeTextTexture->loadFromRenderedText(mMainFont, timeText.str().c_str(), textColour))

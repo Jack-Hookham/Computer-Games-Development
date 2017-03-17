@@ -10,6 +10,7 @@
 //#include "PlatformerCommon.h"
 #include "Player.h"
 #include "Texture.h"
+#include "Timer.h"
 //#include "GameManager.h"
 
 class GraphicsManager
@@ -31,7 +32,7 @@ public:
 	//Log for GraphicsManager
 	void log(const std::string text);
 
-	void updateGraphics(Uint32 startTime);
+	void updateGraphics(Timer timer);
 
 private:
 	int SCREEN_WIDTH;

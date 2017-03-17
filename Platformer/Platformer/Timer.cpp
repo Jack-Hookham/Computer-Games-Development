@@ -40,6 +40,15 @@ void Timer::stop()
 	mPausedTicks = 0;
 }
 
+void Timer::restart()
+{
+	if (mStarted)
+	{
+		stop();
+	}
+	start();
+}
+
 void Timer::pause()
 {
 	//If the timer is running and isn't already paused

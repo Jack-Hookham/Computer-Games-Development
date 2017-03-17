@@ -56,8 +56,11 @@ int GameManager::gameLoop()
 	//Set text colour as black
 	SDL_Color textColour = { 0, 0, 0, 255 };
 
+	//Application timer
+	Timer timer;
+
 	//Current time start time
-	Uint32 startTime = 0;
+	//Uint32 startTime = 0;
 
 	while (!quit)
 	{
@@ -83,8 +86,30 @@ int GameManager::gameLoop()
 					quit = true;
 					break;
 
-				case SDLK_RETURN:
-					startTime = SDL_GetTicks();
+				case SDLK_s:
+					if (timer.isStarted())
+					{
+						timer.stop();
+					}
+					else
+					{
+						timer.start();
+					}
+					break;
+
+				case SDLK_p:
+					if (timer.isPaused())
+					{
+						timer.unpause();
+					}
+					else
+					{
+						timer.pause();
+					}
+					break;
+
+				case SDLK_r:
+					timer.restart();
 					break;
 
 				case SDLK_a:
@@ -142,7 +167,7 @@ int GameManager::gameLoop()
 		mPhysicsManager->updatePhysics();
 
 		//mGraphicsManager->loadTexture("PATH");
-		mGraphicsManager->updateGraphics(startTime);
+		mGraphicsManager->updateGraphics(timer);
 	}
 
 	return 0;
