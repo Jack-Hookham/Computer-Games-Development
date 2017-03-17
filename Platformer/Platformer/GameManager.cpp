@@ -26,12 +26,20 @@ bool GameManager::init()
 		log("Failed to initialise physics");
 		success = false;
 	}
+	else
+	{
+		log("Physics successfully initialised");
+	}
 
 	//initialise graphics
 	if (!(mGraphicsManager->initGraphics()))
 	{
 		log("Failed to initialise graphics");
 		success = false;
+	}
+	else
+	{
+		log("Graphics successfully initialised");
 	}
 
 	return success;
@@ -44,6 +52,12 @@ int GameManager::gameLoop()
 
 	//Event handler
 	SDL_Event e;
+
+	//Set text colour as black
+	SDL_Color textColour = { 0, 0, 0, 255 };
+
+	//Current time start time
+	Uint32 startTime = 0;
 
 	while (!quit)
 	{
@@ -67,6 +81,10 @@ int GameManager::gameLoop()
 				{
 				case SDLK_ESCAPE:
 					quit = true;
+					break;
+
+				case SDLK_RETURN:
+					startTime = SDL_GetTicks();
 					break;
 
 				case SDLK_a:
@@ -124,7 +142,7 @@ int GameManager::gameLoop()
 		mPhysicsManager->updatePhysics();
 
 		//mGraphicsManager->loadTexture("PATH");
-		mGraphicsManager->updateGraphics();
+		mGraphicsManager->updateGraphics(startTime);
 	}
 
 	return 0;

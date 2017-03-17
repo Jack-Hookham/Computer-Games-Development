@@ -8,8 +8,6 @@
 class Texture
 {
 public:
-	//Default constructor
-	Texture();
 	//Initializes variables
 	Texture(SDL_Renderer* renderer);
 

@@ -11,6 +11,8 @@ GraphicsManager::~GraphicsManager()
 {
 	//Free loaded images
 	mTextTexture->freeTexture();
+	mPromptTextTexture->freeTexture();
+	mTimeTextTexture->freeTexture();
 
 	//Free global font
 	TTF_CloseFont(mMainFont);
@@ -88,8 +90,10 @@ bool GraphicsManager::initGraphics()
 					success = false;
 				}
 			}
-			//Initialise text texture
+			//Initialise text textures
 			mTextTexture = new Texture(mRenderer);
+			mPromptTextTexture = new Texture(mRenderer);
+			mTimeTextTexture = new Texture(mRenderer);
 
 		}
 	}
@@ -97,6 +101,10 @@ bool GraphicsManager::initGraphics()
 	if (!loadMedia())
 	{
 		log("Failed to load media!");
+	}
+	else
+	{
+		log("Media successfully loaded");
 	}
 
 	return success;
@@ -117,11 +125,18 @@ bool GraphicsManager::loadMedia()
 	}
 	else
 	{
-		//
-		SDL_Color textColor = { 0, 0, 0 };
-		if (!mTextTexture->loadFromRenderedText(mMainFont, "The quick brown fox jumps over the lazy dog", textColor))
+		//Set text colour as black
+		SDL_Color textColour = { 0, 0, 0, 255 };
+
+		if (!mTextTexture->loadFromRenderedText(mMainFont, "This text is a texture", textColour))
 		{
-			printf("Failed to render text texture!\n");
+			log("Failed to render text texture!");
+			success = false;
+		}
+
+		if (!mPromptTextTexture->loadFromRenderedText(mMainFont, "Press Enter to Reset Start Time.", textColour))
+		{
+			log("Failed to render text texture!");
 			success = false;
 		}
 	}
@@ -164,11 +179,13 @@ SDL_Texture* GraphicsManager::loadTexture(std::string path)
 	return newTexture;
 }
 
-void GraphicsManager::updateGraphics()
+void GraphicsManager::updateGraphics(Uint32 startTime)
 {
 	//Clear screen
 	SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(mRenderer);
+
+	SDL_Color textColour = { 0, 0, 0, 255 };
 
 	////Render red filled quad
 	//SDL_Rect fillRect = { SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
@@ -198,7 +215,19 @@ void GraphicsManager::updateGraphics()
 	SDL_RenderFillRect(mRenderer, &playerRect);
 	
 	//Render text
-	mTextTexture->render((SCREEN_WIDTH - mTextTexture->getWidth()) / 2, (SCREEN_HEIGHT - mTextTexture->getHeight()) / 2);
+	mTextTexture->render((SCREEN_WIDTH - mTextTexture->getWidth()) / 2, (SCREEN_HEIGHT - mTextTexture->getHeight()) / 3);
+	mPromptTextTexture->render((SCREEN_WIDTH - mPromptTextTexture->getWidth()) / 2, 0);
+
+	timeText.str("");
+	timeText << "Milliseconds since start time " << SDL_GetTicks() - startTime;
+
+	//Update time texture with new time
+	if (!mTimeTextTexture->loadFromRenderedText(mMainFont, timeText.str().c_str(), textColour))
+	{
+		log("Unable to render time texture!");
+	}
+
+	mTimeTextTexture->render((SCREEN_WIDTH - mPromptTextTexture->getWidth()) / 2, (SCREEN_HEIGHT - mPromptTextTexture->getHeight()) / 2);;
 
 	//Update screen
 	SDL_RenderPresent(mRenderer);

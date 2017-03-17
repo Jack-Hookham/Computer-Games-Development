@@ -5,6 +5,7 @@
 #include <SDL_ttf.h>
 #include <string>
 #include <cmath>
+#include <sstream>
 
 //#include "PlatformerCommon.h"
 #include "Player.h"
@@ -30,7 +31,7 @@ public:
 	//Log for GraphicsManager
 	void log(const std::string text);
 
-	void updateGraphics();
+	void updateGraphics(Uint32 startTime);
 
 private:
 	int SCREEN_WIDTH;
@@ -48,5 +49,10 @@ private:
 
 	TTF_Font* mMainFont;
 	Texture* mTextTexture;
+	Texture* mPromptTextTexture;
+	Texture* mTimeTextTexture;
+
+	//In memory text stream
+	std::stringstream timeText;
 };
 
