@@ -47,11 +47,11 @@ private:
 	Vector3 mPosition;
 	Camera mCamera;
 
-	float mHealth = 100.0f;
-	float mSpeed = 1.0f;
+	float mHealth;
+	float mSpeed;
 
-	float mHeight = 2.0f;
-	float mWidth = 2.0f;
+	float mHeight;
+	float mWidth;
 
 
 };

@@ -13,6 +13,7 @@ GraphicsManager::~GraphicsManager()
 	mTextTexture->freeTexture();
 	mPromptTextTexture->freeTexture();
 	mTimeTextTexture->freeTexture();
+	mFPSTextTexture->freeTexture();
 
 	//Free global font
 	TTF_CloseFont(mMainFont);
@@ -94,6 +95,7 @@ bool GraphicsManager::initGraphics()
 			mTextTexture = new Texture(mRenderer);
 			mPromptTextTexture = new Texture(mRenderer);
 			mTimeTextTexture = new Texture(mRenderer);
+			mFPSTextTexture = new Texture(mRenderer);
 
 		}
 	}
@@ -179,13 +181,13 @@ SDL_Texture* GraphicsManager::loadTexture(std::string path)
 	return newTexture;
 }
 
-void GraphicsManager::updateGraphics(Timer timer)
+void GraphicsManager::updateGraphics(Timer timer, float avgFPS)
 {
 	//Clear screen
 	SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(mRenderer);
 
-	SDL_Color textColour = { 0, 0, 0, 255 };
+	SDL_Color textColour = { 0, 0, 60, 255 };
 
 	////Render red filled quad
 	//SDL_Rect fillRect = { SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
@@ -227,7 +229,18 @@ void GraphicsManager::updateGraphics(Timer timer)
 		log("Unable to render time texture!");
 	}
 
-	mTimeTextTexture->render((SCREEN_WIDTH - mPromptTextTexture->getWidth()) / 2, (SCREEN_HEIGHT - mPromptTextTexture->getHeight()) / 2);;
+	mTimeTextTexture->render((SCREEN_WIDTH - mPromptTextTexture->getWidth()) / 2, (SCREEN_HEIGHT - mPromptTextTexture->getHeight()) / 2);
+
+	fpsText.str("");
+	fpsText << "avgFPS: " << avgFPS;
+
+	//Update fps texture with new fps
+	if (!mFPSTextTexture->loadFromRenderedText(mMainFont, fpsText.str().c_str(), textColour))
+	{
+		log("Unable to render fps texture!");
+	}
+
+	mFPSTextTexture->render((SCREEN_WIDTH - mFPSTextTexture->getWidth()) / 2, (SCREEN_HEIGHT - mFPSTextTexture->getHeight()) / 1.5);
 
 	//Update screen
 	SDL_RenderPresent(mRenderer);

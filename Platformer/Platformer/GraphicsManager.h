@@ -32,7 +32,7 @@ public:
 	//Log for GraphicsManager
 	void log(const std::string text);
 
-	void updateGraphics(Timer timer);
+	void updateGraphics(Timer timer, float avgFPS);
 
 private:
 	int SCREEN_WIDTH;
@@ -52,8 +52,11 @@ private:
 	Texture* mTextTexture;
 	Texture* mPromptTextTexture;
 	Texture* mTimeTextTexture;
+	Texture* mFPSTextTexture;
 
 	//In memory text stream
 	std::stringstream timeText;
+	std::stringstream fpsText;
+
 };
 

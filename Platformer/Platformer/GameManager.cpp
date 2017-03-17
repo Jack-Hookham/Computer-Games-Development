@@ -59,13 +59,14 @@ int GameManager::gameLoop()
 	//Application timer
 	Timer timer;
 
-	//Current time start time
-	//Uint32 startTime = 0;
+	//FPS timer
+	Timer fpsTimer;
+
+	int countedFrames = 0;
+	fpsTimer.start();
 
 	while (!quit)
 	{
-		SDL_GetTicks();
-
 		//Handle events on queue
 		while (SDL_PollEvent(&e) != 0)
 		{
@@ -113,11 +114,17 @@ int GameManager::gameLoop()
 					break;
 
 				case SDLK_a:
-					mPlayer->movingLeft = true;
+					if (!mPlayer->movingLeft)
+					{
+						mPlayer->movingLeft = true;
+					}
 					break;
 
 				case SDLK_d:
-					mPlayer->movingRight = true;
+					if (!mPlayer->movingRight)
+					{
+						mPlayer->movingRight = true;
+					}
 					break;
 
 				case SDLK_SPACE:
@@ -151,23 +158,29 @@ int GameManager::gameLoop()
 					break;*/
 				}
 			}
-
-			if (mPlayer->movingLeft)
-			{
-				mPlayer->moveLeft();
-			}
-			else if (mPlayer->movingRight)
-			{
-				mPlayer->moveRight();
-			}
 		}
 
+		if (mPlayer->movingLeft)
+		{
+			mPlayer->moveLeft();
+		}
+		else if (mPlayer->movingRight)
+		{
+			mPlayer->moveRight();
+		}
 
+		//Calculate and correct fps
+		float avgFPS = countedFrames / (fpsTimer.getTicks() / 1000.f);
+		if (avgFPS > 2000000)
+		{
+			avgFPS = 0;
+		}
 
 		mPhysicsManager->updatePhysics();
 
 		//mGraphicsManager->loadTexture("PATH");
-		mGraphicsManager->updateGraphics(timer);
+		mGraphicsManager->updateGraphics(timer, avgFPS);
+		++countedFrames;
 	}
 
 	return 0;
