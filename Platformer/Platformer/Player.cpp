@@ -9,7 +9,7 @@ Player::Player(const int x, const int y)
 {
 	mPosition = Vector3(x, y);
 	mHealth = 100.0f;
-	mSpeed = 0.1f;
+	mSpeed = 3.0f;
 
 	mHeight = 2.0f;
 	mWidth = 2.0f;

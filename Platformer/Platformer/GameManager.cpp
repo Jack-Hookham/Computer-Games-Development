@@ -62,11 +62,17 @@ int GameManager::gameLoop()
 	//FPS timer
 	Timer fpsTimer;
 
+	//The frames per second cap timer
+	Timer capTimer;
+
 	int countedFrames = 0;
 	fpsTimer.start();
 
 	while (!quit)
 	{
+		//Start cap timer at the start of each frame (each loop)
+		capTimer.start();
+
 		//Handle events on queue
 		while (SDL_PollEvent(&e) != 0)
 		{
@@ -181,6 +187,14 @@ int GameManager::gameLoop()
 		//mGraphicsManager->loadTexture("PATH");
 		mGraphicsManager->updateGraphics(timer, avgFPS);
 		++countedFrames;
+
+		//If frame finished early
+		int frameTicks = capTimer.getTicks();
+		if (frameTicks < SCREEN_TICKS_PER_FRAME)
+		{
+			//Wait remaining time
+			SDL_Delay(SCREEN_TICKS_PER_FRAME - frameTicks);
+		}
 	}
 
 	return 0;
