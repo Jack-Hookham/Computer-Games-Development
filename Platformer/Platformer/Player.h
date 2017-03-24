@@ -4,6 +4,7 @@
 
 #include "Vector3.h"
 #include "Camera.h"
+#include "Common.h"
 
 class Player
 {
@@ -32,9 +33,16 @@ public:
 	void setWidth(float width);
 
 	//Movement
+	void move();
 	void moveLeft();
 	void moveRight();
 	void jump();
+
+	void setVelX(float vel);
+	float getVelX();
+
+	void setVelY(float vel);
+	float getVelY();
 
 	bool movingLeft = false;
 	bool movingRight = false;
@@ -50,9 +58,10 @@ private:
 	float mHealth;
 	float mSpeed;
 
+	float mVelX;
+	float mVelY;
+
 	float mHeight;
 	float mWidth;
-
-
 };
 

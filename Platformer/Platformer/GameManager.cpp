@@ -56,22 +56,14 @@ int GameManager::gameLoop()
 	//Set text colour as black
 	SDL_Color textColour = { 0, 0, 0, 255 };
 
-	//Application timer
-	Timer timer;
-
-	//FPS timer
-	Timer fpsTimer;
-
-	//The frames per second cap timer
-	Timer capTimer;
-
 	int countedFrames = 0;
-	fpsTimer.start();
+
+	mFPSTimer.start();
 
 	while (!quit)
 	{
 		//Start cap timer at the start of each frame (each loop)
-		capTimer.start();
+		mCapTimer.start();
 
 		//Handle events on queue
 		while (SDL_PollEvent(&e) != 0)
@@ -94,44 +86,34 @@ int GameManager::gameLoop()
 					break;
 
 				case SDLK_s:
-					if (timer.isStarted())
+					if (mTimer.isStarted())
 					{
-						timer.stop();
+						mTimer.stop();
 					}
 					else
 					{
-						timer.start();
+						mTimer.start();
 					}
 					break;
 
 				case SDLK_p:
-					if (timer.isPaused())
+					if (mTimer.isPaused())
 					{
-						timer.unpause();
+						mTimer.unpause();
 					}
 					else
 					{
-						timer.pause();
+						mTimer.pause();
 					}
 					break;
 
 				case SDLK_r:
-					timer.restart();
+					mTimer.restart();
 					break;
 
-				case SDLK_a:
-					if (!mPlayer->movingLeft)
-					{
-						mPlayer->movingLeft = true;
-					}
-					break;
+				case SDLK_a: mPlayer->setVelX(-(mPlayer->getSpeed())); break;
 
-				case SDLK_d:
-					if (!mPlayer->movingRight)
-					{
-						mPlayer->movingRight = true;
-					}
-					break;
+				case SDLK_d: mPlayer->setVelX(mPlayer->getSpeed()); break;
 
 				case SDLK_SPACE:
 					mPlayer->jump();
@@ -166,17 +148,10 @@ int GameManager::gameLoop()
 			}
 		}
 
-		if (mPlayer->movingLeft)
-		{
-			mPlayer->moveLeft();
-		}
-		else if (mPlayer->movingRight)
-		{
-			mPlayer->moveRight();
-		}
+		mPlayer->move();
 
 		//Calculate and correct fps
-		float avgFPS = countedFrames / (fpsTimer.getTicks() / 1000.f);
+		float avgFPS = countedFrames / (mFPSTimer.getTicks() / 1000.f);
 		if (avgFPS > 2000000)
 		{
 			avgFPS = 0;
@@ -185,11 +160,11 @@ int GameManager::gameLoop()
 		mPhysicsManager->updatePhysics();
 
 		//mGraphicsManager->loadTexture("PATH");
-		mGraphicsManager->updateGraphics(timer, avgFPS);
+		mGraphicsManager->updateGraphics(mTimer, avgFPS);
 		++countedFrames;
 
 		//If frame finished early
-		int frameTicks = capTimer.getTicks();
+		int frameTicks = mCapTimer.getTicks();
 		if (frameTicks < SCREEN_TICKS_PER_FRAME)
 		{
 			//Wait remaining time
