@@ -12,6 +12,7 @@
 #include "GraphicsManager.h"
 #include "Player.h"
 #include "Timer.h"
+#include "InputManager.h"
 
 class GameManager
 {
@@ -38,6 +39,7 @@ private:
 	Player* mPlayer;
 	PhysicsManager* mPhysicsManager;
 	GraphicsManager* mGraphicsManager;
+	InputManager mInputManager;
 
 	//Application timer
 	Timer mTimer;
@@ -48,5 +50,7 @@ private:
 	//The frames per second cap timer
 	//MOVE THESE TIMERS
 	Timer mCapTimer;
+
+	bool manageInput();
 };
 

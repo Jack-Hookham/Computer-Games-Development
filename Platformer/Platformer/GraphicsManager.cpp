@@ -184,7 +184,7 @@ SDL_Texture* GraphicsManager::loadTexture(std::string path)
 void GraphicsManager::updateGraphics(Timer timer, float avgFPS)
 {
 	//Clear screen
-	SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_SetRenderDrawColor(mRenderer, 0x88, 0x88, 0x88, 0xFF);
 	SDL_RenderClear(mRenderer);
 
 	SDL_Color textColour = { 0, 0, 60, 255 };
@@ -232,7 +232,7 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS)
 	mTimeTextTexture->render((SCREEN_WIDTH - mPromptTextTexture->getWidth()) / 2, (SCREEN_HEIGHT - mPromptTextTexture->getHeight()) / 2);
 
 	fpsText.str("");
-	fpsText << "avgFPS: " << avgFPS;
+	fpsText << std::setprecision(2) << "avgFPS: " << avgFPS;
 
 	//Update fps texture with new fps
 	if (!mFPSTextTexture->loadFromRenderedText(mMainFont, fpsText.str().c_str(), textColour))

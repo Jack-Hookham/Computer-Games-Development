@@ -6,6 +6,7 @@
 #include <string>
 #include <cmath>
 #include <sstream>
+#include <iomanip>
 
 //#include "PlatformerCommon.h"
 #include "Player.h"

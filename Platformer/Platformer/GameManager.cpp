@@ -50,9 +50,6 @@ int GameManager::gameLoop()
 	//Main loop flag
 	bool quit = false;
 
-	//Event handler
-	SDL_Event e;
-
 	//Set text colour as black
 	SDL_Color textColour = { 0, 0, 0, 255 };
 
@@ -65,88 +62,7 @@ int GameManager::gameLoop()
 		//Start cap timer at the start of each frame (each loop)
 		mCapTimer.start();
 
-		//Handle events on queue
-		while (SDL_PollEvent(&e) != 0)
-		{
-			//User requests quit
-			if (e.type == SDL_QUIT)
-			{
-				quit = true;
-				break;
-			}
-
-			//User presses a key
-			else if (e.type == SDL_KEYDOWN)
-			{
-				//Select action based on key press
-				switch (e.key.keysym.sym)
-				{
-				case SDLK_ESCAPE:
-					quit = true;
-					break;
-
-				case SDLK_s:
-					if (mTimer.isStarted())
-					{
-						mTimer.stop();
-					}
-					else
-					{
-						mTimer.start();
-					}
-					break;
-
-				case SDLK_p:
-					if (mTimer.isPaused())
-					{
-						mTimer.unpause();
-					}
-					else
-					{
-						mTimer.pause();
-					}
-					break;
-
-				case SDLK_r:
-					mTimer.restart();
-					break;
-
-				case SDLK_a: mPlayer->setVelX(-(mPlayer->getSpeed())); break;
-
-				case SDLK_d: mPlayer->setVelX(mPlayer->getSpeed()); break;
-
-				case SDLK_SPACE:
-					mPlayer->jump();
-					break;
-
-				/*default:
-					gCurrentSurface = gKeyPressSurfaces[KEY_PRESS_SURFACE_DEFAULT];
-					break;*/
-				}
-			}
-			else if (e.type == SDL_KEYUP)
-			{
-				//Select action based on key release
-				switch (e.key.keysym.sym)
-				{
-				case SDLK_a:
-					mPlayer->movingLeft = false;
-					break;
-
-				case SDLK_d:
-					mPlayer->movingRight = false;
-					break;/*
-
-				case SDLK_SPACE:
-					mPlayer->jump();
-					break;*/
-
-					/*default:
-					gCurrentSurface = gKeyPressSurfaces[KEY_PRESS_SURFACE_DEFAULT];
-					break;*/
-				}
-			}
-		}
+		quit = manageInput();
 
 		mPlayer->move();
 
@@ -178,6 +94,149 @@ int GameManager::gameLoop()
 void GameManager::log(const std::string text)
 {
 	std::cout << "[GameManager] " << text << std::endl;
+}
+
+bool GameManager::manageInput()
+{
+	//Event handler
+	SDL_Event e;
+
+	//Handle events on queue
+	while (SDL_PollEvent(&e) != 0)
+	{
+		//User requests quit
+		if (e.type == SDL_QUIT)
+		{
+			return true;
+		}
+
+		//User presses a key
+		else if (e.type == SDL_KEYDOWN)
+		{
+			mInputManager.pressKey(e.key.keysym.sym);
+		}
+		else if (e.type == SDL_KEYUP)
+		{
+			mInputManager.releaseKey(e.key.keysym.sym);
+		}
+	}
+
+	//Process input
+	//Quit if escape pressed
+	if (mInputManager.isKeyPressed(SDLK_ESCAPE))
+	{
+		return true;
+	}
+
+	//Timers
+	if (mInputManager.isKeyPressed(SDLK_s))
+	{
+		if (mTimer.isStarted())
+		{
+			mTimer.stop();
+		}
+		else
+		{
+			mTimer.start();
+		}
+	}
+	if (mInputManager.isKeyPressed(SDLK_p))
+	{
+		if (mTimer.isPaused())
+		{
+			mTimer.unpause();
+		}
+		else
+		{
+			mTimer.pause();
+		}
+	}
+	if (mInputManager.isKeyPressed(SDLK_r))
+	{
+		mTimer.restart();
+	}
+
+	//Movement
+	if (mInputManager.isKeyPressed(SDLK_a))
+	{
+		mPlayer->setVelX(-(mPlayer->getSpeed()));
+	}
+	if (mInputManager.isKeyPressed(SDLK_d))
+	{
+		mPlayer->setVelX(mPlayer->getSpeed());
+	}
+	//if (!mInputManager.isKeyPressed(SDLK_a) && !mInputManager.isKeyPressed(SDLK_d))
+	//{
+	//	mPlayer->setVelX(0);
+	//}
+	//Select action based on key press
+	//switch (e.key.keysym.sym)
+	//{
+	//case SDLK_ESCAPE:
+	//	quit = true;
+	//	break;
+
+	//case SDLK_s:
+	//	if (mTimer.isStarted())
+	//	{
+	//		mTimer.stop();
+	//	}
+	//	else
+	//	{
+	//		mTimer.start();
+	//	}
+	//	break;
+
+	//case SDLK_p:
+	//	if (mTimer.isPaused())
+	//	{
+	//		mTimer.unpause();
+	//	}
+	//	else
+	//	{
+	//		mTimer.pause();
+	//	}
+	//	break;
+
+	//case SDLK_r:
+	//	mTimer.restart();
+	//	break;
+
+	//case SDLK_a: mPlayer->setVelX(-(mPlayer->getSpeed())); break;
+
+	//case SDLK_d: mPlayer->setVelX(mPlayer->getSpeed()); break;
+
+	//case SDLK_SPACE:
+	//	mPlayer->jump();
+	//	break;
+
+	///*default:
+	//	gCurrentSurface = gKeyPressSurfaces[KEY_PRESS_SURFACE_DEFAULT];
+	//	break;*/
+	//}
+
+//	if (mInputManager.isKeyPressed)
+
+	////Select action based on key release
+	//switch (e.key.keysym.sym)
+	//{
+	//case SDLK_a:
+	//	mPlayer->movingLeft = false;
+	//	break;
+
+	//case SDLK_d:
+	//	mPlayer->movingRight = false;
+	//	break;/*
+
+	//case SDLK_SPACE:
+	//	mPlayer->jump();
+	//	break;*/
+
+	//	/*default:
+	//	gCurrentSurface = gKeyPressSurfaces[KEY_PRESS_SURFACE_DEFAULT];
+	//	break;*/
+	//}
+	return false;
 }
 
 
