@@ -1,8 +1,11 @@
 #pragma once
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
+#include <Windows.h>
+
+#include <GL/glew.h>
+#include <SDL/SDL.h>
+#include <SDL_image/SDL_image.h>
+#include <SDL_ttf/SDL_ttf.h>
 #include <stdio.h>
 #include <string>
 #include <cmath>
