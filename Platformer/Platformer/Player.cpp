@@ -87,7 +87,7 @@ void Player::move()
 {
 	mPosition += Vector3(mVelX, mVelY, 0);
 
-	//If the dot went too far to the left or right
+	//If the player went too far to the left or right
 	if ((mPosition.getX() < 0) || (mPosition.getX() + mWidth > SCREEN_WIDTH))
 	{
 		//Move back

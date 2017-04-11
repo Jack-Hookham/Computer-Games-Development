@@ -165,10 +165,10 @@ bool GameManager::manageInput()
 	{
 		mPlayer->setVelX(mPlayer->getSpeed());
 	}
-	//if (!mInputManager.isKeyPressed(SDLK_a) && !mInputManager.isKeyPressed(SDLK_d))
-	//{
-	//	mPlayer->setVelX(0);
-	//}
+	if (!mInputManager.isKeyPressed(SDLK_a) && !mInputManager.isKeyPressed(SDLK_d))
+	{
+		mPlayer->setVelX(0);
+	}
 	//Select action based on key press
 	//switch (e.key.keysym.sym)
 	//{
