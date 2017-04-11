@@ -4,7 +4,6 @@ InputManager::InputManager()
 {
 }
 
-
 InputManager::~InputManager()
 {
 }
@@ -19,7 +18,8 @@ void InputManager::releaseKey(unsigned int keyID)
 	mKeyMap[keyID] = false;
 }
 
-bool InputManager::isKeyPressed(unsigned int keyID)
+//True if key is held down
+bool InputManager::isKeyDown(unsigned int keyID)
 {
 	auto key = mKeyMap.find(keyID);
 	//if key was found
@@ -29,4 +29,48 @@ bool InputManager::isKeyPressed(unsigned int keyID)
 		return key->second;
 	}
 	return false;
+}
+
+//True if key is pressed but not held
+bool InputManager::isKeyPressed(unsigned int keyID)
+{
+	if (isKeyDown(keyID) && !wasKeyDown(keyID)) 
+	{
+		return true;
+	}
+	return false;
+}
+
+bool InputManager::isKeyReleased(unsigned int keyID)
+{
+	if (!isKeyDown(keyID) && wasKeyDown(keyID))
+	{
+		return true;
+	}
+	return false;
+}
+
+
+//Copy current keymap to previous keymap
+void InputManager::update()
+{
+	for (auto& map : mKeyMap)
+	{
+		mPrevKeyMap[map.first] = map.second;
+	}
+}
+
+bool InputManager::wasKeyDown(unsigned int keyID)
+{
+	auto key = mPrevKeyMap.find(keyID);
+	if (key != mPrevKeyMap.end())
+	{
+		//Key found
+		return key->second;
+	}
+	else
+	{
+		//Key not found
+		return false;
+	}
 }

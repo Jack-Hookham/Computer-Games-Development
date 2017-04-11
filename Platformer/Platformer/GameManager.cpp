@@ -157,85 +157,26 @@ bool GameManager::manageInput()
 	}
 
 	//Movement
-	if (mInputManager.isKeyPressed(SDLK_a))
+	if (mInputManager.isKeyDown(SDLK_a))
 	{
 		mPlayer->setVelX(-(mPlayer->getSpeed()));
 	}
-	if (mInputManager.isKeyPressed(SDLK_d))
+	if (mInputManager.isKeyDown(SDLK_d))
 	{
 		mPlayer->setVelX(mPlayer->getSpeed());
 	}
-	if (!mInputManager.isKeyPressed(SDLK_a) && !mInputManager.isKeyPressed(SDLK_d))
+	if (!mInputManager.isKeyDown(SDLK_a) && !mInputManager.isKeyDown(SDLK_d))
 	{
 		mPlayer->setVelX(0);
 	}
-	//Select action based on key press
-	//switch (e.key.keysym.sym)
-	//{
-	//case SDLK_ESCAPE:
-	//	quit = true;
-	//	break;
-
-	//case SDLK_s:
-	//	if (mTimer.isStarted())
-	//	{
-	//		mTimer.stop();
-	//	}
-	//	else
-	//	{
-	//		mTimer.start();
-	//	}
-	//	break;
-
-	//case SDLK_p:
-	//	if (mTimer.isPaused())
-	//	{
-	//		mTimer.unpause();
-	//	}
-	//	else
-	//	{
-	//		mTimer.pause();
-	//	}
-	//	break;
-
-	//case SDLK_r:
-	//	mTimer.restart();
-	//	break;
-
-	//case SDLK_a: mPlayer->setVelX(-(mPlayer->getSpeed())); break;
-
-	//case SDLK_d: mPlayer->setVelX(mPlayer->getSpeed()); break;
 
 	//case SDLK_SPACE:
 	//	mPlayer->jump();
 	//	break;
 
-	///*default:
-	//	gCurrentSurface = gKeyPressSurfaces[KEY_PRESS_SURFACE_DEFAULT];
-	//	break;*/
-	//}
+	//Update the input manager - copys current input map to previous input map
+	mInputManager.update();
 
-//	if (mInputManager.isKeyPressed)
-
-	////Select action based on key release
-	//switch (e.key.keysym.sym)
-	//{
-	//case SDLK_a:
-	//	mPlayer->movingLeft = false;
-	//	break;
-
-	//case SDLK_d:
-	//	mPlayer->movingRight = false;
-	//	break;/*
-
-	//case SDLK_SPACE:
-	//	mPlayer->jump();
-	//	break;*/
-
-	//	/*default:
-	//	gCurrentSurface = gKeyPressSurfaces[KEY_PRESS_SURFACE_DEFAULT];
-	//	break;*/
-	//}
 	return false;
 }
 
