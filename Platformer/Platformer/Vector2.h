@@ -21,6 +21,9 @@ public:
 	float getX() const;
 	float getY() const;
 
+	void setX(float x);
+	void setY(float y);
+
 	//Using inline speeds up the program by avoiding function calling overhead
 	//cout is used a lot during testing so this improves performance
 	inline friend ostream& operator<<(ostream& out, const Vector2& v)

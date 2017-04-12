@@ -16,6 +16,7 @@
 #include "Player.h"
 #include "Texture.h"
 #include "Timer.h"
+#include "Sprite.h"
 //#include "GameManager.h"
 
 class GraphicsManager
@@ -34,14 +35,14 @@ public:
 	//Loads individual image as texture
 	SDL_Texture* loadTexture(std::string path);
 
-	//Log for GraphicsManager
-	void log(const std::string text);
-
 	void updateGraphics(Timer timer, float avgFPS);
 
 private:
-	int SCREEN_WIDTH;
-	int SCREEN_HEIGHT;
+	//Log for GraphicsManager
+	void log(const std::string text);
+
+	int mScreenWidth;
+	int mScreenHeight;
 
 	const float WORLD_TO_SCREEN = 10.0f;
 
@@ -50,6 +51,9 @@ private:
 
 	//The window renderer
 	SDL_Renderer* mRenderer = NULL;
+
+	//OpenGL context
+	//SDL_GLContext mContext;
 
 	Player* mPlayer;
 
@@ -63,5 +67,6 @@ private:
 	std::stringstream timeText;
 	std::stringstream fpsText;
 
+	Sprite mSprite;
 };
 

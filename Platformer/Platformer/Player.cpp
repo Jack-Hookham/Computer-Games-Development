@@ -2,12 +2,12 @@
 
 Player::Player()
 {
-	mPosition = Vector3(0, 0, 0);
+	mPosition = Vector2(0, 0);
 }
 
 Player::Player(const int x, const int y)
 {
-	mPosition = Vector3(x, y);
+	mPosition = Vector2(x, y);
 	mHealth = 100.0f;
 
 	mSpeed = 3.0f;
@@ -23,22 +23,22 @@ Player::~Player()
 {
 }
 
-Vector3 Player::getPosition()
+Vector2 Player::getPosition()
 {
 	return mPosition;
 }
 
 void Player::setPosition(const int x, const int y)
 {
-	mPosition = Vector3(x, y);
+	mPosition = Vector2(x, y);
 }
 
 void Player::setPosition(const int x, const int y, const int z)
 {
-	mPosition = Vector3(x, y, z);
+	mPosition = Vector2(x, y);
 }
 
-void Player::setPosition(const Vector3 position)
+void Player::setPosition(const Vector2 position)
 {
 	mPosition = position;
 }
@@ -85,27 +85,27 @@ void Player::setWidth(float width)
 
 void Player::move()
 {
-	mPosition += Vector3(mVelX, mVelY, 0);
+	mPosition += Vector2(mVelX, mVelY);
 
 	//If the player went too far to the left or right
 	if ((mPosition.getX() < 0) || (mPosition.getX() + mWidth > SCREEN_WIDTH))
 	{
 		//Move back
-		mPosition -= Vector3(mVelX, 0, 0);
+		mPosition -= Vector2(mVelX, 0);
 	}
 }
 
 void Player::moveLeft()
 {
 	log("Move Left");
-	mPosition += Vector3(-mSpeed, 0, 0);
+	mPosition += Vector2(-mSpeed, 0);
 	cout << mPosition << endl;
 };
 
 void Player::moveRight()
 {
 	log("Move Right");
-	mPosition += Vector3(mSpeed, 0, 0);
+	mPosition += Vector2(mSpeed, 0);
 	cout << mPosition << endl;
 }
 
@@ -137,4 +137,9 @@ float Player::getVelY()
 void Player::log(const std::string text)
 {
 	std::cout << "[Player] " << text << std::endl;
+}
+
+void Player::draw()
+{
+
 }

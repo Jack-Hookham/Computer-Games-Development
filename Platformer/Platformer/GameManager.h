@@ -23,16 +23,19 @@ public:
 	GameManager();
 	~GameManager();
 
+	//Run the game
+	int run();
+
+private:
 	//Start up SDL and create window
 	bool init();
 
 	//Main loop for the game
-	int gameLoop();
-
+	int gameLoop();	
+	
 	//Log for GameManager
 	void log(const std::string text);
 
-private:
 	const int SCREEN_WIDTH = 1280;
 	const int SCREEN_HEIGHT = 720;
 

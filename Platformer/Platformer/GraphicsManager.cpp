@@ -1,10 +1,10 @@
 #include "GraphicsManager.h"
 
-GraphicsManager::GraphicsManager(Player* player,  const int SCREEN_WIDTH, const int SCREEN_HEIGHT)
+GraphicsManager::GraphicsManager(Player* player,  const int screenWidth, const int screenHeight)
 {
 	mPlayer = player;
-	this->SCREEN_WIDTH = SCREEN_WIDTH;
-	this->SCREEN_HEIGHT = SCREEN_HEIGHT;
+	mScreenWidth = screenWidth;
+	mScreenHeight = screenHeight;
 }
 
 GraphicsManager::~GraphicsManager()
@@ -15,7 +15,7 @@ GraphicsManager::~GraphicsManager()
 	mTimeTextTexture->freeTexture();
 	mFPSTextTexture->freeTexture();
 
-	//Free global font
+	//Free font
 	TTF_CloseFont(mMainFont);
 	mMainFont = NULL;
 
@@ -37,7 +37,7 @@ bool GraphicsManager::initGraphics()
 	bool success = true;
 
 	//Initialise SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
 		const std::string text = "SDL could not Initialise! SDL Error: " + std::string(SDL_GetError());
 		log(text);
@@ -45,14 +45,20 @@ bool GraphicsManager::initGraphics()
 	}
 	else
 	{
+		//Use OpenGL 3.1 core
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
 		//Set texture filtering to linear
-		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
-		{
-			log("Warning: Linear texture filtering not enabled!");
-		}
+		//if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
+		//{
+		//	log("Warning: Linear texture filtering not enabled!");
+		//}
 
 		//Create window
-		mWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+		mWindow = SDL_CreateWindow("Platfomer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, mScreenWidth, mScreenHeight, 
+			SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 		if (mWindow == NULL)
 		{
 			const std::string text = "Window could not be created! SDL Error: " + std::string(SDL_GetError());
@@ -62,17 +68,50 @@ bool GraphicsManager::initGraphics()
 		else
 		{
 			//Create renderer for window
-			mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
-			if (mRenderer == NULL)
+			//mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
+			//if (mRenderer == NULL)
+			//{
+			//	const std::string text = "Renderer could not be created! SDL Error: " + std::string(SDL_GetError());
+			//	log(text);
+			//	success = false;
+			//}
+
+			//Create context
+			SDL_GLContext glContext = SDL_GL_CreateContext(mWindow);
+			if (glContext == NULL)
 			{
-				const std::string text = "Renderer could not be created! SDL Error: " + std::string(SDL_GetError());
+				const std::string text = "OpenGL context could not be created! SDL Error: " + std::string(SDL_GetError());
 				log(text);
 				success = false;
 			}
 			else
 			{
+				//Initialise GLEW
+				glewExperimental = GL_TRUE;
+				GLenum glewError = glewInit();
+				if (glewError != GLEW_OK)
+				{
+					log("Error initializing GLEW!");
+				}
+
+				SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+				glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+
+				//Use Vsync
+				//if (SDL_GL_SetSwapInterval(1) < 0)
+				//{
+				//	log("Warning: Unable to set VSync! SDL Error: " + std::string(SDL_GetError()));
+				//}
+
+				//Initialize OpenGL
+				//if (!initGL())
+				//{
+				//	log("Unable to initialize OpenGL!\n");
+				//	success = false;
+				//}
 				//Initialise renderer color
-				SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				//SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
 				//Initialise PNG loading
 				int imgFlags = IMG_INIT_PNG;
@@ -108,6 +147,8 @@ bool GraphicsManager::initGraphics()
 	{
 		log("Media successfully loaded");
 	}
+
+	mSprite.init(-1, -1, 1, 1);
 
 	return success;
 }
@@ -183,65 +224,74 @@ SDL_Texture* GraphicsManager::loadTexture(std::string path)
 
 void GraphicsManager::updateGraphics(Timer timer, float avgFPS)
 {
-	//Clear screen
-	SDL_SetRenderDrawColor(mRenderer, 0x88, 0x88, 0x88, 0xFF);
-	SDL_RenderClear(mRenderer);
+	//Set depth to 1.0
+	glClearDepth(1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	SDL_Color textColour = { 0, 0, 60, 255 };
+	mSprite.draw();
 
-	////Render red filled quad
-	//SDL_Rect fillRect = { SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-	//SDL_SetRenderDrawColor(mRenderer, 0xFF, 0x00, 0x00, 0xFF);
-	//SDL_RenderFillRect(mRenderer, &fillRect);
+	//Swap buffer and draw everything
+	SDL_GL_SwapWindow(mWindow);
 
-	////Render green outlined quad
-	//SDL_Rect outlineRect = { SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, SCREEN_WIDTH * 2 / 3, SCREEN_HEIGHT * 2 / 3 };
-	//SDL_SetRenderDrawColor(mRenderer, 0x00, 0xFF, 0x00, 0xFF);
-	//SDL_RenderDrawRect(mRenderer, &outlineRect);
+	////Clear screen
+	//SDL_SetRenderDrawColor(mRenderer, 0x88, 0x88, 0x88, 0xFF);
+	//SDL_RenderClear(mRenderer);
 
-	////Draw blue horizontal line
-	//SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
-	//SDL_RenderDrawLine(mRenderer, 0, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT / 2);
+	//SDL_Color textColour = { 0, 0, 60, 255 };
 
-	////Draw vertical line of yellow dots
-	//SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0x00, 0xFF);
-	//for (int i = 0; i < SCREEN_HEIGHT; i += 4)
+	//////Render red filled quad
+	////SDL_Rect fillRect = { mScreenWidth / 4, mScreenHeight / 4, mScreenWidth / 2, mScreenHeight / 2 };
+	////SDL_SetRenderDrawColor(mRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	////SDL_RenderFillRect(mRenderer, &fillRect);
+
+	//////Render green outlined quad
+	////SDL_Rect outlineRect = { mScreenWidth / 6, mScreenHeight / 6, mScreenWidth * 2 / 3, mScreenHeight * 2 / 3 };
+	////SDL_SetRenderDrawColor(mRenderer, 0x00, 0xFF, 0x00, 0xFF);
+	////SDL_RenderDrawRect(mRenderer, &outlineRect);
+
+	//////Draw blue horizontal line
+	////SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
+	////SDL_RenderDrawLine(mRenderer, 0, mScreenHeight / 2, mScreenWidth, mScreenHeight / 2);
+
+	//////Draw vertical line of yellow dots
+	////SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0x00, 0xFF);
+	////for (int i = 0; i < mScreenHeight; i += 4)
+	////{
+	////	SDL_RenderDrawPoint(mRenderer, mScreenWidth / 2, i);
+	////}
+
+	////Render player
+	//SDL_Rect playerRect = { mPlayer->getPosition().getX(), mPlayer->getPosition().getY(),
+	//						mPlayer->getWidth() * WORLD_TO_SCREEN, mPlayer->getHeight() * WORLD_TO_SCREEN };
+	//SDL_SetRenderDrawColor(mRenderer, 0x66, 0x00, 0xFF, 0xFF);
+	//SDL_RenderFillRect(mRenderer, &playerRect);
+	//
+	////Render text
+	//mTextTexture->render((mScreenWidth - mTextTexture->getWidth()) / 2, (mScreenHeight - mTextTexture->getHeight()) / 3);
+	//mPromptTextTexture->render((mScreenWidth - mPromptTextTexture->getWidth()) / 2, 0);
+
+	//timeText.str("");
+	//timeText << "Milliseconds since start time " << timer.getTicks();
+
+	////Update time texture with new time
+	//if (!mTimeTextTexture->loadFromRenderedText(mMainFont, timeText.str().c_str(), textColour))
 	//{
-	//	SDL_RenderDrawPoint(mRenderer, SCREEN_WIDTH / 2, i);
+	//	log("Unable to render time texture!");
 	//}
 
-	//Render player
-	SDL_Rect playerRect = { mPlayer->getPosition().getX(), mPlayer->getPosition().getY(),
-							mPlayer->getWidth() * WORLD_TO_SCREEN, mPlayer->getHeight() * WORLD_TO_SCREEN };
-	SDL_SetRenderDrawColor(mRenderer, 0x66, 0x00, 0xFF, 0xFF);
-	SDL_RenderFillRect(mRenderer, &playerRect);
-	
-	//Render text
-	mTextTexture->render((SCREEN_WIDTH - mTextTexture->getWidth()) / 2, (SCREEN_HEIGHT - mTextTexture->getHeight()) / 3);
-	mPromptTextTexture->render((SCREEN_WIDTH - mPromptTextTexture->getWidth()) / 2, 0);
+	//mTimeTextTexture->render((mScreenWidth - mPromptTextTexture->getWidth()) / 2, (mScreenHeight - mPromptTextTexture->getHeight()) / 2);
 
-	timeText.str("");
-	timeText << "Milliseconds since start time " << timer.getTicks();
+	//fpsText.str("");
+	//fpsText << std::setprecision(2) << "avgFPS: " << avgFPS;
 
-	//Update time texture with new time
-	if (!mTimeTextTexture->loadFromRenderedText(mMainFont, timeText.str().c_str(), textColour))
-	{
-		log("Unable to render time texture!");
-	}
+	////Update fps texture with new fps
+	//if (!mFPSTextTexture->loadFromRenderedText(mMainFont, fpsText.str().c_str(), textColour))
+	//{
+	//	log("Unable to render fps texture!");
+	//}
 
-	mTimeTextTexture->render((SCREEN_WIDTH - mPromptTextTexture->getWidth()) / 2, (SCREEN_HEIGHT - mPromptTextTexture->getHeight()) / 2);
+	//mFPSTextTexture->render((mScreenWidth - mFPSTextTexture->getWidth()) / 2, (mScreenHeight - mFPSTextTexture->getHeight()) / 1.5);
 
-	fpsText.str("");
-	fpsText << std::setprecision(2) << "avgFPS: " << avgFPS;
-
-	//Update fps texture with new fps
-	if (!mFPSTextTexture->loadFromRenderedText(mMainFont, fpsText.str().c_str(), textColour))
-	{
-		log("Unable to render fps texture!");
-	}
-
-	mFPSTextTexture->render((SCREEN_WIDTH - mFPSTextTexture->getWidth()) / 2, (SCREEN_HEIGHT - mFPSTextTexture->getHeight()) / 1.5);
-
-	//Update screen
-	SDL_RenderPresent(mRenderer);
+	////Update screen
+	//SDL_RenderPresent(mRenderer);
 }

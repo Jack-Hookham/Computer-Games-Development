@@ -4,9 +4,10 @@ int main(int argc, char* args[])
 {
 	GameManager gm = GameManager();
 
-	gm.init();
+	gm.run();
+	//gm.init();
 	//gm.loadMedia();
-	gm.gameLoop();
+	//gm.gameLoop();
 
 	return 0;
 }

@@ -15,6 +15,20 @@ GameManager::~GameManager()
 	delete mPlayer;
 }
 
+int GameManager::run()
+{
+	if (init())
+	{
+		log("All systems successfully initialised");
+	}
+	else
+	{
+		log("Failed to initialise 1 or more sub systems");
+	}
+
+	return gameLoop();
+}
+
 bool GameManager::init()
 {
 	//initialisation flag
@@ -109,15 +123,30 @@ bool GameManager::manageInput()
 		{
 			return true;
 		}
-
-		//User presses a key
+		//Key press
 		else if (e.type == SDL_KEYDOWN)
 		{
 			mInputManager.pressKey(e.key.keysym.sym);
 		}
+		//Key release
 		else if (e.type == SDL_KEYUP)
 		{
 			mInputManager.releaseKey(e.key.keysym.sym);
+		}
+		//Mouse motion
+		else if (e.type == SDL_MOUSEMOTION)
+		{
+			mInputManager.setMouseCoords((float)e.motion.x, (float)e.motion.y);
+		}
+		//Mouse button down
+		else if (e.type == SDL_MOUSEBUTTONDOWN)
+		{
+			mInputManager.pressKey(e.button.button);
+		}
+		//Mouse button up
+		else if (e.type == SDL_MOUSEBUTTONUP)
+		{
+			mInputManager.releaseKey(e.button.button);
 		}
 	}
 

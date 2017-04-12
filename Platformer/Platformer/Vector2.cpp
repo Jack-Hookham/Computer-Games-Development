@@ -37,6 +37,18 @@ float Vector2::getY() const
 	return y;
 }
 
+//x setter
+void Vector2::setX(float x)
+{
+	this->x = x;
+}
+
+//y setter
+void Vector2::setY(float y)
+{
+	this->y = y;
+}
+
 //Magnitude of this vector
 float Vector2::magnitude() const
 {

@@ -50,6 +50,18 @@ bool InputManager::isKeyReleased(unsigned int keyID)
 	return false;
 }
 
+void InputManager::setMouseCoords(float x, float y)
+{
+	mMouseCoords.setX(x);
+	mMouseCoords.setY(y);
+
+	//cout << mMouseCoords << endl;
+}
+
+Vector2 InputManager::getMouseCoords()
+{
+	return mMouseCoords;
+}
 
 //Copy current keymap to previous keymap
 void InputManager::update()
@@ -73,4 +85,9 @@ bool InputManager::wasKeyDown(unsigned int keyID)
 		//Key not found
 		return false;
 	}
+}
+
+void InputManager::log(const std::string text)
+{
+	std::cout << "[InputManager] " << text << std::endl;
 }

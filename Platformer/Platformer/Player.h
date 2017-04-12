@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 
-#include "Vector3.h"
+#include "Vector2.h"
 #include "Camera.h"
 #include "Common.h"
 
@@ -13,10 +13,10 @@ public:
 	Player(const int x, const int y);
 	~Player();
 
-	Vector3 getPosition();
+	Vector2 getPosition();
 	void setPosition(const int x, const int y);
 	void setPosition(const int x, const int y, const int z);
-	void setPosition(const Vector3 position);
+	void setPosition(const Vector2 position);
 
 	//Health
 	float getHealth();
@@ -48,11 +48,13 @@ public:
 	bool movingRight = false;
 	bool jumping = false;
 
+	void draw();
+
+private:
 	//Log for Player
 	void log(const std::string text);
 
-private:
-	Vector3 mPosition;
+	Vector2 mPosition;
 	Camera mCamera;
 
 	float mHealth;

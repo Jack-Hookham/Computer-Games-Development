@@ -15,6 +15,7 @@ public:
 
 	void updatePhysics();
 
+private:
 	//Log for PhysicsManager
 	void log(const std::string text);
 };
