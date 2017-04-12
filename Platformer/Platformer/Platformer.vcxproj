@@ -127,7 +127,9 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="fileManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="GraphicsManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Platformer.cpp" />
@@ -142,7 +144,9 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="fileManager.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="GraphicsManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="PhysicsManager.h" />

@@ -17,6 +17,7 @@
 #include "Texture.h"
 #include "Timer.h"
 #include "Sprite.h"
+#include "Shader.h"
 //#include "GameManager.h"
 
 class GraphicsManager
@@ -40,6 +41,8 @@ public:
 private:
 	//Log for GraphicsManager
 	void log(const std::string text);
+
+	void initShaders();
 
 	int mScreenWidth;
 	int mScreenHeight;
@@ -68,5 +71,7 @@ private:
 	std::stringstream fpsText;
 
 	Sprite mSprite;
+
+	Shader mColourShader;
 };
 

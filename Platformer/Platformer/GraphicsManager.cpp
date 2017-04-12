@@ -150,6 +150,8 @@ bool GraphicsManager::initGraphics()
 
 	mSprite.init(-1, -1, 1, 1);
 
+	initShaders();
+
 	return success;
 }
 
@@ -192,6 +194,13 @@ void GraphicsManager::log(const std::string text)
 	std::cout << "[GraphicsManager] " << text << std::endl;
 }
 
+void GraphicsManager::initShaders()
+{
+	mColourShader.compileShaders("../res/shaders/colorShading.vert", "../res/shaders/colorShading.frag");
+	mColourShader.addAttribute("vertexPosition");
+	mColourShader.linkShaders();
+}
+
 SDL_Texture* GraphicsManager::loadTexture(std::string path)
 {
 	//The final texture
@@ -228,7 +237,11 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS)
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	mColourShader.use();
+
 	mSprite.draw();
+
+	mColourShader.unuse();
 
 	//Swap buffer and draw everything
 	SDL_GL_SwapWindow(mWindow);
