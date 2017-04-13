@@ -149,7 +149,7 @@ bool GraphicsManager::initGraphics()
 
 	initShaders();
 
-	mSprite.init(-1, -1, 2, 2);
+	mSprite.init(-1, -1, 1, 1);
 
 	return success;
 }
@@ -170,19 +170,21 @@ bool GraphicsManager::loadMedia()
 	else
 	{
 		//Set text colour as black
-		SDL_Color textColour = { 0, 0, 0, 255 };
+		//SDL_Color textColour = { 0, 0, 0, 255 };
 
-		if (!mTextTexture->loadFromRenderedText(mMainFont, "This text is a texture", textColour))
-		{
-			log("Failed to render text texture!");
-			success = false;
-		}
+		//if (!mTextTexture->loadFromRenderedText(mMainFont, "This text is a texture", textColour))
+		//{
+		//	log("Failed to render text texture!");
+		//	success = false;
+		//}
 
-		if (!mPromptTextTexture->loadFromRenderedText(mMainFont, "Press Enter to Reset Start Time.", textColour))
-		{
-			log("Failed to render text texture!");
-			success = false;
-		}
+		//if (!mPromptTextTexture->loadFromRenderedText(mMainFont, "Press Enter to Reset Start Time.", textColour))
+		//{
+		//	log("Failed to render text texture!");
+		//	success = false;
+		//}
+
+		mPlayerTexture = ImageManager::loadTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 	}
 
 	return success;
@@ -195,9 +197,11 @@ void GraphicsManager::log(const std::string text)
 
 void GraphicsManager::initShaders()
 {
-	mColourShader.compileShaders("../res/shaders/colourVert.glsl", "../res/shaders/colourFrag.glsl");
+//	mColourShader.compileShaders("../res/shaders/colourVert.glsl", "../res/shaders/colourFrag.glsl");
+	mColourShader.compileShaders("../res/shaders/colorShading.vert", "../res/shaders/colorShading.frag");
 	mColourShader.addAttribute("vertexPosition");
-	mColourShader.addAttribute("vertexColour");
+	mColourShader.addAttribute("vertexColor");
+	mColourShader.addAttribute("vertexUV");
 	mColourShader.linkShaders();
 }
 
@@ -233,18 +237,23 @@ SDL_Texture* GraphicsManager::loadTexture(std::string path)
 
 void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 {
-	cout << timeMod << endl;
+	//cout << timeMod << endl;
 	//Set depth to 1.0
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	mColourShader.use();
-
-	GLuint timeLocation = mColourShader.getUniformLocation("timeMod");
-	glUniform1f(timeLocation, timeMod);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mPlayerTexture.id);
+	GLuint textureLocation = mColourShader.getUniformLocation("mySampler");
+	glUniform1i(textureLocation, 0);
+	
+	//GLuint timeLocation = mColourShader.getUniformLocation("timeMod");
+	//glUniform1f(timeLocation, timeMod);
 
 	mSprite.draw();
 
+	glBindTexture(GL_TEXTURE_2D, 0);
 	mColourShader.unuse();
 
 	//Swap buffer and draw everything

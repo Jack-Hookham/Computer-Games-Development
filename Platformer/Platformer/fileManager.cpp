@@ -1,12 +1,9 @@
 #include "fileManager.h"
 
-#include <filesystem>
-#include <fstream>
-
-// Namespace alias
+//Namespace alias
 namespace fs = std::tr2::sys;
 
-bool fileManager::readFile(std::string filePath, std::vector<unsigned char>& buffer) 
+bool FileManager::readFile(std::string filePath, std::vector<unsigned char>& buffer) 
 {
 	bool success = true;
 
@@ -36,12 +33,13 @@ bool fileManager::readFile(std::string filePath, std::vector<unsigned char>& buf
 	return success;
 }
 
-bool fileManager::readFile(std::string filePath, std::string& buffer)
+bool FileManager::readFile(std::string filePath, std::string& buffer)
 {
 	bool success = true;
 
 	std::ifstream file(filePath, std::ios::binary);
-	if (file.fail()) {
+	if (file.fail())
+	{
 		perror(filePath.c_str());
 		return false;
 	}
@@ -65,7 +63,7 @@ bool fileManager::readFile(std::string filePath, std::string& buffer)
 	return success;
 }
 
-bool fileManager::getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries) 
+bool FileManager::getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries)
 {
 	auto dpath = fs::path(path);
 	// Must be directory
@@ -85,7 +83,12 @@ bool fileManager::getDirectoryEntries(const char* path, std::vector<DirEntry>& r
 	return true;
 }
 
-bool fileManager::makeDirectory(const char* path) 
+bool FileManager::makeDirectory(const char* path)
 {
 	return fs::create_directory(fs::path(path));
+}
+
+void FileManager::log(const std::string text)
+{
+	std::cout << "[FileManager] " << text << std::endl;
 }

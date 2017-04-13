@@ -18,6 +18,8 @@
 #include "Timer.h"
 #include "Sprite.h"
 #include "Shader.h"
+#include "GLTexture.h"
+#include "ImageManager.h"
 //#include "GameManager.h"
 
 class GraphicsManager
@@ -73,5 +75,7 @@ private:
 	Sprite mSprite;
 
 	Shader mColourShader;
+
+	GLTexture mPlayerTexture;
 };
 

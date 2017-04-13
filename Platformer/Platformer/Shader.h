@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <string>
 #include <iostream>
+#include <vector>
+#include <fstream>
 
 //http://www.opengl.org/wiki/Shader_Compilation
 

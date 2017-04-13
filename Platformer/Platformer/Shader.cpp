@@ -1,10 +1,5 @@
 #include "Shader.h"
 
-#include <vector>
-#include <string>
-#include <iostream>
-#include <fstream>
-
 #include "fileManager.h"
 
 //The : mNumAttributes(0) ect. is an initialization list. It is a better way to initialize variables, since it avoids an extra copy. 
@@ -22,8 +17,8 @@ void Shader::compileShaders(const std::string& vertShaderPath, const std::string
 	std::string vertSource;
 	std::string fragSource;
 
-	fileManager::readFile(vertShaderPath, vertSource);
-	fileManager::readFile(fragShaderPath, fragSource);
+	FileManager::readFile(vertShaderPath, vertSource);
+	FileManager::readFile(fragShaderPath, fragSource);
 
 	compileShadersFromSource(vertSource.c_str(), fragSource.c_str());
 }
@@ -37,13 +32,15 @@ void Shader::compileShadersFromSource(const char* vertexSource, const char* frag
 
 	//Create the vertex shader object, and store its ID
 	mVertShaderID = glCreateShader(GL_VERTEX_SHADER);
-	if (mVertShaderID == 0) {
+	if (mVertShaderID == 0) 
+	{
 		log("Vertex shader failed to be created!");
 	}
 
 	//Create the fragment shader object, and store its ID
 	mFragShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-	if (mFragShaderID == 0) {
+	if (mFragShaderID == 0) 
+	{
 		log("Fragment shader failed to be created!");
 	}
 
