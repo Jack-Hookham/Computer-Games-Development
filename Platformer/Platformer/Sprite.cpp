@@ -45,7 +45,8 @@ void Sprite::init(float x, float y, float width, float height)
 		vertices[i].setColour(255, 0, 255, 255);
 	}
 
-	vertices[1].setColour(128, 255, 0, 128);
+	vertices[1].setColour(128, 255, 0, 255);
+	vertices[4].setColour(0, 128, 56, 255);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);

@@ -1,11 +1,11 @@
 #include "GameManager.h"
 
-GameManager::GameManager()
+GameManager::GameManager() : mScreenWidth(1280), mScreenHeight(720), mGameState(GameState::PLAY), mTimeMod(0)
 {
-	mPlayer = new Player(SCREEN_WIDTH/2, SCREEN_WIDTH/2);
+	mPlayer = new Player(mScreenWidth, mScreenHeight);
 
 	mPhysicsManager = new PhysicsManager();
-	mGraphicsManager = new GraphicsManager(mPlayer, SCREEN_WIDTH, SCREEN_HEIGHT);
+	mGraphicsManager = new GraphicsManager(mPlayer, mScreenWidth, mScreenHeight);
 }
 
 GameManager::~GameManager()
@@ -76,6 +76,8 @@ int GameManager::gameLoop()
 		//Start cap timer at the start of each frame (each loop)
 		mCapTimer.start();
 
+		mTimeMod += 0.01;
+
 		quit = manageInput();
 
 		mPlayer->move();
@@ -90,7 +92,7 @@ int GameManager::gameLoop()
 		mPhysicsManager->updatePhysics();
 
 		//mGraphicsManager->loadTexture("PATH");
-		mGraphicsManager->updateGraphics(mTimer, avgFPS);
+		mGraphicsManager->updateGraphics(mTimer, avgFPS, mTimeMod);
 		++countedFrames;
 
 		//If frame finished early

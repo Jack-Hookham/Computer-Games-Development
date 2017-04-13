@@ -17,6 +17,13 @@
 #include "Timer.h"
 #include "InputManager.h"
 
+enum class GameState
+{
+	MENU,
+	PLAY,
+	EXIT
+};
+
 class GameManager
 {
 public:
@@ -36,8 +43,10 @@ private:
 	//Log for GameManager
 	void log(const std::string text);
 
-	const int SCREEN_WIDTH = 1280;
-	const int SCREEN_HEIGHT = 720;
+	GameState mGameState;
+
+	int mScreenWidth;
+	int mScreenHeight;
 
 	const int SCREEN_FPS = 60;
 	const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
@@ -58,5 +67,9 @@ private:
 	Timer mCapTimer;
 
 	bool manageInput();
+
+	float mTimeMod;
+
+
 };
 

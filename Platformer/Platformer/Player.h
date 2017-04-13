@@ -4,7 +4,6 @@
 
 #include "Vector2.h"
 #include "Camera.h"
-#include "Common.h"
 
 class Player
 {
@@ -65,5 +64,8 @@ private:
 
 	float mHeight;
 	float mWidth;
+
+	float mScreenWidth;
+	float mScreenHeight;
 };
 

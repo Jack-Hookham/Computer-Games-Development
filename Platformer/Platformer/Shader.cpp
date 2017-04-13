@@ -22,8 +22,8 @@ void Shader::compileShaders(const std::string& vertShaderPath, const std::string
 	std::string vertSource;
 	std::string fragSource;
 
-	fileManager::readFileToBuffer(vertShaderPath, vertSource);
-	fileManager::readFileToBuffer(fragShaderPath, fragSource);
+	fileManager::readFile(vertShaderPath, vertSource);
+	fileManager::readFile(fragShaderPath, fragSource);
 
 	compileShadersFromSource(vertSource.c_str(), fragSource.c_str());
 }
@@ -102,7 +102,8 @@ void Shader::addAttribute(const std::string& attributeName)
 GLint Shader::getUniformLocation(const std::string& uniformName) 
 {
 	GLint location = glGetUniformLocation(mProgramID, uniformName.c_str());
-	if (location == GL_INVALID_INDEX) {
+	if (location == GL_INVALID_INDEX) 
+	{
 		log("Uniform " + uniformName + " not found in shader!");
 	}
 	return location;
@@ -113,7 +114,8 @@ void Shader::use()
 {
 	glUseProgram(mProgramID);
 	//enable all the attributes we added with addAttribute
-	for (int i = 0; i < mNumAttributes; i++) {
+	for (int i = 0; i < mNumAttributes; i++) 
+	{
 		glEnableVertexAttribArray(i);
 	}
 }
@@ -122,17 +124,20 @@ void Shader::use()
 void Shader::unuse() 
 {
 	glUseProgram(0);
-	for (int i = 0; i < mNumAttributes; i++) {
+	for (int i = 0; i < mNumAttributes; i++) 
+	{
 		glDisableVertexAttribArray(i);
 	}
 }
 
-void Shader::dispose() {
+void Shader::dispose() 
+{
 	if (mProgramID) glDeleteProgram(mProgramID);
 }
 
 //Compiles a single shader file
-void Shader::compileShader(const char* source, const std::string& name, GLuint id) {
+void Shader::compileShader(const char* source, const std::string& name, GLuint id) 
+{
 
 	//tell opengl that we want to use fileContents as the contents of the shader file
 	glShaderSource(id, 1, &source, nullptr);

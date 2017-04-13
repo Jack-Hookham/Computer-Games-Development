@@ -5,9 +5,12 @@ Player::Player()
 	mPosition = Vector2(0, 0);
 }
 
-Player::Player(const int x, const int y)
+Player::Player(int screenWidth, int screenHeight)
 {
-	mPosition = Vector2(x, y);
+	mScreenWidth = screenWidth;
+	mScreenHeight = screenHeight;
+
+	mPosition = Vector2(mScreenWidth / 2, mScreenHeight / 2);
 	mHealth = 100.0f;
 
 	mSpeed = 3.0f;
@@ -88,7 +91,7 @@ void Player::move()
 	mPosition += Vector2(mVelX, mVelY);
 
 	//If the player went too far to the left or right
-	if ((mPosition.getX() < 0) || (mPosition.getX() + mWidth > SCREEN_WIDTH))
+	if ((mPosition.getX() < 0) || (mPosition.getX() + mWidth > mScreenWidth))
 	{
 		//Move back
 		mPosition -= Vector2(mVelX, 0);

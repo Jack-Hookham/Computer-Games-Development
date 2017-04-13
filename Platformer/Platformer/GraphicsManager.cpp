@@ -135,7 +135,6 @@ bool GraphicsManager::initGraphics()
 			mPromptTextTexture = new Texture(mRenderer);
 			mTimeTextTexture = new Texture(mRenderer);
 			mFPSTextTexture = new Texture(mRenderer);
-
 		}
 	}
 
@@ -150,7 +149,7 @@ bool GraphicsManager::initGraphics()
 
 	initShaders();
 
-	mSprite.init(-1, -1, 1, 1);
+	mSprite.init(-1, -1, 2, 2);
 
 	return success;
 }
@@ -232,13 +231,17 @@ SDL_Texture* GraphicsManager::loadTexture(std::string path)
 	return newTexture;
 }
 
-void GraphicsManager::updateGraphics(Timer timer, float avgFPS)
+void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 {
+	cout << timeMod << endl;
 	//Set depth to 1.0
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	mColourShader.use();
+
+	GLuint timeLocation = mColourShader.getUniformLocation("timeMod");
+	glUniform1f(timeLocation, timeMod);
 
 	mSprite.draw();
 

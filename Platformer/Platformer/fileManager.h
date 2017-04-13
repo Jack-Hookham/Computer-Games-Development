@@ -11,10 +11,9 @@ struct DirEntry
 class fileManager
 {
 public:
-	static bool readFileToBuffer(std::string filePath, std::vector<unsigned char>& buffer);
-	static bool readFileToBuffer(std::string filePath, std::string& buffer);
-	// Gets all directory entries in the directory specified by path and stores in rvEntries.
-	// Returns false if path is not a directory.
+	static bool readFile(std::string filePath, std::vector<unsigned char>& buffer);
+	static bool readFile(std::string filePath, std::string& buffer);
+
 	static bool getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries);
 	static bool makeDirectory(const char* path);
 };

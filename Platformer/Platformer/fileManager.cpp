@@ -6,54 +6,63 @@
 // Namespace alias
 namespace fs = std::tr2::sys;
 
-bool fileManager::readFileToBuffer(std::string filePath, std::vector<unsigned char>& buffer) 
+bool fileManager::readFile(std::string filePath, std::vector<unsigned char>& buffer) 
 {
+	bool success = true;
+
 	std::ifstream file(filePath, std::ios::binary);
-	if (file.fail()) {
+	if (file.fail()) 
+	{
 		perror(filePath.c_str());
-		return false;
+		success = false;
+	}
+	else
+	{
+		//seek to the end
+		file.seekg(0, std::ios::end);
+
+		//Get the file size
+		unsigned int fileSize = (unsigned int)file.tellg();
+		file.seekg(0, std::ios::beg);
+
+		//Reduce the file size by any header bytes that might be present
+		fileSize -= (unsigned int)file.tellg();
+
+		buffer.resize(fileSize);
+		file.read((char *)&(buffer[0]), fileSize);
+		file.close();
 	}
 
-	//seek to the end
-	file.seekg(0, std::ios::end);
-
-	//Get the file size
-	unsigned int fileSize = (unsigned int)file.tellg();
-	file.seekg(0, std::ios::beg);
-
-	//Reduce the file size by any header bytes that might be present
-	fileSize -= (unsigned int)file.tellg();
-
-	buffer.resize(fileSize);
-	file.read((char *)&(buffer[0]), fileSize);
-	file.close();
-
-	return true;
+	return success;
 }
 
-bool fileManager::readFileToBuffer(std::string filePath, std::string& buffer) 
+bool fileManager::readFile(std::string filePath, std::string& buffer)
 {
+	bool success = true;
+
 	std::ifstream file(filePath, std::ios::binary);
 	if (file.fail()) {
 		perror(filePath.c_str());
 		return false;
 	}
+	else
+	{
+		//seek to the end
+		file.seekg(0, std::ios::end);
 
-	//seek to the end
-	file.seekg(0, std::ios::end);
+		//Get the file size
+		unsigned int fileSize = (unsigned int)file.tellg();
+		file.seekg(0, std::ios::beg);
 
-	//Get the file size
-	unsigned int fileSize = (unsigned int)file.tellg();
-	file.seekg(0, std::ios::beg);
+		//Reduce the file size by any header bytes that might be present
+		fileSize -= (unsigned int)file.tellg();
 
-	//Reduce the file size by any header bytes that might be present
-	fileSize -= (unsigned int)file.tellg();
+		buffer.resize(fileSize);
+		file.read((char *)&(buffer[0]), fileSize);
+		file.close();
+	}
 
-	buffer.resize(fileSize);
-	file.read((char *)&(buffer[0]), fileSize);
-	file.close();
-
-	return true;
+	return success;
 }
 
 bool fileManager::getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries) 

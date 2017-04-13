@@ -36,7 +36,7 @@ public:
 	//Loads individual image as texture
 	SDL_Texture* loadTexture(std::string path);
 
-	void updateGraphics(Timer timer, float avgFPS);
+	void updateGraphics(Timer timer, float avgFPS, float timeMod);
 
 private:
 	//Log for GraphicsManager
