@@ -15,5 +15,7 @@ void main(void) {
 	gl_Position.w = 1.0;
 	
 	OUT.colour		= colour;
-	OUT.texCoord 	= texCoord;
+	
+	//flip the texCoord
+	OUT.texCoord 	= vec2(texCoord.x, 1.0 - texCoord.y);
 }
