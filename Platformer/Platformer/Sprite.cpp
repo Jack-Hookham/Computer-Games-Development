@@ -1,5 +1,12 @@
 #include "Sprite.h"
 
+enum MeshBuffer
+{
+	VERTEX_BUFFER,
+	COLOUR_BUFFER,
+	TEXTURE_BUFFER,
+};
+
 Sprite::Sprite()
 {
 	vboID = 0;
@@ -65,20 +72,22 @@ void Sprite::init(float x, float y, float width, float height)
 //Draw the sprite on the screen
 void Sprite::draw()
 {
-
 	glBindBuffer(GL_ARRAY_BUFFER, vboID);
 
-	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(VERTEX_BUFFER);
+	glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+	
+	glEnableVertexAttribArray(COLOUR_BUFFER);
+	glVertexAttribPointer(COLOUR_BUFFER, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, colour));
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, colour));
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+	glEnableVertexAttribArray(TEXTURE_BUFFER);
+	glVertexAttribPointer(TEXTURE_BUFFER, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(VERTEX_BUFFER);
+	glDisableVertexAttribArray(COLOUR_BUFFER);
+	glDisableVertexAttribArray(TEXTURE_BUFFER);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

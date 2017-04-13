@@ -8,13 +8,12 @@ in Vertex	{
 	vec2 texCoord;
 } IN;
 
-out vec4 fragColour;
-out vec2 texCoord;
+out vec4 colour;
 
-void main(void){
-
-	vec4 texColour = texture(mySampler, texCoord);
-	fragColour = IN.colour * texColour;
+void main() {
+    
+    vec4 textureColor = texture(mySampler, IN.texCoord);
+    colour = IN.colour * textureColor;
 
 //	fragColour = IN.colour + vec4(1.0 * (cos(timeMod) + 1.0) * 0.5,
 //								  1.0 * (cos(timeMod + 2.0) + 1.0) * 0.5,

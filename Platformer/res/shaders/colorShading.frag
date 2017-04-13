@@ -1,23 +1,16 @@
-#version 130
-//The fragment shader operates on each pixel in a given polygon
-
-in vec2 fragmentPosition;
-in vec4 fragmentColor;
-in vec2 fragmentUV;
-
-//This is the 3 component float vector that gets outputted to the screen
-//for each pixel.
-out vec4 color;
+#version 150
 
 uniform sampler2D mySampler;
 
-void main() {
+in Vertex	{
+	vec4 colour;
+	vec2 texCoord;
+} IN;
 
-    //cos(x) returns a number between -1 and 1. To convert it into the range 0 to 1
-    //you simply do (cos(x) + 1.0) * 0.5
+out vec4 colour;
+
+void main() {
     
-    vec4 textureColor = texture(mySampler, fragmentUV);
-    
-    //Make crazy colors using time and position!
-    color = fragmentColor * textureColor;
+    vec4 textureColor = texture(mySampler, IN.texCoord);
+    colour = IN.colour * textureColor;
 }

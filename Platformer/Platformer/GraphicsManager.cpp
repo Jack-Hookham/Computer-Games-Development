@@ -149,7 +149,7 @@ bool GraphicsManager::initGraphics()
 
 	initShaders();
 
-	mSprite.init(-1, -1, 1, 1);
+	mSprite.init(-1.0f, -1.0f, 1.0f, 1.0f);
 
 	return success;
 }
@@ -197,11 +197,12 @@ void GraphicsManager::log(const std::string text)
 
 void GraphicsManager::initShaders()
 {
-//	mColourShader.compileShaders("../res/shaders/colourVert.glsl", "../res/shaders/colourFrag.glsl");
-	mColourShader.compileShaders("../res/shaders/colorShading.vert", "../res/shaders/colorShading.frag");
-	mColourShader.addAttribute("vertexPosition");
-	mColourShader.addAttribute("vertexColor");
-	mColourShader.addAttribute("vertexUV");
+	mColourShader.compileShaders("../res/shaders/colourVert.glsl", "../res/shaders/colourFrag.glsl");
+//	mColourShader.compileShaders("../res/shaders/colorShading.vert", "../res/shaders/colorShading.frag");
+
+	mColourShader.addAttribute("position");
+	mColourShader.addAttribute("colour");
+	mColourShader.addAttribute("texCoord");
 	mColourShader.linkShaders();
 }
 
