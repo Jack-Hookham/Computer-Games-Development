@@ -6,7 +6,8 @@
 // Namespace alias
 namespace fs = std::tr2::sys;
 
-bool fileManager::readFileToBuffer(std::string filePath, std::vector<unsigned char>& buffer) {
+bool fileManager::readFileToBuffer(std::string filePath, std::vector<unsigned char>& buffer) 
+{
 	std::ifstream file(filePath, std::ios::binary);
 	if (file.fail()) {
 		perror(filePath.c_str());
@@ -30,7 +31,8 @@ bool fileManager::readFileToBuffer(std::string filePath, std::vector<unsigned ch
 	return true;
 }
 
-bool fileManager::readFileToBuffer(std::string filePath, std::string& buffer) {
+bool fileManager::readFileToBuffer(std::string filePath, std::string& buffer) 
+{
 	std::ifstream file(filePath, std::ios::binary);
 	if (file.fail()) {
 		perror(filePath.c_str());
@@ -54,12 +56,14 @@ bool fileManager::readFileToBuffer(std::string filePath, std::string& buffer) {
 	return true;
 }
 
-bool fileManager::getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries) {
+bool fileManager::getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries) 
+{
 	auto dpath = fs::path(path);
 	// Must be directory
 	if (!fs::is_directory(dpath)) return false;
 
-	for (auto it = fs::directory_iterator(dpath); it != fs::directory_iterator(); ++it) {
+	for (auto it = fs::directory_iterator(dpath); it != fs::directory_iterator(); ++it) 
+	{
 		rvEntries.emplace_back();
 		rvEntries.back().path = it->path().string();
 		if (is_directory(it->path())) {
@@ -72,6 +76,7 @@ bool fileManager::getDirectoryEntries(const char* path, std::vector<DirEntry>& r
 	return true;
 }
 
-bool fileManager::makeDirectory(const char* path) {
+bool fileManager::makeDirectory(const char* path) 
+{
 	return fs::create_directory(fs::path(path));
 }

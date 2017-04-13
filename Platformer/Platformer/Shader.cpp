@@ -93,7 +93,7 @@ void Shader::linkShaders()
 	glDeleteShader(mFragShaderID);
 }
 
-//Adds an attribute to our shader. SHould be called between compiling and linking.
+//Adds an attribute to our shader
 void Shader::addAttribute(const std::string& attributeName)
 {
 	glBindAttribLocation(mProgramID, mNumAttributes++, attributeName.c_str());
@@ -149,17 +149,15 @@ void Shader::compileShader(const char* source, const std::string& name, GLuint i
 		GLint maxLength = 0;
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
 
-		//The maxLength includes the NULL character
 		std::vector<char> errorLog(maxLength);
 		glGetShaderInfoLog(id, maxLength, &maxLength, &errorLog[0]);
 
-		//Provide the infolog in whatever manor you deem best.
-		//Exit with failure.
 		glDeleteShader(id); //Don't leak the shader.
 
-							//Print error log and quit
-		std::printf("%s\n", &(errorLog[0]));
+		//Print error log and quit
+		const std::string error = &(errorLog[0]);
 		log("Shader " + name + " failed to compile");
+		log(error);
 	}
 }
 

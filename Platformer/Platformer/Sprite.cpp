@@ -26,31 +26,29 @@ void Sprite::init(float x, float y, float width, float height)
 		glGenBuffers(1, &vboID);
 	}
 
-
-	float vertexData[12];
+	//Create a vertex struct to hold the vertex data for a quad
+	Vertex vertices[6];
 
 	//First triangle
-	vertexData[0] = x + width;
-	vertexData[1] = y + height;
-
-	vertexData[2] = x;
-	vertexData[3] = y + height;
-
-	vertexData[4] = x;
-	vertexData[5] = y;
+	vertices[0].setPosition(x + width, y + height);
+	vertices[1].setPosition(x, y + height);
+	vertices[2].setPosition(x, y);
 
 	//Second triangle
-	vertexData[6] = x;
-	vertexData[7] = y;
+	vertices[3].setPosition(x, y);
+	vertices[4].setPosition(x + width, y);
+	vertices[5].setPosition(x + width, y + height);
 
-	vertexData[8] = x + width;
-	vertexData[9] = y;
+	//Set the colour of each vertex
+	for (int i = 0; i < 6; i++)
+	{
+		vertices[i].setColour(255, 0, 255, 255);
+	}
 
-	vertexData[10] = x + width;
-	vertexData[11] = y + height;
+	vertices[1].setColour(128, 255, 0, 128);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -62,7 +60,8 @@ void Sprite::draw()
 
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+	glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, colour));
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 

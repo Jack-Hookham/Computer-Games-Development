@@ -1,6 +1,4 @@
-#version 150 core
-
-//Basic fragment shader
+#version 150
 
 in Vertex	{
 	vec4 colour;
@@ -8,8 +6,7 @@ in Vertex	{
 } IN;
 
 out vec4 fragColour;
-out vec2 texCoord;
 
-void main(void)	{	
+void main(void){
 	fragColour = IN.colour;
 }

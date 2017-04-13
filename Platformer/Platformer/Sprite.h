@@ -1,6 +1,9 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <cstddef>
+
+#include "Vertex.h"
 
 class Sprite
 {
