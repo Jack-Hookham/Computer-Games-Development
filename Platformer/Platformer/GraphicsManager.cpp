@@ -252,8 +252,8 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 	GLuint textureLocation = mColourShader.getUniformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 	
-	//GLuint timeLocation = mColourShader.getUniformLocation("timeMod");
-	//glUniform1f(timeLocation, timeMod);
+	GLuint timeLocation = mColourShader.getUniformLocation("timeMod");
+	glUniform1f(timeLocation, timeMod);
 
 	for (int i = 0; i < mSprites.size(); i++)
 	{
