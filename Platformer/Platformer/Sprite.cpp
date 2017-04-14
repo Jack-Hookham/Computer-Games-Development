@@ -21,12 +21,13 @@ Sprite::~Sprite()
 	}
 }
 
-void Sprite::init(float x, float y, float width, float height)
+void Sprite::init(float x, float y, float width, float height, std::string texturePath)
 {
 	mX = x;
 	mY = y;
 	mWidth = width;
 	mHeight = height;
+	mTexture = ResourceManager::getTexture(texturePath);
 
 	if (vboID == 0)
 	{
@@ -72,6 +73,8 @@ void Sprite::init(float x, float y, float width, float height)
 //Draw the sprite on the screen
 void Sprite::draw()
 {
+	glBindTexture(GL_TEXTURE_2D, mTexture.id);
+
 	glBindBuffer(GL_ARRAY_BUFFER, vboID);
 
 	glEnableVertexAttribArray(VERTEX_BUFFER);

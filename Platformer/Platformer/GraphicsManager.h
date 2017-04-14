@@ -11,6 +11,7 @@
 #include <cmath>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 
 //#include "PlatformerCommon.h"
 #include "Player.h"
@@ -72,10 +73,8 @@ private:
 	std::stringstream timeText;
 	std::stringstream fpsText;
 
-	Sprite mSprite;
+	std::vector<Sprite*> mSprites;
 
 	Shader mColourShader;
-
-	GLTexture mPlayerTexture;
 };
 

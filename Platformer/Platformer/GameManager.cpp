@@ -83,7 +83,7 @@ int GameManager::gameLoop()
 		mPlayer->move();
 
 		//Calculate and correct fps
-		float avgFPS = countedFrames / (mFPSTimer.getTicks() / 1000.f);
+		float avgFPS = countedFrames / (mFPSTimer.getTicks() / 1000.0f);
 		if (avgFPS > 2000000)
 		{
 			avgFPS = 0;

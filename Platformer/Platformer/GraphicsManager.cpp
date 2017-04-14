@@ -149,7 +149,11 @@ bool GraphicsManager::initGraphics()
 
 	initShaders();
 
-	mSprite.init(-1.0f, -1.0f, 1.0f, 1.0f);
+	mSprites.push_back(new Sprite());
+	mSprites.back()->init(-1.0f, -1.0f, 1.0f, 1.0f, "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+
+	mSprites.push_back(new Sprite());
+	mSprites.back()->init(0.0f, -1.0f, 1.0f, 1.0f, "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 
 	return success;
 }
@@ -184,7 +188,7 @@ bool GraphicsManager::loadMedia()
 		//	success = false;
 		//}
 
-		mPlayerTexture = ImageManager::loadTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+		//mPlayerTexture = ImageManager::loadTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 	}
 
 	return success;
@@ -245,14 +249,16 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 
 	mColourShader.use();
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, mPlayerTexture.id);
 	GLuint textureLocation = mColourShader.getUniformLocation("mySampler");
 	glUniform1i(textureLocation, 0);
 	
 	//GLuint timeLocation = mColourShader.getUniformLocation("timeMod");
 	//glUniform1f(timeLocation, timeMod);
 
-	mSprite.draw();
+	for (int i = 0; i < mSprites.size(); i++)
+	{
+		mSprites[i]->draw();
+	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	mColourShader.unuse();
