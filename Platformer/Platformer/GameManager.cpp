@@ -192,16 +192,41 @@ bool GameManager::manageInput()
 	//Movement
 	if (mInputManager.isKeyDown(SDLK_a))
 	{
-		mPlayer->setVelX(-(mPlayer->getSpeed()));
+		//mPlayer->setVelX(-(mPlayer->getSpeed()));
+		mGraphicsManager->translateCamera(glm::vec2(CAMERA_SPEED, 0.0f));
 	}
 	if (mInputManager.isKeyDown(SDLK_d))
 	{
-		mPlayer->setVelX(mPlayer->getSpeed());
+		//mPlayer->setVelX(mPlayer->getSpeed());
+		mGraphicsManager->translateCamera(glm::vec2(-CAMERA_SPEED, 0.0f));
 	}
-	if (!mInputManager.isKeyDown(SDLK_a) && !mInputManager.isKeyDown(SDLK_d))
+
+	if (mInputManager.isKeyDown(SDLK_w))
 	{
-		mPlayer->setVelX(0);
+		mGraphicsManager->translateCamera(glm::vec2(0.0f, -CAMERA_SPEED));
 	}
+
+	if (mInputManager.isKeyDown(SDLK_s))
+	{
+		mGraphicsManager->translateCamera(glm::vec2(0.0f, CAMERA_SPEED));
+	}
+
+	//if (!mInputManager.isKeyDown(SDLK_a) && !mInputManager.isKeyDown(SDLK_d))
+	//{
+	//	mPlayer->setVelX(0);
+	//}
+
+	if (mInputManager.isKeyDown(SDLK_q))
+	{
+		//zoom in
+		mGraphicsManager->setCameraScale(SCALE_SPEED);
+	}
+	if (mInputManager.isKeyDown(SDLK_e))
+	{
+		//zoom out
+		mGraphicsManager->setCameraScale(-SCALE_SPEED);
+	}
+
 
 	//case SDLK_SPACE:
 	//	mPlayer->jump();

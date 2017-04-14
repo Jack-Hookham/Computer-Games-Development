@@ -7,9 +7,8 @@ enum MeshBuffer
 	TEXTURE_BUFFER,
 };
 
-Sprite::Sprite()
+Sprite::Sprite() : vboID(0)
 {
-	vboID = 0;
 }
 
 

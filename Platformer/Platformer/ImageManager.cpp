@@ -25,7 +25,6 @@ GLTexture ImageManager::loadTexture(std::string filePath)
 		log("decodePNG error code: " + std::to_string(errorCode));
 	}
 
-
 	glGenTextures(1, &(texture.id));
 	//Bind
 	glBindTexture(GL_TEXTURE_2D, texture.id);

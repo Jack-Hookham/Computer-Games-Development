@@ -1,10 +1,8 @@
 #include "GraphicsManager.h"
 
-GraphicsManager::GraphicsManager(Player* player,  const int screenWidth, const int screenHeight)
+GraphicsManager::GraphicsManager(Player* player,  const int screenWidth, const int screenHeight) 
+	: mPlayer(player), mScreenWidth(screenWidth), mScreenHeight(screenHeight)
 {
-	mPlayer = player;
-	mScreenWidth = screenWidth;
-	mScreenHeight = screenHeight;
 }
 
 GraphicsManager::~GraphicsManager()
@@ -52,8 +50,10 @@ bool GraphicsManager::initGraphics()
 		}
 		else
 		{
+			//Initialise the camera
+			mCamera.initCamera(mScreenWidth, mScreenHeight);
 
-			//Initialize OpenGL
+			//Initialise OpenGL
 			//if (!initGL())
 			//{
 			//	log("Unable to initialize OpenGL!\n");
@@ -133,10 +133,10 @@ bool GraphicsManager::loadMedia()
 
 		//mPlayerTexture = ImageManager::loadTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 		mSprites.push_back(new Sprite());
-		mSprites.back()->init(-1.0f, -1.0f, 1.0f, 1.0f, "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+		mSprites.back()->init(-1.0f, -1.0f, mScreenWidth / 2, mScreenWidth / 2, "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 
 		mSprites.push_back(new Sprite());
-		mSprites.back()->init(0.0f, -1.0f, 1.0f, 1.0f, "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+		mSprites.back()->init(mScreenWidth / 2, -1.0f, mScreenWidth / 2, mScreenWidth / 2, "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 	}
 
 	return success;
@@ -190,6 +190,8 @@ void GraphicsManager::initShaders()
 
 void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 {
+	mCamera.updateCamera();
+
 	//cout << timeMod << endl;
 	//Set depth to 1.0
 	glClearDepth(1.0);
@@ -203,6 +205,10 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 	
 	GLuint timeLocation = mColourShader.getUniformLocation("timeMod");
 	glUniform1f(timeLocation, timeMod);
+
+	GLuint projMatrixLocation = mColourShader.getUniformLocation("projMatrix");
+	glm::mat4 cameraMatrix = mCamera.getCamerMatrix();
+	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 	for (int i = 0; i < mSprites.size(); i++)
 	{
@@ -276,4 +282,14 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 
 	////Update screen
 	//SDL_RenderPresent(mRenderer);
+}
+
+void GraphicsManager::translateCamera(glm::vec2 translation)
+{
+	mCamera.setPosition(mCamera.getPosition() + translation);
+}
+
+void GraphicsManager::setCameraScale(float scale)
+{
+	mCamera.setScale(mCamera.getScale() + scale);
 }

@@ -21,6 +21,7 @@
 #include "GLTexture.h"
 #include "ImageManager.h"
 #include "Window.h"
+#include "Camera.h"
 
 class GraphicsManager
 {
@@ -40,6 +41,9 @@ public:
 
 	void updateGraphics(Timer timer, float avgFPS, float timeMod);
 
+	void translateCamera(glm::vec2 translation);
+	void setCameraScale(float scale);
+
 private:
 	//Log for GraphicsManager
 	void log(const std::string text);
@@ -53,6 +57,9 @@ private:
 
 	//The window we'll be rendering to
 	Window mWindow;
+
+	//Camera for the window
+	Camera mCamera;
 
 	Player* mPlayer;
 

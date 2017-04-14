@@ -51,6 +51,9 @@ private:
 	int mMaxFPS = 60;
 	float mScreenTicksPerFrame = 1000 / mMaxFPS;
 
+	const float CAMERA_SPEED = 10.0f;
+	const float SCALE_SPEED = 0.01f;
+
 	Player* mPlayer;
 	PhysicsManager* mPhysicsManager;
 	GraphicsManager* mGraphicsManager;
