@@ -48,8 +48,8 @@ private:
 	int mScreenWidth;
 	int mScreenHeight;
 
-	const int SCREEN_FPS = 60;
-	const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
+	int mMaxFPS = 60;
+	float mScreenTicksPerFrame = 1000 / mMaxFPS;
 
 	Player* mPlayer;
 	PhysicsManager* mPhysicsManager;
@@ -63,7 +63,6 @@ private:
 	Timer mFPSTimer;
 
 	//The frames per second cap timer
-	//MOVE THESE TIMERS
 	Timer mCapTimer;
 
 	bool manageInput();

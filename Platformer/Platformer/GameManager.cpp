@@ -97,10 +97,12 @@ int GameManager::gameLoop()
 
 		//If frame finished early
 		int frameTicks = mCapTimer.getTicks();
-		if (frameTicks < SCREEN_TICKS_PER_FRAME)
+		if (frameTicks < mScreenTicksPerFrame)
+		//mMaxFPS = 60;
+		//float mScreenTicksPerFrame
 		{
 			//Wait remaining time
-			SDL_Delay(SCREEN_TICKS_PER_FRAME - frameTicks);
+			SDL_Delay(mScreenTicksPerFrame - frameTicks);
 		}
 	}
 

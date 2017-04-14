@@ -13,7 +13,6 @@
 #include <iomanip>
 #include <vector>
 
-//#include "PlatformerCommon.h"
 #include "Player.h"
 #include "Texture.h"
 #include "Timer.h"
@@ -21,7 +20,7 @@
 #include "Shader.h"
 #include "GLTexture.h"
 #include "ImageManager.h"
-//#include "GameManager.h"
+#include "Window.h"
 
 class GraphicsManager
 {
@@ -53,28 +52,29 @@ private:
 	const float WORLD_TO_SCREEN = 10.0f;
 
 	//The window we'll be rendering to
-	SDL_Window* mWindow = NULL;
-
-	//The window renderer
-	SDL_Renderer* mRenderer = NULL;
-
-	//OpenGL context
-	//SDL_GLContext mContext;
+	Window mWindow;
 
 	Player* mPlayer;
-
-	TTF_Font* mMainFont;
-	Texture* mTextTexture;
-	Texture* mPromptTextTexture;
-	Texture* mTimeTextTexture;
-	Texture* mFPSTextTexture;
-
-	//In memory text stream
-	std::stringstream timeText;
-	std::stringstream fpsText;
 
 	std::vector<Sprite*> mSprites;
 
 	Shader mColourShader;
+	//The window renderer
+	//SDL_Renderer* mRenderer = NULL;
+
+	//OpenGL context
+	//SDL_GLContext mContext;
+
+	//TTF_Font* mMainFont;
+	//Texture* mTextTexture;
+	//Texture* mPromptTextTexture;
+	//Texture* mTimeTextTexture;
+	//Texture* mFPSTextTexture;
+
+	//In memory text stream
+	//std::stringstream timeText;
+	//std::stringstream fpsText;
+
+
 };
 
