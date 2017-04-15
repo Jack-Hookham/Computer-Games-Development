@@ -65,6 +65,8 @@ private:
 
 	Player* mPlayer;
 
+	std::vector<Sprite*> mSprites;
+
 	SpriteBatch mSpriteBatch;
 
 	Shader mColourShader;

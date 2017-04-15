@@ -35,7 +35,7 @@ void SpriteBatch::end()
 //y = y coord
 //z = width
 //w = height
-void SpriteBatch::draw(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, const Colour& colour, float depth)
+void SpriteBatch::draw(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
 {
 	Glyph* newGlyph = new Glyph;
 

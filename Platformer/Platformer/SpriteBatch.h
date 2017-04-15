@@ -5,10 +5,11 @@
 #include <vector>
 #include <algorithm>
 
-#include "Glyph.h"
+
 #include "Vertex.h"
 #include "Sprite.h"
-#include "RenderBatch.h"
+//#include "Glyph.h"
+//#include "RenderBatch.h"
 
 //Type of sorting used for sorting the vector of glyphs
 enum GlyphSortType
@@ -17,6 +18,28 @@ enum GlyphSortType
 	FRONT_TO_BACK,
 	BACK_TO_FRONT,
 	TEXTURE
+};
+
+struct Glyph
+{
+	GLuint texture;
+	float depth;
+
+	Vertex topLeft;
+	Vertex bottomLeft;
+	Vertex topRight;
+	Vertex bottomRight;
+};
+
+// Each render batch is used for a single draw call
+class RenderBatch {
+public:
+	RenderBatch(GLuint Offset, GLuint NumVertices, GLuint Texture) : offset(Offset),
+		numVertices(NumVertices), texture(Texture) {
+	}
+	GLuint offset;
+	GLuint numVertices;
+	GLuint texture;
 };
 
 class SpriteBatch
@@ -30,7 +53,7 @@ public:
 	void begin(GlyphSortType sortType = TEXTURE);
 	void end();
 
-	void draw(const glm::vec4& rectTo, const glm::vec4& texCoord, GLuint texture, const Colour& colour, float depth);
+	void draw(const glm::vec4& rectTo, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour);
 
 	void renderBatch();
 
