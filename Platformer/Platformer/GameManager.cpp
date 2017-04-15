@@ -193,22 +193,22 @@ bool GameManager::manageInput()
 	if (mInputManager.isKeyDown(SDLK_a))
 	{
 		//mPlayer->setVelX(-(mPlayer->getSpeed()));
-		mGraphicsManager->translateCamera(glm::vec2(CAMERA_SPEED, 0.0f));
+		mGraphicsManager->translateCamera(glm::vec2(-CAMERA_SPEED, 0.0f));
 	}
 	if (mInputManager.isKeyDown(SDLK_d))
 	{
 		//mPlayer->setVelX(mPlayer->getSpeed());
-		mGraphicsManager->translateCamera(glm::vec2(-CAMERA_SPEED, 0.0f));
+		mGraphicsManager->translateCamera(glm::vec2(CAMERA_SPEED, 0.0f));
 	}
 
 	if (mInputManager.isKeyDown(SDLK_w))
 	{
-		mGraphicsManager->translateCamera(glm::vec2(0.0f, -CAMERA_SPEED));
+		mGraphicsManager->translateCamera(glm::vec2(0.0f, CAMERA_SPEED));
 	}
 
 	if (mInputManager.isKeyDown(SDLK_s))
 	{
-		mGraphicsManager->translateCamera(glm::vec2(0.0f, CAMERA_SPEED));
+		mGraphicsManager->translateCamera(glm::vec2(0.0f, -CAMERA_SPEED));
 	}
 
 	//if (!mInputManager.isKeyDown(SDLK_a) && !mInputManager.isKeyDown(SDLK_d))

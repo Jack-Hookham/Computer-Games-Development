@@ -1,22 +1,15 @@
 #include "Sprite.h"
 
-enum MeshBuffer
-{
-	VERTEX_BUFFER,
-	COLOUR_BUFFER,
-	TEXTURE_BUFFER,
-};
-
-Sprite::Sprite() : vboID(0)
+Sprite::Sprite() : mBufferObject(0)
 {
 }
 
 
 Sprite::~Sprite()
 {
-	if (vboID != 0)
+	if (mBufferObject != 0)
 	{
-		glDeleteBuffers(1, &vboID);
+		glDeleteBuffers(1, &mBufferObject);
 	}
 }
 
@@ -28,9 +21,9 @@ void Sprite::init(float x, float y, float width, float height, std::string textu
 	mHeight = height;
 	mTexture = ResourceManager::getTexture(texturePath);
 
-	if (vboID == 0)
+	if (mBufferObject == 0)
 	{
-		glGenBuffers(1, &vboID);
+		glGenBuffers(1, &mBufferObject);
 	}
 
 	//Create a vertex struct to hold the vertex data for a quad
@@ -63,7 +56,7 @@ void Sprite::init(float x, float y, float width, float height, std::string textu
 	vertices[1].setColour(128, 255, 0, 255);
 	vertices[4].setColour(0, 128, 56, 255);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vboID);
+	glBindBuffer(GL_ARRAY_BUFFER, mBufferObject);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -74,7 +67,7 @@ void Sprite::draw()
 {
 	glBindTexture(GL_TEXTURE_2D, mTexture.id);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vboID);
+	glBindBuffer(GL_ARRAY_BUFFER, mBufferObject);
 
 	glEnableVertexAttribArray(VERTEX_BUFFER);
 	glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));

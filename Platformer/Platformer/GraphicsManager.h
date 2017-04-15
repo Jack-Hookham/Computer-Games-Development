@@ -22,6 +22,8 @@
 #include "ImageManager.h"
 #include "Window.h"
 #include "Camera.h"
+#include "SpriteBatch.h"
+#include "ResourceManager.h"
 
 class GraphicsManager
 {
@@ -63,7 +65,7 @@ private:
 
 	Player* mPlayer;
 
-	std::vector<Sprite*> mSprites;
+	SpriteBatch mSpriteBatch;
 
 	Shader mColourShader;
 	//The window renderer

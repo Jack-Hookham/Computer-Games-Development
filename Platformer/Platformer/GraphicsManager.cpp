@@ -98,6 +98,8 @@ bool GraphicsManager::initGraphics()
 
 	initShaders();
 
+	mSpriteBatch.init();
+
 	return success;
 }
 
@@ -132,11 +134,7 @@ bool GraphicsManager::loadMedia()
 		//}
 
 		//mPlayerTexture = ImageManager::loadTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
-		mSprites.push_back(new Sprite());
-		mSprites.back()->init(-1.0f, -1.0f, mScreenWidth / 2, mScreenWidth / 2, "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 
-		mSprites.push_back(new Sprite());
-		mSprites.back()->init(mScreenWidth / 2, -1.0f, mScreenWidth / 2, mScreenWidth / 2, "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 	}
 
 	return success;
@@ -210,10 +208,34 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 	glm::mat4 cameraMatrix = mCamera.getCamerMatrix();
 	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
-	for (int i = 0; i < mSprites.size(); i++)
-	{
-		mSprites[i]->draw();
-	}
+	//SpriteBatch functions
+	//begin sorts by texture by default
+	mSpriteBatch.begin();
+
+	glm::vec4 pos(0.0f, 0.0f, 1.0f, 1.0f);
+	glm::vec4 texCoords(0.0f, 0.0f, 1.0f, 1.0f);
+	std::string texturePath = "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png";
+	GLTexture texture = ResourceManager::getTexture(texturePath);
+	Colour colour;
+	colour.r = 255;
+	colour.b = 128;
+	colour.g = 128;
+	colour.a = 255;
+
+	mSpriteBatch.draw(pos, texCoords, texture.id, colour, 0.0f);
+
+	mSpriteBatch.end();
+
+	//mSprites.push_back(new Sprite());
+	//mSprites.back()->init(-1.0f, -1.0f, mScreenWidth / 2, mScreenWidth / 2, "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+
+	//mSprites.push_back(new Sprite());
+	//mSprites.back()->init(mScreenWidth / 2, -1.0f, mScreenWidth / 2, mScreenWidth / 2, "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+
+	//for (int i = 0; i < mSprites.size(); i++)
+	//{
+	//	mSprites[i]->draw();
+	//}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	mColourShader.unuse();

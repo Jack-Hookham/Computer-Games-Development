@@ -8,6 +8,13 @@
 #include "Vertex.h"
 #include "ResourceManager.h"
 
+enum MeshBuffer
+{
+	VERTEX_BUFFER,
+	COLOUR_BUFFER,
+	TEXTURE_BUFFER,
+};
+
 class Sprite
 {
 public:
@@ -19,11 +26,16 @@ public:
 	void draw();
 
 private:
+	//Sprite dimensions
 	float mX;
 	float mY;
 	float mWidth;
 	float mHeight;
-	GLuint vboID;
+
+	//VBO for the sprite
+	GLuint mBufferObject;
+
+	//Texture for the sprite
 	GLTexture mTexture;
 };
 

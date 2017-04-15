@@ -20,3 +20,4 @@ void main() {
 				  IN.colour.g * (cos(2.0 + timeMod) + 1.0) * 0.5,
 				  IN.colour.a) * textureColour;
 }
+
