@@ -1,6 +1,6 @@
 #include "GameManager.h"
 
-GameManager::GameManager() : mScreenWidth(1280), mScreenHeight(720), mGameState(GameState::PLAY), mTimeMod(0)
+GameManager::GameManager() : mScreenWidth(1280), mScreenHeight(720), mGameState(PLAY), mTimeMod(0)
 {
 	mPlayer = new Player(mScreenWidth, mScreenHeight);
 
@@ -61,9 +61,6 @@ bool GameManager::init()
 
 int GameManager::gameLoop()
 {
-	//Main loop flag
-	bool quit = false;
-
 	//Set text colour as black
 	SDL_Color textColour = { 0, 0, 0, 255 };
 
@@ -71,14 +68,14 @@ int GameManager::gameLoop()
 
 	mFPSTimer.start();
 
-	while (!quit)
+	while (mGameState != QUIT)
 	{
 		//Start cap timer at the start of each frame (each loop)
 		mCapTimer.start();
 
 		mTimeMod += 0.01;
 
-		quit = manageInput();
+		manageInput();
 
 		mPlayer->move();
 
@@ -116,7 +113,7 @@ void GameManager::log(const std::string text)
 	std::cout << "[GameManager] " << text << std::endl;
 }
 
-bool GameManager::manageInput()
+void GameManager::manageInput()
 {
 	//Event handler
 	SDL_Event e;
@@ -127,7 +124,7 @@ bool GameManager::manageInput()
 		//User requests quit
 		if (e.type == SDL_QUIT)
 		{
-			return true;
+			mGameState = QUIT;
 		}
 		//Key press
 		else if (e.type == SDL_KEYDOWN)
@@ -160,7 +157,7 @@ bool GameManager::manageInput()
 	//Quit if escape pressed
 	if (mInputManager.isKeyPressed(SDLK_ESCAPE))
 	{
-		return true;
+		mGameState = QUIT;
 	}
 
 	//Mouse buttons
@@ -174,7 +171,7 @@ bool GameManager::manageInput()
 		glm::vec2 direction = worldCoords - playerPosition;
 		direction = glm::normalize(direction);
 
-		mBullets.emplace_back(playerPosition, direction, 1.0f, 1000);
+		mBullets.emplace_back(playerPosition, direction, 5.0f, 1000);
 	}
 
 	//Movement
@@ -250,8 +247,6 @@ bool GameManager::manageInput()
 
 	//Update the input manager - copys current input map to previous input map
 	mInputManager.update();
-
-	return false;
 }
 
 

@@ -19,11 +19,11 @@
 #include "InputManager.h"
 #include "Bullet.h"
 
-enum class GameState
+enum GameState
 {
 	MENU,
 	PLAY,
-	EXIT
+	QUIT
 };
 
 class GameManager
@@ -70,7 +70,7 @@ private:
 	//The frames per second cap timer
 	Timer mCapTimer;
 
-	bool manageInput();
+	void manageInput();
 
 	float mTimeMod;
 
