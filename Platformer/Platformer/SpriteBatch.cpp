@@ -6,6 +6,12 @@ SpriteBatch::SpriteBatch() : mBufferObject(0), mArrayObject(0)
 
 SpriteBatch::~SpriteBatch()
 {
+	//deallocate mGlyphs
+	for (int i = 0; i < mGlyphs.size(); i++)
+	{
+		delete mGlyphs[i];
+	}
+	mGlyphs.clear();
 }
 
 //Initialise the spritebatch
@@ -19,6 +25,12 @@ void SpriteBatch::begin(GlyphSortType sortType)
 {
 	mSortType = sortType;
 	mRenderBatches.clear();
+
+	//deallocate mGlyphs ready for reallocation
+	for (int i = 0; i < mGlyphs.size(); i++)
+	{
+		delete mGlyphs[i];
+	}
 	mGlyphs.clear();
 }
 

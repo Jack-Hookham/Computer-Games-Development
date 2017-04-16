@@ -95,6 +95,8 @@ int GameManager::gameLoop()
 		mGraphicsManager->updateGraphics(mTimer, avgFPS, mTimeMod);
 		++countedFrames;
 
+		//cout << "FPS: " << avgFPS << endl;
+
 		//If frame finished early
 		int frameTicks = mCapTimer.getTicks();
 		if (frameTicks < mScreenTicksPerFrame)

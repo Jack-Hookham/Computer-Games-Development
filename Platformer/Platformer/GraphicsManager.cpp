@@ -207,8 +207,8 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 	GLuint textureLocation = mColourShader.getUniformLocation("sampler");
 	glUniform1i(textureLocation, 0);
 	
-	GLuint timeLocation = mColourShader.getUniformLocation("timeMod");
-	glUniform1f(timeLocation, timeMod);
+	//GLuint timeLocation = mColourShader.getUniformLocation("timeMod");
+	//glUniform1f(timeLocation, timeMod);
 
 	GLuint projMatrixLocation = mColourShader.getUniformLocation("projMatrix");
 	glm::mat4 cameraMatrix = mCamera.getCamerMatrix();
@@ -220,15 +220,22 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 
 	glm::vec4 pos(-100.0f, -100.0f, 50.0f, 50.0f);
 	glm::vec4 texCoords(0.0f, 0.0f, 1.0f, 1.0f);
-	std::string texturePath = "../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png";
-	GLTexture texture = ResourceManager::getTexture(texturePath);
+	static GLTexture texture = ResourceManager::getTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 	Colour colour;
 	colour.r = 255;
 	colour.b = 128;
 	colour.g = 128;
 	colour.a = 255;
 
-	mSpriteBatch.draw(pos, texCoords, texture.id, 0.0f, colour);
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			mSpriteBatch.draw(pos + glm::vec4(50 * i, 50 * j, 0, 0), texCoords, texture.id, 0.0f, colour);
+		}
+	}
+	//mSpriteBatch.draw(pos, texCoords, texture.id, 0.0f, colour);
+	mSpriteBatch.draw(pos + glm::vec4(50, 0, 0, 0), texCoords, texture.id, 0.0f, colour);
 
 	mSpriteBatch.end();
 	mSpriteBatch.renderBatch();

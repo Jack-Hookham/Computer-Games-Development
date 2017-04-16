@@ -1,6 +1,6 @@
 #version 150
 
-uniform float timeMod;
+//uniform float timeMod;
 uniform sampler2D sampler;
 
 in Vertex	{
@@ -15,9 +15,6 @@ void main() {
     vec4 textureColour = texture(sampler, IN.texCoord);
     //colour = IN.colour * textureColour;
 
-	colour = vec4(IN.colour.r * (cos(4.0 + timeMod) + 1.0) * 0.5,
-				  IN.colour.g * (cos(8.0 + timeMod) + 1.0) * 0.5,
-				  IN.colour.g * (cos(2.0 + timeMod) + 1.0) * 0.5,
-				  IN.colour.a) * textureColour;
+	colour = IN.colour * textureColour;
 }
 

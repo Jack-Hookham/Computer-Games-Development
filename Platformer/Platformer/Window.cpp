@@ -91,6 +91,10 @@ bool Window::createWindow(std::string name, int screenWidth, int screenHeight, U
 			//{
 			//	log("Warning: Unable to set VSync! SDL Error: " + std::string(SDL_GetError()));
 			//}
+
+			//Enable alpha blending
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		}
 	}
 
