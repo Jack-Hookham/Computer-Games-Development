@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <string>
+#include <glm/glm.hpp>
 
 #include "Vector2.h"
 
@@ -23,7 +24,7 @@ public:
 
 	//Mouse
 	void setMouseCoords(float x, float y);
-	Vector2 getMouseCoords(); 
+	glm::vec2 getMouseCoords();
 
 	void update();
 
@@ -40,6 +41,6 @@ private:
 	std::unordered_map<unsigned int, bool> mKeyMap;
 	std::unordered_map<unsigned int, bool> mPrevKeyMap;
 
-	Vector2 mMouseCoords;
+	glm::vec2 mMouseCoords;
 };
 

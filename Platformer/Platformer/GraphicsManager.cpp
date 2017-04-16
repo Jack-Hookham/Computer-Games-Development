@@ -223,18 +223,19 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 	static GLTexture texture = ResourceManager::getTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 	Colour colour;
 	colour.r = 255;
-	colour.b = 128;
-	colour.g = 128;
+	colour.b = 255;
+	colour.g = 255;
 	colour.a = 255;
 
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			mSpriteBatch.draw(pos + glm::vec4(50 * i, 50 * j, 0, 0), texCoords, texture.id, 0.0f, colour);
-		}
-	}
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	for (int j = 0; j < 10; j++)
+	//	{
+	//		mSpriteBatch.draw(pos + glm::vec4(50 * i, 50 * j, 0, 0), texCoords, texture.id, 0.0f, colour);
+	//	}
+	//}
 	//mSpriteBatch.draw(pos, texCoords, texture.id, 0.0f, colour);
+
 	mSpriteBatch.draw(pos + glm::vec4(50, 0, 0, 0), texCoords, texture.id, 0.0f, colour);
 
 	mSpriteBatch.end();

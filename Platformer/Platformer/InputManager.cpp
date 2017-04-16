@@ -52,13 +52,13 @@ bool InputManager::isKeyReleased(unsigned int keyID)
 
 void InputManager::setMouseCoords(float x, float y)
 {
-	mMouseCoords.setX(x);
-	mMouseCoords.setY(y);
+	mMouseCoords.x = x;
+	mMouseCoords.y = y;
 
 	//cout << mMouseCoords << endl;
 }
 
-Vector2 InputManager::getMouseCoords()
+glm::vec2 InputManager::getMouseCoords()
 {
 	return mMouseCoords;
 }
@@ -66,9 +66,9 @@ Vector2 InputManager::getMouseCoords()
 //Copy current keymap to previous keymap
 void InputManager::update()
 {
-	for (auto& map : mKeyMap)
+	for (std::pair<unsigned int, bool> i : mKeyMap)
 	{
-		mPrevKeyMap[map.first] = map.second;
+		mPrevKeyMap[i.first] = i.second;
 	}
 }
 

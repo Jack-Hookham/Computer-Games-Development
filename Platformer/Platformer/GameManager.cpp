@@ -156,39 +156,18 @@ bool GameManager::manageInput()
 		}
 	}
 
-	//Process input
+	//***Process input***
 	//Quit if escape pressed
 	if (mInputManager.isKeyPressed(SDLK_ESCAPE))
 	{
 		return true;
 	}
 
-	//Timers
-	if (mInputManager.isKeyPressed(SDLK_s))
+	//Mouse buttons
+	if (mInputManager.isKeyPressed(SDL_BUTTON_LEFT))
 	{
-		if (mTimer.isStarted())
-		{
-			mTimer.stop();
-		}
-		else
-		{
-			mTimer.start();
-		}
-	}
-	if (mInputManager.isKeyPressed(SDLK_p))
-	{
-		if (mTimer.isPaused())
-		{
-			mTimer.unpause();
-		}
-		else
-		{
-			mTimer.pause();
-		}
-	}
-	if (mInputManager.isKeyPressed(SDLK_r))
-	{
-		mTimer.restart();
+		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
+		cout << mouseCoords.x << " " << mouseCoords.y << endl;
 	}
 
 	//Movement
@@ -227,6 +206,34 @@ bool GameManager::manageInput()
 	{
 		//zoom out
 		mGraphicsManager->setCameraScale(-SCALE_SPEED);
+	}
+
+	//Timers
+	if (mInputManager.isKeyPressed(SDLK_s))
+	{
+		if (mTimer.isStarted())
+		{
+			mTimer.stop();
+		}
+		else
+		{
+			mTimer.start();
+		}
+	}
+	if (mInputManager.isKeyPressed(SDLK_p))
+	{
+		if (mTimer.isPaused())
+		{
+			mTimer.unpause();
+		}
+		else
+		{
+			mTimer.pause();
+		}
+	}
+	if (mInputManager.isKeyPressed(SDLK_r))
+	{
+		mTimer.restart();
 	}
 
 
