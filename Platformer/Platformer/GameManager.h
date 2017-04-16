@@ -17,6 +17,7 @@
 #include "Player.h"
 #include "Timer.h"
 #include "InputManager.h"
+#include "Bullet.h"
 
 enum class GameState
 {
@@ -73,6 +74,6 @@ private:
 
 	float mTimeMod;
 
-
+	std::vector<Bullet> mBullets;
 };
 

@@ -89,10 +89,10 @@ int GameManager::gameLoop()
 			avgFPS = 0;
 		}
 
-		mPhysicsManager->updatePhysics();
+		mPhysicsManager->updatePhysics(mBullets);
 
 		//mGraphicsManager->loadTexture("PATH");
-		mGraphicsManager->updateGraphics(mTimer, avgFPS, mTimeMod);
+		mGraphicsManager->updateGraphics(mTimer, avgFPS, mTimeMod, mBullets);
 		++countedFrames;
 
 		//cout << "FPS: " << avgFPS << endl;
@@ -169,6 +169,12 @@ bool GameManager::manageInput()
 		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
 		glm::vec2 worldCoords = mGraphicsManager->getCamera().screenToWorld(mouseCoords);
 		cout << worldCoords.x << " " << worldCoords.y << endl;
+
+		glm::vec2 playerPosition(0.0f, 0.0f);
+		glm::vec2 direction = worldCoords - playerPosition;
+		direction = glm::normalize(direction);
+
+		mBullets.emplace_back(playerPosition, direction, 1.0f, 1000);
 	}
 
 	//Movement

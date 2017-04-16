@@ -75,6 +75,9 @@ void Camera::setScale(float scale)
 //Convert screen coords to world coords
 glm::vec2 Camera::screenToWorld(glm::vec2 screenCoords)
 {
+	//invert y
+	screenCoords.y = mScreenHeight - screenCoords.y;
+
 	//Centre screen to 0
 	screenCoords -= glm::vec2(mScreenWidth / 2, mScreenHeight / 2);
 

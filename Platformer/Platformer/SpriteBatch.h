@@ -48,20 +48,18 @@ public:
 	SpriteBatch();
 	~SpriteBatch();
 
-	void init();
+	void bufferData();
 
 	void begin(GlyphSortType sortType = TEXTURE);
 	void end();
 
-	void draw(const glm::vec4& rectTo, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour);
+	void addGlyph(const glm::vec4& rectTo, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour);
 
 	void renderBatch();
 
 private:
 	//glyphs are quads = 2 trianges = 6 vertices
 	const unsigned int GLYPH_VERTICES = 6;
-
-	void bufferData();
 
 	void sortGlyphs();
 

@@ -24,6 +24,7 @@
 #include "Camera.h"
 #include "SpriteBatch.h"
 #include "ResourceManager.h"
+#include "Bullet.h"
 
 class GraphicsManager
 {
@@ -41,7 +42,7 @@ public:
 	//Loads individual image as texture
 	SDL_Texture* loadTexture(std::string path);
 
-	void updateGraphics(Timer timer, float avgFPS, float timeMod);
+	void updateGraphics(Timer timer, float avgFPS, float timeMod, std::vector<Bullet> &bullets);
 
 	void translateCamera(glm::vec2 translation);
 	void setCameraScale(float scale);

@@ -98,7 +98,8 @@ bool GraphicsManager::initGraphics()
 
 	initShaders();
 
-	mSpriteBatch.init();
+	//Generate VBO and VAO to initialise the sprite batch
+	mSpriteBatch.bufferData();
 
 	return success;
 }
@@ -192,7 +193,7 @@ void GraphicsManager::initShaders()
 //	return newTexture;
 //}
 
-void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
+void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, std::vector<Bullet> &bullets)
 {
 	mCamera.updateCamera();
 
@@ -218,14 +219,10 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 	//begin sorts by texture by default
 	mSpriteBatch.begin();
 
-	glm::vec4 pos(-100.0f, -100.0f, 50.0f, 50.0f);
+	glm::vec4 pos(0.0f, 0.0f, 50.0f, 50.0f);
 	glm::vec4 texCoords(0.0f, 0.0f, 1.0f, 1.0f);
 	static GLTexture texture = ResourceManager::getTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
-	Colour colour;
-	colour.r = 255;
-	colour.b = 255;
-	colour.g = 255;
-	colour.a = 255;
+	Colour colour{ 255, 255, 255, 255 };
 
 	//for (int i = 0; i < 10; i++)
 	//{
@@ -236,7 +233,13 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod)
 	//}
 	//mSpriteBatch.draw(pos, texCoords, texture.id, 0.0f, colour);
 
-	mSpriteBatch.draw(pos + glm::vec4(50, 0, 0, 0), texCoords, texture.id, 0.0f, colour);
+	//Add a sprite
+	mSpriteBatch.addGlyph(pos, texCoords, texture.id, 0.0f, colour);
+
+	for (int i = 0; i < bullets.size(); i++)
+	{
+		bullets[i].draw(mSpriteBatch);
+	}
 
 	mSpriteBatch.end();
 	mSpriteBatch.renderBatch();

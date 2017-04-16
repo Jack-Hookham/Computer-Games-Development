@@ -14,10 +14,32 @@ SpriteBatch::~SpriteBatch()
 	mGlyphs.clear();
 }
 
-//Initialise the spritebatch
-void SpriteBatch::init()
+//Generate VBO and VAO to initialise the sprite batch
+void SpriteBatch::bufferData()
 {
-	bufferData();
+	if (mArrayObject == 0)
+	{
+		glGenVertexArrays(1, &mArrayObject);
+	}
+	glBindVertexArray(mArrayObject);
+
+	if (mBufferObject == 0)
+	{
+		glGenBuffers(1, &mBufferObject);
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, mBufferObject);
+
+	glEnableVertexAttribArray(VERTEX_BUFFER);
+	glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+
+	glEnableVertexAttribArray(COLOUR_BUFFER);
+	glVertexAttribPointer(COLOUR_BUFFER, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, colour));
+
+	glEnableVertexAttribArray(TEXTURE_BUFFER);
+	glVertexAttribPointer(TEXTURE_BUFFER, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+
+	//Once we're done with the vertex buffer binding, we can unbind the VAO, ready to reapply later
+	glBindVertexArray(0);
 }
 
 //Begin the spritebatch
@@ -47,7 +69,7 @@ void SpriteBatch::end()
 //y = y coord
 //z = width
 //w = height
-void SpriteBatch::draw(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
+void SpriteBatch::addGlyph(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
 {
 	Glyph* newGlyph = new Glyph;
 
@@ -84,34 +106,6 @@ void SpriteBatch::renderBatch()
 		glDrawArrays(GL_TRIANGLES, mRenderBatches[i].offset, mRenderBatches[i].numVertices);
 	}
 
-	glBindVertexArray(0);
-}
-
-//Generate VBO and VAO
-void SpriteBatch::bufferData()
-{
-	if (mArrayObject == 0)
-	{
-		glGenVertexArrays(1, &mArrayObject);
-	}
-	glBindVertexArray(mArrayObject);
-
-	if (mBufferObject == 0)
-	{
-		glGenBuffers(1, &mBufferObject);
-	}
-	glBindBuffer(GL_ARRAY_BUFFER, mBufferObject);
-
-	glEnableVertexAttribArray(VERTEX_BUFFER);
-	glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
-
-	glEnableVertexAttribArray(COLOUR_BUFFER);
-	glVertexAttribPointer(COLOUR_BUFFER, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, colour));
-
-	glEnableVertexAttribArray(TEXTURE_BUFFER);
-	glVertexAttribPointer(TEXTURE_BUFFER, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
-
-	//Once we're done with the vertex buffer binding, we can unbind the VAO, ready to reapply later
 	glBindVertexArray(0);
 }
 
