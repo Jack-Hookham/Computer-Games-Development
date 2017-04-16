@@ -20,6 +20,8 @@ public:
 	float getScale();
 	void setScale(float scale);
 
+	glm::vec2 screenToWorld(glm::vec2 screenCoords);
+
 private:
 	int mScreenWidth;
 	int mScreenHeight;

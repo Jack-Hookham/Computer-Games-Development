@@ -46,6 +46,8 @@ public:
 	void translateCamera(glm::vec2 translation);
 	void setCameraScale(float scale);
 
+	Camera getCamera();
+
 private:
 	//Log for GraphicsManager
 	void log(const std::string text);

@@ -72,3 +72,18 @@ void Camera::setScale(float scale)
 	mUpdateMatrix = true;
 }
 
+//Convert screen coords to world coords
+glm::vec2 Camera::screenToWorld(glm::vec2 screenCoords)
+{
+	//Centre screen to 0
+	screenCoords -= glm::vec2(mScreenWidth / 2, mScreenHeight / 2);
+
+	//Scale coords
+	screenCoords /= mScale;
+
+	//Translate using camera position
+	screenCoords += mPosition;
+
+	return screenCoords;
+}
+

@@ -167,7 +167,8 @@ bool GameManager::manageInput()
 	if (mInputManager.isKeyPressed(SDL_BUTTON_LEFT))
 	{
 		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
-		cout << mouseCoords.x << " " << mouseCoords.y << endl;
+		glm::vec2 worldCoords = mGraphicsManager->getCamera().screenToWorld(mouseCoords);
+		cout << worldCoords.x << " " << worldCoords.y << endl;
 	}
 
 	//Movement

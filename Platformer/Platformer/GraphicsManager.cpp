@@ -324,3 +324,8 @@ void GraphicsManager::setCameraScale(float scale)
 {
 	mCamera.setScale(mCamera.getScale() + scale);
 }
+
+Camera GraphicsManager::getCamera()
+{
+	return mCamera;
+}
