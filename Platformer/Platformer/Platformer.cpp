@@ -2,7 +2,7 @@
 
 int main(int argc, char* args[])
 {
-	GameManager gm = GameManager();
+	GameManager gm;
 
 	gm.run();
 	//gm.init();

@@ -65,6 +65,24 @@ bool GameManager::init()
 	//Audio uses SDL_mixer
 	mAudioManager.init();
 
+	//Box2D world setup
+	b2Vec2 gravity(0.0f, -9.8f);
+	mB2World = std::make_unique<b2World>(gravity);
+
+	//Make the ground
+	b2BodyDef groundBodyDef;
+	groundBodyDef.position.Set(0.0f, -20.0f);
+	b2Body* groundBody = mB2World->CreateBody(&groundBodyDef);
+
+	//Make the ground fixture
+	b2PolygonShape groundBox;
+	groundBox.SetAsBox(50.0f, 10.0f);
+	groundBody->CreateFixture(&groundBox, 0.0f);
+
+	Box newBox;
+	newBox.init(mB2World.get(), glm::vec2(0.0f, 14.0f), glm::vec2(2.0f, 2.0f));
+	mBoxes.push_back(newBox);
+
 	return success;
 }
 
@@ -96,10 +114,18 @@ int GameManager::gameLoop()
 		//mPlayer->move();
 		
 		int stepCount = 0;
+		//This loop ensures that physics updates are not effected by fps
 		while (totalTimeStep > 0.0f && stepCount < MAX_PHYSICS_STEPS)
 		{
+			//Set timestep to the smaller of the two
+			//This means that if the totalTimeStep is bigger than the max time step allowed
+			//We limit the timestep to the max time step
 			float timeStep = std::min(totalTimeStep, MAX_TIME_STEP);
+			
+			//Update all physics
 			mPhysicsManager->updatePhysics(timeStep, mBullets);
+			mB2World->Step(timeStep, 6, 2);
+
 			totalTimeStep -= timeStep;
 			stepCount++;
 		}
@@ -112,7 +138,7 @@ int GameManager::gameLoop()
 		}
 
 		//mGraphicsManager->loadTexture("PATH");
-		mGraphicsManager->updateGraphics(mTimer, avgFPS, mTimeMod, mBullets);
+		mGraphicsManager->updateGraphics(mTimer, avgFPS, mTimeMod, mBullets, mBoxes);
 		++countedFrames;
 
 		//cout << "FPS: " << avgFPS << endl;

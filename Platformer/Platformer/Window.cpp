@@ -84,7 +84,7 @@ bool Window::createWindow(std::string name, int screenWidth, int screenHeight, U
 			log("OpenGL Version: " + std::string((char*)glGetString(GL_VERSION)));
 
 			//Set the background colour
-			glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+			glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
 			//Use Vsync
 			//if (SDL_GL_SetSwapInterval(1) < 0)

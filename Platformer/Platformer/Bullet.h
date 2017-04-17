@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "SpriteBatch.h"
+#include "ResourceManager.h"
 
 class Bullet
 {

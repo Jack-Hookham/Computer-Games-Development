@@ -6,7 +6,9 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
+#include <Box2D/Box2D.h>
 #include <glm/glm.hpp>
+
 #include <stdio.h>
 #include <string>
 #include <cmath>
@@ -19,6 +21,7 @@
 #include "Player.h"
 #include "Timer.h"
 #include "Bullet.h"
+#include "Box.h"
 
 enum GameState
 {
@@ -66,8 +69,8 @@ private:
 	const int MAX_PHYSICS_STEPS = 6;
 	const float MAX_TIME_STEP = 1.0f;
 
-	const float CAMERA_SPEED = 10.0f;
-	const float SCALE_SPEED = 0.01f;
+	const float CAMERA_SPEED = 1.0f;
+	const float SCALE_SPEED = 0.1f;
 
 	Player* mPlayer;
 
@@ -92,5 +95,8 @@ private:
 	float mTimeMod = 0.0f;
 
 	std::vector<Bullet> mBullets;
+
+	std::unique_ptr<b2World> mB2World;
+	std::vector<Box> mBoxes;
 };
 

@@ -7,13 +7,7 @@
 #include "GLTexture.h"
 #include "Vertex.h"
 #include "ResourceManager.h"
-
-enum MeshBuffer
-{
-	VERTEX_BUFFER,
-	COLOUR_BUFFER,
-	TEXTURE_BUFFER,
-};
+#include "SpriteBatch.h"
 
 class Sprite
 {

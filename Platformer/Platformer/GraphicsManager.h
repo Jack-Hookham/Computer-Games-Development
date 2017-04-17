@@ -14,9 +14,7 @@
 #include <vector>
 
 #include "Player.h"
-#include "Texture.h"
 #include "Timer.h"
-#include "Sprite.h"
 #include "Shader.h"
 #include "GLTexture.h"
 #include "ImageManager.h"
@@ -26,6 +24,7 @@
 #include "ResourceManager.h"
 #include "Bullet.h"
 #include "SpriteFont.h"
+#include "Box.h"
 
 class GraphicsManager
 {
@@ -43,7 +42,8 @@ public:
 	//Loads individual image as texture
 	//SDL_Texture* loadTexture(std::string path);
 
-	void updateGraphics(Timer timer, float avgFPS, float timeMod, std::vector<Bullet> &bullets);
+	void updateGraphics(Timer timer, float avgFPS, float timeMod, std::vector<Bullet> &bullets, 
+		std::vector<Box> &boxes);
 
 	void translateCamera(glm::vec2 translation);
 	void setCameraScale(float scale);
@@ -74,8 +74,6 @@ private:
 	Camera mHUDCamera;
 
 	Player* mPlayer;
-
-	std::vector<Sprite*> mSprites;
 
 	//Entity sprite batch
 	SpriteBatch mEntitySpriteBatch;

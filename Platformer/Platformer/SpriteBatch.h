@@ -5,13 +5,17 @@
 #include <vector>
 #include <algorithm>
 
-
 #include "Vertex.h"
-#include "Sprite.h"
-//#include "Glyph.h"
-//#include "RenderBatch.h"
+#include "GLTexture.h"
 
-//Type of sorting used for sorting the vector of glyphs
+enum BufferType
+{
+	VERTEX_BUFFER,
+	COLOUR_BUFFER,
+	TEXTURE_BUFFER,
+};
+
+//Type of sorting used for sorting the vector of quads
 enum QuadSortType
 {
 	NONE,
@@ -21,30 +25,17 @@ enum QuadSortType
 };
 
 //Quad to hold sprite data
-struct Quad
+class Quad
 {
-	Quad() {};
-	Quad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour) :
-		texture(texture), depth(depth)
-	{
+public:
+	//Default constructor
+	Quad();
 
-		topLeft.colour = colour;
-		topLeft.setPosition(destQuad.x, destQuad.y + destQuad.w);
-		topLeft.setTexCoord(texCoord.x, texCoord.y + texCoord.w);
+	//Params constructor no angle
+	Quad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour);
 
-		topRight.colour = colour;
-		topRight.setPosition(destQuad.x + destQuad.z, destQuad.y + destQuad.w);
-		topRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y + texCoord.w);
-
-		bottomLeft.colour = colour;
-		bottomLeft.setPosition(destQuad.x, destQuad.y);
-		bottomLeft.setTexCoord(texCoord.x, texCoord.y);
-
-		bottomRight.colour = colour;
-		bottomRight.setPosition(destQuad.x + destQuad.z, destQuad.y);
-		bottomRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y);
-	}
-
+	//Params constructor with angle
+	Quad(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint Texture, float Depth, const Colour& color, float angle);
 
 	GLuint texture;
 	float depth;
@@ -53,6 +44,10 @@ struct Quad
 	Vertex bottomLeft;
 	Vertex topRight;
 	Vertex bottomRight;
+
+private:
+	//Rotate a point about (0, 0) by angle
+	glm::vec2 rotatePoint(const glm::vec2& pos, float angle);
 };
 
 //Each render batch is used for a single draw call
@@ -77,7 +72,8 @@ public:
 	void begin(QuadSortType sortType = TEXTURE);
 	void end();
 
-	void addQuad(const glm::vec4& rectTo, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour);
+	void addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour);
+	void addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, float angle);
 
 	void renderBatch();
 
@@ -105,8 +101,10 @@ private:
 	//Quad pointers for sorting
 	std::vector<Quad*> mQuadPointers;
 
+	//RenderBatches
 	std::vector<RenderBatch> mRenderBatches;
 
+	//SortType
 	QuadSortType mSortType;
 };
 

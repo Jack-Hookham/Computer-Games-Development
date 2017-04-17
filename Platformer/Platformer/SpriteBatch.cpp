@@ -1,5 +1,79 @@
 #include "SpriteBatch.h"
 
+//Default constructor
+Quad::Quad()
+{
+}
+
+//Params constructor no angle
+Quad::Quad(const glm::vec4 & destQuad, const glm::vec4 & texCoord, GLuint texture, float depth, const Colour & colour)
+{
+	this->texture = texture;
+	this->depth = depth;
+
+	topLeft.colour = colour;
+	topLeft.setPosition(destQuad.x, destQuad.y + destQuad.w);
+	topLeft.setTexCoord(texCoord.x, texCoord.y + texCoord.w);
+
+	topRight.colour = colour;
+	topRight.setPosition(destQuad.x + destQuad.z, destQuad.y + destQuad.w);
+	topRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y + texCoord.w);
+
+	bottomLeft.colour = colour;
+	bottomLeft.setPosition(destQuad.x, destQuad.y);
+	bottomLeft.setTexCoord(texCoord.x, texCoord.y);
+
+	bottomRight.colour = colour;
+	bottomRight.setPosition(destQuad.x + destQuad.z, destQuad.y);
+	bottomRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y);
+}
+
+//Params constructor with angle
+Quad::Quad(const glm::vec4 & destRect, const glm::vec4 & uvRect, GLuint Texture, float Depth, const Colour & color, float angle)
+{
+	this->texture = texture;
+	this->depth = depth;
+
+	glm::vec2 halfDims(destRect.z / 2.0f, destRect.w / 2.0f);
+
+	// Get points centered at origin
+	glm::vec2 tl(-halfDims.x, halfDims.y);
+	glm::vec2 bl(-halfDims.x, -halfDims.y);
+	glm::vec2 br(halfDims.x, -halfDims.y);
+	glm::vec2 tr(halfDims.x, halfDims.y);
+
+	// Rotate the points
+	tl = rotatePoint(tl, angle) + halfDims;
+	bl = rotatePoint(bl, angle) + halfDims;
+	br = rotatePoint(br, angle) + halfDims;
+	tr = rotatePoint(tr, angle) + halfDims;
+
+	topLeft.colour = color;
+	topLeft.setPosition(destRect.x + tl.x, destRect.y + tl.y);
+	topLeft.setTexCoord(uvRect.x, uvRect.y + uvRect.w);
+
+	bottomLeft.colour = color;
+	bottomLeft.setPosition(destRect.x + bl.x, destRect.y + bl.y);
+	bottomLeft.setTexCoord(uvRect.x, uvRect.y);
+
+	bottomRight.colour = color;
+	bottomRight.setPosition(destRect.x + br.x, destRect.y + br.y);
+	bottomRight.setTexCoord(uvRect.x + uvRect.z, uvRect.y);
+
+	topRight.colour = color;
+	topRight.setPosition(destRect.x + tr.x, destRect.y + tr.y);
+	topRight.setTexCoord(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
+}
+
+//Rotate a point about (0, 0) by angle
+glm::vec2 Quad::rotatePoint(const glm::vec2& pos, float angle)
+{
+	glm::vec2 newVec2;
+	newVec2.x = pos.x * cos(angle) - pos.y * sin(angle);
+	newVec2.y = pos.x * sin(angle) + pos.y * cos(angle);
+	return newVec2;
+}
+
 SpriteBatch::SpriteBatch()
 {
 }
@@ -66,6 +140,12 @@ void SpriteBatch::end()
 void SpriteBatch::addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
 {
 	mQuads.emplace_back(destQuad, texCoord, texture, depth, colour);
+}
+
+//Add quad with angle param
+void SpriteBatch::addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, float angle)
+{
+	mQuads.emplace_back(destQuad, texCoord, texture, depth, colour, angle);
 }
 
 //Render the spritebatch
