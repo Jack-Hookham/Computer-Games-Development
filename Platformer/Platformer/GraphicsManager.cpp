@@ -1,8 +1,10 @@
 #include "GraphicsManager.h"
 
 GraphicsManager::GraphicsManager(Player* player,  const int screenWidth, const int screenHeight) 
-	: mPlayer(player), mScreenWidth(screenWidth), mScreenHeight(screenHeight)
 {
+	mPlayer = player;
+	mScreenWidth = screenWidth;
+	mScreenHeight = screenHeight;
 }
 
 GraphicsManager::~GraphicsManager()
@@ -33,7 +35,7 @@ GraphicsManager::~GraphicsManager()
 
 bool GraphicsManager::initGraphics()
 {
-	//Initialization flag
+	//Initialisation flag
 	bool success = true;
 
 	//Initialise SDL
@@ -41,49 +43,45 @@ bool GraphicsManager::initGraphics()
 	{
 		const std::string text = "SDL could not Initialise! SDL Error: " + std::string(SDL_GetError());
 		log(text);
-		success = false;
+		return success = false;
 	}
-	else
+
+	if (!mWindow.createWindow("Platformer", mScreenWidth, mScreenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL))
 	{
-		if (!mWindow.createWindow("Platformer", mScreenWidth, mScreenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL))
-		{
-			log("Failed to create window");
-			success = false;
-		}
-		else
-		{
-			//Initialise the cameras
-			mWorldCamera.initCamera(mScreenWidth, mScreenHeight);
-			mHUDCamera.initCamera(mScreenWidth, mScreenHeight);
-			//Offset the hud camera to align 0, 0 with the bottom left corner
-			mHUDCamera.setPosition(glm::vec2(mScreenWidth / 2, mScreenHeight / 2));
+		log("Failed to create window");
+		return success = false;
+	}
 
-			//Initialise OpenGL
-			//if (!initGL())
-			//{
-			//	log("Unable to initialize OpenGL!\n");
-			//	success = false;
-			//}
-			//Initialise renderer color
-			//SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	//Initialise the cameras
+	mWorldCamera.initCamera(mScreenWidth, mScreenHeight);
+	mHUDCamera.initCamera(mScreenWidth, mScreenHeight);
+	//Offset the hud camera to align 0, 0 with the bottom left corner
+	mHUDCamera.setPosition(glm::vec2(mScreenWidth / 2, mScreenHeight / 2));
 
-			//Initialise PNG loading
-			int imgFlags = IMG_INIT_PNG;
-			if (!(IMG_Init(imgFlags) & imgFlags))
-			{
-				const std::string text = "SDL_image could not Initialise! SDL_image Error: " + std::string(IMG_GetError());
-				log(text);
-				success = false;
-			}
+	//Initialise OpenGL
+	//if (!initGL())
+	//{
+	//	log("Unable to initialize OpenGL!\n");
+	//	success = false;
+	//}
+	//Initialise renderer color
+	//SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
-			//Initialise SDL_ttf
-			if (TTF_Init() == -1)
-			{
-				const std::string text = "SDL_ttf could not initialise! SDL_ttf Error: " + std::string(TTF_GetError());
-				log(text);
-				success = false;
-			}
-		}
+	//Initialise PNG loading
+	int imgFlags = IMG_INIT_PNG;
+	if (!(IMG_Init(imgFlags) & imgFlags))
+	{
+		const std::string text = "SDL_image could not Initialise! SDL_image Error: " + std::string(IMG_GetError());
+		log(text);
+		return success = false;
+	}
+
+	//Initialise SDL_ttf
+	if (TTF_Init() == -1)
+	{
+		const std::string text = "SDL_ttf could not initialise! SDL_ttf Error: " + std::string(TTF_GetError());
+		log(text);
+		return success = false;
 	}
 
 	//Initialise text textures
@@ -226,7 +224,7 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 	mWorldCamera.updateCamera();
 	mHUDCamera.updateCamera();
 
-	//cout << timeMod << endl;
+	//std::cout << timeMod << std::endl;
 	//Set depth to 1.0
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

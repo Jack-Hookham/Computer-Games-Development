@@ -1,6 +1,6 @@
 #include "GameManager.h"
 
-GameManager::GameManager() : mScreenWidth(1280), mScreenHeight(720), mGameState(PLAY), mTimeMod(0)
+GameManager::GameManager()
 {
 	mPlayer = new Player(mScreenWidth, mScreenHeight);
 
@@ -25,6 +25,11 @@ int GameManager::run()
 	{
 		log("Failed to initialise 1 or more sub systems");
 	}
+
+	mMusic = mAudioManager.loadMusic("../res/sound/tutorial/XYZ.ogg");
+	mMusic.play(-1);
+
+	mShotSound1 = mAudioManager.loadSoundEffect("../res/sound/tutorial/shots/cg1.wav");
 
 	return gameLoop();
 }
@@ -55,6 +60,10 @@ bool GameManager::init()
 	{
 		log("Graphics successfully initialised");
 	}
+
+	//Audio must initialise after graphics because SDL is initialised in graphics
+	//Audio uses SDL_mixer
+	mAudioManager.init();
 
 	return success;
 }
@@ -89,7 +98,7 @@ int GameManager::gameLoop()
 		int stepCount = 0;
 		while (totalTimeStep > 0.0f && stepCount < MAX_PHYSICS_STEPS)
 		{
-			float timeStep = min(totalTimeStep, MAX_TIME_STEP);
+			float timeStep = std::min(totalTimeStep, MAX_TIME_STEP);
 			mPhysicsManager->updatePhysics(timeStep, mBullets);
 			totalTimeStep -= timeStep;
 			stepCount++;
@@ -179,13 +188,15 @@ void GameManager::manageInput()
 	{
 		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
 		glm::vec2 worldCoords = mGraphicsManager->getCamera().screenToWorld(mouseCoords);
-		cout << worldCoords.x << " " << worldCoords.y << endl;
+		std::cout << worldCoords.x << " " << worldCoords.y << std::endl;
 
 		glm::vec2 playerPosition(0.0f, 0.0f);
 		glm::vec2 direction = worldCoords - playerPosition;
 		direction = glm::normalize(direction);
 
 		mBullets.emplace_back(playerPosition, direction, 5.0f, 1000);
+
+		mShotSound1.play();
 	}
 
 	//Movement

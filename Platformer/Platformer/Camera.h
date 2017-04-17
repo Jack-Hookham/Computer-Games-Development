@@ -25,15 +25,15 @@ public:
 	bool cullOffScreen(const glm::vec2& position, const glm::vec2& dimensions);
 
 private:
-	int mScreenWidth;
-	int mScreenHeight;
+	int mScreenWidth = 1280;
+	int mScreenHeight = 720;
 
-	bool mUpdateMatrix;
+	bool mUpdateMatrix = true;
 
-	glm::vec2 mPosition;
-	glm::mat4 mOrthographicMatrix;
-	glm::mat4 mCameraMatrix;
+	glm::vec2 mPosition = glm::vec2(0.0f);
+	glm::mat4 mOrthographicMatrix = glm::mat4(1.0f);
+	glm::mat4 mCameraMatrix = glm::mat4(1.0f);
 
-	float mScale;
+	float mScale = 1.0f;
 };
 

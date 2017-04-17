@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera() : mScreenWidth(1280), mScreenHeight(720), mUpdateMatrix(true), mPosition(0.0f, 0.0f), mOrthographicMatrix(1.0f), mCameraMatrix(1.0f), mScale(1.0f)
+Camera::Camera()
 {
 }
 

@@ -95,10 +95,10 @@ private:
 	void createRenderBatches();
 
 	//VBO for the sprite
-	GLuint mBufferObject;
+	GLuint mBufferObject = 0;
 
 	//VAO for the sprite
-	GLuint mArrayObject;
+	GLuint mArrayObject = 0;
 
 	//Quads
 	std::vector<Quad> mQuads;

@@ -14,7 +14,8 @@ public:
 	Shader();
 	~Shader();
 
-	void compileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
+	void compileShaders(const std::string& vertPath, const std::string& fragPath,
+		const std::string& geomPath = "", const std::string& tcsPath = "", const std::string& tesPath = "");
 
 	void compileShadersFromSource(const char* vertexSource, const char* fragmentSource);
 
@@ -29,15 +30,14 @@ public:
 
 	void dispose();
 private:
+	int mNumAttributes = 0;
 
-	int mNumAttributes;
+	GLuint mProgramID = 0;
+
+	GLuint mVertShaderID = 0;
+	GLuint mFragShaderID = 0;
 
 	void compileShader(const char* source, const std::string& name, GLuint id);
-
-	GLuint mProgramID;
-
-	GLuint mVertShaderID;
-	GLuint mFragShaderID;
 
 	void log(const std::string text);
 };

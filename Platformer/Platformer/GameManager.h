@@ -4,8 +4,8 @@
 
 #include <GL/glew.h>
 #include <SDL/SDL.h>
-#include <SDL_image/SDL_image.h>
-#include <SDL_ttf/SDL_ttf.h>
+#include <SDL/SDL_image.h>
+#include <SDL/SDL_ttf.h>
 #include <glm/glm.hpp>
 #include <stdio.h>
 #include <string>
@@ -14,9 +14,10 @@
 
 #include "PhysicsManager.h"
 #include "GraphicsManager.h"
+#include "InputManager.h"
+#include "AudioManager.h"
 #include "Player.h"
 #include "Timer.h"
-#include "InputManager.h"
 #include "Bullet.h"
 
 enum GameState
@@ -47,10 +48,10 @@ private:
 
 	void manageInput();
 
-	GameState mGameState;
+	GameState mGameState = PLAY;
 
-	int mScreenWidth;
-	int mScreenHeight;
+	int mScreenWidth = 1280;
+	int mScreenHeight= 720;
 
 	//Desired fps for the game
 	const int DESIRED_FPS = 60;
@@ -69,9 +70,15 @@ private:
 	const float SCALE_SPEED = 0.01f;
 
 	Player* mPlayer;
+
 	PhysicsManager* mPhysicsManager;
 	GraphicsManager* mGraphicsManager;
 	InputManager mInputManager;
+
+	//Audio stuff
+	AudioManager mAudioManager;
+	Music mMusic;
+	SoundEffect mShotSound1;
 
 	//Application timer
 	Timer mTimer;
@@ -82,7 +89,7 @@ private:
 	//Timer for each frame
 	Timer mFrameTimer;
 
-	float mTimeMod;
+	float mTimeMod = 0.0f;
 
 	std::vector<Bullet> mBullets;
 };

@@ -1,6 +1,6 @@
 #include "SpriteBatch.h"
 
-SpriteBatch::SpriteBatch() : mBufferObject(0), mArrayObject(0)
+SpriteBatch::SpriteBatch()
 {
 }
 

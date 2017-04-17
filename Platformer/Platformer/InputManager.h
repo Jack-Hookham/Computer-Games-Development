@@ -5,8 +5,6 @@
 #include <string>
 #include <glm/glm.hpp>
 
-#include "Vector2.h"
-
 class InputManager
 {
 public:

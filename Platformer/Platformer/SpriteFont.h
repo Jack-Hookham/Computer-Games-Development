@@ -25,7 +25,7 @@ Modified By: Jack Hookham
 #ifndef SpriteFont_h__
 #define SpriteFont_h__
 
-#include <SDL_ttf/SDL_ttf.h>
+#include <SDL/SDL_ttf.h>
 #include <glm/glm.hpp>
 #include <map>
 #include <vector>
