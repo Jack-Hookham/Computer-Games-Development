@@ -5,39 +5,8 @@
 #include <iostream>
 #include <map>
 
-class SoundEffect
-{
-public:
-	//Give AudioManager access to mChunk
-	friend class AudioManager;
-	
-	//n = number of times to loop
-	//n == -1 means loop forever
-	bool play(int n = 0);
-
-private:
-	Mix_Chunk* mChunk = NULL;
-};
-
-class Music
-{
-public:
-	friend class AudioManager;
-
-	//n = number of times to loop
-	//n == -1 means loop forever
-	void play(int n = 1);
-
-	static void stop();
-
-	static void resume();
-
-	static void pause();
-
-private:
-	//Give AudioManager access to mMusic
-	Mix_Music* mMusic = NULL;
-};
+#include "SoundEffect.h"
+#include "Music.h"
 
 class AudioManager
 {

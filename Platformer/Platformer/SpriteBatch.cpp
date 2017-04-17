@@ -6,11 +6,6 @@ SpriteBatch::SpriteBatch()
 
 SpriteBatch::~SpriteBatch()
 {
-	//deallocate quad pointers
-	for (int i = 0; i < mQuads.size(); i++)
-	{
-		delete mQuadPointers[i];
-	}
 }
 
 //Generate VBO and VAO to initialise the sprite batch

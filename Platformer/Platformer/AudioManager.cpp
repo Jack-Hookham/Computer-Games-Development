@@ -121,37 +121,3 @@ void AudioManager::log(const std::string text)
 {
 	std::cout << "[AudioManager] " << text << std::endl;
 }
-
-//Play music n times
-void Music::play(int n)
-{
-	Mix_PlayMusic(mMusic, n);
-}
-
-void Music::stop()
-{
-	Mix_HaltMusic();
-}
-
-void Music::resume()
-{
-	Mix_ResumeMusic();
-}
-
-void Music::pause()
-{
-	Mix_PauseMusic();
-}
-
-//Play sound n times
-bool SoundEffect::play(int n)
-{
-	bool success = true;
-
-	if (Mix_PlayChannel(-1, mChunk, n) == -1)
-	{
-		return success = false;
-	}
-
-	return success;
-}
