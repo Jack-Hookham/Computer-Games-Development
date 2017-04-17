@@ -6,7 +6,28 @@ AudioManager::AudioManager()
 
 AudioManager::~AudioManager()
 {
-	destroy();
+	if (mIsInitialised)
+	{
+		mIsInitialised = false;
+
+		//Free all chunks
+		for (std::pair<const std::string, Mix_Chunk*>& mapIterator : mSoundEffectMap)
+		{
+			Mix_FreeChunk(mapIterator.second);
+		}
+
+		//Free all music
+		for (std::pair<const std::string, Mix_Music*>& mapIterator : mMusicMap)
+		{
+			Mix_FreeMusic(mapIterator.second);
+		}
+
+		mSoundEffectMap.clear();
+		mMusicMap.clear();
+
+		Mix_CloseAudio();
+		Mix_Quit();
+	}
 }
 
 bool AudioManager::init()
@@ -40,15 +61,6 @@ bool AudioManager::init()
 	mIsInitialised = true;
 
 	return success;
-}
-
-void AudioManager::destroy()
-{
-	if (mIsInitialised)
-	{
-		mIsInitialised = false;
-		Mix_Quit();
-	}
 }
 
 SoundEffect AudioManager::loadSoundEffect(const std::string& path)

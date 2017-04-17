@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SDL/SDL.h>
 #include <unordered_map>
 #include <iostream>
 #include <string>

@@ -184,7 +184,7 @@ void GameManager::manageInput()
 	}
 
 	//Mouse buttons
-	if (mInputManager.isKeyPressed(SDL_BUTTON_LEFT))
+	if (mInputManager.isKeyPressed(SDL_BUTTON_LEFT) || mInputManager.isKeyPressed(SDL_JOYBUTTONDOWN))
 	{
 		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
 		glm::vec2 worldCoords = mGraphicsManager->getCamera().screenToWorld(mouseCoords);
