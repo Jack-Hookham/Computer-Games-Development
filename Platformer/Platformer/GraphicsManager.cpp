@@ -234,7 +234,11 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 	//mSpriteBatch.draw(pos, texCoords, texture.id, 0.0f, colour);
 
 	//Add a sprite
-	mSpriteBatch.addQuad(pos, texCoords, texture.id, 0.0f, colour);
+	if (mCamera.cullOffScreen(glm::vec2(pos.x, pos.y), glm::vec2(pos.z, pos.w)))
+	{
+
+		mSpriteBatch.addQuad(pos, texCoords, texture.id, 0.0f, colour);
+	}
 
 	for (int i = 0; i < bullets.size(); i++)
 	{

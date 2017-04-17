@@ -90,3 +90,33 @@ glm::vec2 Camera::screenToWorld(glm::vec2 screenCoords)
 	return screenCoords;
 }
 
+//True if the entity is off the screen
+bool Camera::cullOffScreen(const glm::vec2& position, const glm::vec2& dimensions)
+{
+	//Scale screen dimensions to mScale
+	glm::vec2 scaledScreenDimensions = glm::vec2(mScreenWidth, mScreenHeight) / (mScale);
+
+	//Minimum distance before a collision occurs
+	const float MIN_DISTANCE_X = dimensions.x / 2.0f + scaledScreenDimensions.x / 2.0f;
+	const float MIN_DISTANCE_Y = dimensions.y / 2.0f + scaledScreenDimensions.y / 2.0f;
+
+	//Centre position of the parameters
+	glm::vec2 centrePos = position + dimensions / 2.0f;
+	//Centre position of the camera
+	glm::vec2 centreCameraPos = mPosition;
+	//Vector from the input to the camera
+	glm::vec2 distVec = centrePos - centreCameraPos;
+
+	//Get the depth of the collision
+	float xDepth = MIN_DISTANCE_X - abs(distVec.x);
+	float yDepth = MIN_DISTANCE_Y - abs(distVec.y);
+
+	//If both the depths are > 0, then we collided
+	if (xDepth > 0 && yDepth > 0) 
+	{
+		//There was a collision
+		return true;
+	}
+	return false;
+}
+

@@ -22,6 +22,8 @@ public:
 
 	glm::vec2 screenToWorld(glm::vec2 screenCoords);
 
+	bool cullOffScreen(const glm::vec2& position, const glm::vec2& dimensions);
+
 private:
 	int mScreenWidth;
 	int mScreenHeight;
