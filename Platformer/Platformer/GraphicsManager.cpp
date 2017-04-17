@@ -27,6 +27,8 @@ GraphicsManager::~GraphicsManager()
 	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
+
+	delete mSpriteFont;
 }
 
 bool GraphicsManager::initGraphics()
@@ -50,8 +52,11 @@ bool GraphicsManager::initGraphics()
 		}
 		else
 		{
-			//Initialise the camera
-			mCamera.initCamera(mScreenWidth, mScreenHeight);
+			//Initialise the cameras
+			mWorldCamera.initCamera(mScreenWidth, mScreenHeight);
+			mHUDCamera.initCamera(mScreenWidth, mScreenHeight);
+			//Offset the hud camera to align 0, 0 with the bottom left corner
+			mHUDCamera.setPosition(glm::vec2(mScreenWidth / 2, mScreenHeight / 2));
 
 			//Initialise OpenGL
 			//if (!initGL())
@@ -87,6 +92,15 @@ bool GraphicsManager::initGraphics()
 	//mTimeTextTexture = new Texture(mRenderer);
 	//mFPSTextTexture = new Texture(mRenderer);
 
+	initShaders();
+
+	//Generate VBO and VAO to initialise the sprite batch
+	mEntitySpriteBatch.bufferData();
+	mHUDSpriteBatch.bufferData();
+
+	//Initialise sprite font
+	mSpriteFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 32);
+
 	if (!loadMedia())
 	{
 		log("Failed to load media!");
@@ -95,11 +109,6 @@ bool GraphicsManager::initGraphics()
 	{
 		log("Media successfully loaded");
 	}
-
-	initShaders();
-
-	//Generate VBO and VAO to initialise the sprite batch
-	mSpriteBatch.bufferData();
 
 	return success;
 }
@@ -163,6 +172,25 @@ void GraphicsManager::initShaders()
 	mColourShader.linkShaders();
 }
 
+void GraphicsManager::drawHUD(float avgFPS)
+{
+	char buffer[256];
+
+	glm::mat4 cameraMatrix = mHUDCamera.getCamerMatrix();
+	GLuint projMatrixLocation = mColourShader.getUniformLocation("projMatrix");
+	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+	mHUDSpriteBatch.begin();
+
+	sprintf_s(buffer, "FPS: %f", avgFPS);
+
+	mSpriteFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10, 10), 
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	mHUDSpriteBatch.end();
+	mHUDSpriteBatch.renderBatch();
+}
+
 //SDL_Texture* GraphicsManager::loadTexture(std::string path)
 //{
 //	//The final texture
@@ -195,7 +223,8 @@ void GraphicsManager::initShaders()
 
 void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, std::vector<Bullet> &bullets)
 {
-	mCamera.updateCamera();
+	mWorldCamera.updateCamera();
+	mHUDCamera.updateCamera();
 
 	//cout << timeMod << endl;
 	//Set depth to 1.0
@@ -211,13 +240,13 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 	//GLuint timeLocation = mColourShader.getUniformLocation("timeMod");
 	//glUniform1f(timeLocation, timeMod);
 
+	glm::mat4 cameraMatrix = mWorldCamera.getCamerMatrix();
 	GLuint projMatrixLocation = mColourShader.getUniformLocation("projMatrix");
-	glm::mat4 cameraMatrix = mCamera.getCamerMatrix();
 	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 	//SpriteBatch functions
 	//begin sorts by texture by default
-	mSpriteBatch.begin();
+	mEntitySpriteBatch.begin();
 
 	glm::vec4 pos(0.0f, 0.0f, 50.0f, 50.0f);
 	glm::vec4 texCoords(0.0f, 0.0f, 1.0f, 1.0f);
@@ -228,25 +257,26 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 	//{
 	//	for (int j = 0; j < 10; j++)
 	//	{
-	//		mSpriteBatch.draw(pos + glm::vec4(50 * i, 50 * j, 0, 0), texCoords, texture.id, 0.0f, colour);
+	//		mEntitySpriteBatch.draw(pos + glm::vec4(50 * i, 50 * j, 0, 0), texCoords, texture.id, 0.0f, colour);
 	//	}
 	//}
-	//mSpriteBatch.draw(pos, texCoords, texture.id, 0.0f, colour);
+	//mEntitySpriteBatch.draw(pos, texCoords, texture.id, 0.0f, colour);
 
 	//Add a sprite
-	if (mCamera.cullOffScreen(glm::vec2(pos.x, pos.y), glm::vec2(pos.z, pos.w)))
+	if (mWorldCamera.cullOffScreen(glm::vec2(pos.x, pos.y), glm::vec2(pos.z, pos.w)))
 	{
-
-		mSpriteBatch.addQuad(pos, texCoords, texture.id, 0.0f, colour);
+		mEntitySpriteBatch.addQuad(pos, texCoords, texture.id, 0.0f, colour);
 	}
 
 	for (int i = 0; i < bullets.size(); i++)
 	{
-		bullets[i].draw(mSpriteBatch);
+		bullets[i].draw(mEntitySpriteBatch);
 	}
 
-	mSpriteBatch.end();
-	mSpriteBatch.renderBatch();
+	mEntitySpriteBatch.end();
+	mEntitySpriteBatch.renderBatch();
+
+	drawHUD(avgFPS);
 
 	//for (int i = 0; i < mSprites.size(); i++)
 	//{
@@ -324,15 +354,15 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 
 void GraphicsManager::translateCamera(glm::vec2 translation)
 {
-	mCamera.setPosition(mCamera.getPosition() + translation);
+	mWorldCamera.setPosition(mWorldCamera.getPosition() + translation);
 }
 
 void GraphicsManager::setCameraScale(float scale)
 {
-	mCamera.setScale(mCamera.getScale() + scale);
+	mWorldCamera.setScale(mWorldCamera.getScale() + scale);
 }
 
 Camera GraphicsManager::getCamera()
 {
-	return mCamera;
+	return mWorldCamera;
 }

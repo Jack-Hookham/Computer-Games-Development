@@ -25,6 +25,7 @@
 #include "SpriteBatch.h"
 #include "ResourceManager.h"
 #include "Bullet.h"
+#include "SpriteFont.h"
 
 class GraphicsManager
 {
@@ -40,7 +41,7 @@ public:
 	bool loadMedia();
 
 	//Loads individual image as texture
-	SDL_Texture* loadTexture(std::string path);
+	//SDL_Texture* loadTexture(std::string path);
 
 	void updateGraphics(Timer timer, float avgFPS, float timeMod, std::vector<Bullet> &bullets);
 
@@ -53,24 +54,37 @@ private:
 	//Log for GraphicsManager
 	void log(const std::string text);
 
+	//Initialise the shaders
 	void initShaders();
 
+	//Draw the HUD
+	void drawHUD(float avgFPS);
+
+	//Screen dimensions
 	int mScreenWidth;
 	int mScreenHeight;
-
-	const float WORLD_TO_SCREEN = 10.0f;
 
 	//The window we'll be rendering to
 	Window mWindow;
 
-	//Camera for the window
-	Camera mCamera;
+	//Camera for the world
+	Camera mWorldCamera;
+
+	//Camera for the HUD
+	Camera mHUDCamera;
 
 	Player* mPlayer;
 
 	std::vector<Sprite*> mSprites;
 
-	SpriteBatch mSpriteBatch;
+	//Entity sprite batch
+	SpriteBatch mEntitySpriteBatch;
+
+	//HUD sprite batch
+	SpriteBatch mHUDSpriteBatch;
+
+	//HUD font
+	SpriteFont* mSpriteFont;
 
 	Shader mColourShader;
 	//The window renderer

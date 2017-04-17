@@ -143,6 +143,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteBatch.cpp" />
+    <ClCompile Include="SpriteFont.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureCache.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="RenderBatch.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SpriteBatch.h" />
+    <ClInclude Include="SpriteFont.h" />
     <ClInclude Include="TextureCache.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Shader.h" />
