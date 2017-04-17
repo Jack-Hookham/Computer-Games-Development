@@ -68,25 +68,39 @@ int GameManager::gameLoop()
 
 	mFPSTimer.start();
 
+	float previousTicks = SDL_GetTicks();
+
 	while (mGameState != QUIT)
 	{
 		//Start cap timer at the start of each frame (each loop)
-		mCapTimer.start();
+		mFrameTimer.start();
+		
+		float newTicks = SDL_GetTicks();
+		float frameTime = newTicks - previousTicks;
+		previousTicks = newTicks;
+		float totalTimeStep = frameTime / SCREEN_TICKS_PER_FRAME;
 
 		mTimeMod += 0.01;
 
 		manageInput();
 
-		mPlayer->move();
+		//mPlayer->move();
+		
+		int stepCount = 0;
+		while (totalTimeStep > 0.0f && stepCount < MAX_PHYSICS_STEPS)
+		{
+			float timeStep = min(totalTimeStep, MAX_TIME_STEP);
+			mPhysicsManager->updatePhysics(timeStep, mBullets);
+			totalTimeStep -= timeStep;
+			stepCount++;
+		}
 
 		//Calculate and correct fps
-		float avgFPS = countedFrames / (mFPSTimer.getTicks() / 1000.0f);
+		float avgFPS = countedFrames / (mFPSTimer.getTicks() / MS_PER_SECOND);
 		if (avgFPS > 2000000)
 		{
 			avgFPS = 0;
 		}
-
-		mPhysicsManager->updatePhysics(mBullets);
 
 		//mGraphicsManager->loadTexture("PATH");
 		mGraphicsManager->updateGraphics(mTimer, avgFPS, mTimeMod, mBullets);
@@ -95,14 +109,14 @@ int GameManager::gameLoop()
 		//cout << "FPS: " << avgFPS << endl;
 
 		//If frame finished early
-		int frameTicks = mCapTimer.getTicks();
-		if (frameTicks < mScreenTicksPerFrame)
-		//mMaxFPS = 60;
-		//float mScreenTicksPerFrame
-		{
-			//Wait remaining time
-			SDL_Delay(mScreenTicksPerFrame - frameTicks);
-		}
+		int frameTicks = mFrameTimer.getTicks();
+
+		//if (frameTicks < SCREEN_TICKS_PER_FRAME)
+		////mMaxFPS = 60;
+		//{
+		//	//Wait remaining time
+		//	SDL_Delay(SCREEN_TICKS_PER_FRAME - frameTicks);
+		//}
 	}
 
 	return 0;

@@ -15,7 +15,7 @@ public:
 	//initialise box2D physics
 	bool initPhysics();
 
-	void updatePhysics(std::vector<Bullet> &bullets);
+	void updatePhysics(float timeStep, std::vector<Bullet> &bullets);
 
 private:
 	//Log for PhysicsManager

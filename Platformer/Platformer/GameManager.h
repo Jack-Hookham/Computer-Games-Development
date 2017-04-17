@@ -45,13 +45,25 @@ private:
 	//Log for GameManager
 	void log(const std::string text);
 
+	void manageInput();
+
 	GameState mGameState;
 
 	int mScreenWidth;
 	int mScreenHeight;
 
-	int mMaxFPS = 60;
-	float mScreenTicksPerFrame = 1000 / mMaxFPS;
+	//Desired fps for the game
+	const int DESIRED_FPS = 60;
+
+	//Store this as const as it's used multiple times
+	const float MS_PER_SECOND = 1000.0f;
+
+	//Store this to save multiple divides
+	const float SCREEN_TICKS_PER_FRAME = MS_PER_SECOND / DESIRED_FPS;
+
+	//Physics step limiter
+	const int MAX_PHYSICS_STEPS = 6;
+	const float MAX_TIME_STEP = 1.0f;
 
 	const float CAMERA_SPEED = 10.0f;
 	const float SCALE_SPEED = 0.01f;
@@ -67,10 +79,8 @@ private:
 	//FPS timer
 	Timer mFPSTimer;
 
-	//The frames per second cap timer
-	Timer mCapTimer;
-
-	void manageInput();
+	//Timer for each frame
+	Timer mFrameTimer;
 
 	float mTimeMod;
 

@@ -6,12 +6,11 @@ SpriteBatch::SpriteBatch() : mBufferObject(0), mArrayObject(0)
 
 SpriteBatch::~SpriteBatch()
 {
-	//deallocate mGlyphs
-	for (int i = 0; i < mGlyphs.size(); i++)
+	//deallocate quad pointers
+	for (int i = 0; i < mQuads.size(); i++)
 	{
-		delete mGlyphs[i];
+		delete mQuadPointers[i];
 	}
-	mGlyphs.clear();
 }
 
 //Generate VBO and VAO to initialise the sprite batch
@@ -43,56 +42,35 @@ void SpriteBatch::bufferData()
 }
 
 //Begin the spritebatch
-void SpriteBatch::begin(GlyphSortType sortType)
+void SpriteBatch::begin(QuadSortType sortType)
 {
 	mSortType = sortType;
 	mRenderBatches.clear();
-
-	//deallocate mGlyphs ready for reallocation
-	for (int i = 0; i < mGlyphs.size(); i++)
-	{
-		delete mGlyphs[i];
-	}
-	mGlyphs.clear();
+	mQuads.clear();
 }
 
 //End the spritebatch
 void SpriteBatch::end()
 {
-	sortGlyphs();
+	mQuadPointers.resize(mQuads.size());
+	for (int i = 0; i < mQuads.size(); i++)
+	{
+		mQuadPointers[i] = &mQuads[i];
+	}
+
+	sortQuads();
 	createRenderBatches();
 }
 
-//Adds glyph containing information about an indivudual quad used in the SpriteBatch 
+//Adds quad containing information about an indivudual quad used in the SpriteBatch 
 //for recTo and texCoord vec4s:
 //x = x coord
 //y = y coord
 //z = width
 //w = height
-void SpriteBatch::addGlyph(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
+void SpriteBatch::addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
 {
-	Glyph* newGlyph = new Glyph;
-
-	newGlyph->texture = texture;
-	newGlyph->depth = depth;
-	
-	newGlyph->topLeft.colour = colour;
-	newGlyph->topLeft.setPosition(destQuad.x, destQuad.y + destQuad.w);
-	newGlyph->topLeft.setTexCoord(texCoord.x, texCoord.y + texCoord.w);
-	
-	newGlyph->topRight.colour = colour;
-	newGlyph->topRight.setPosition(destQuad.x + destQuad.z, destQuad.y + destQuad.w);
-	newGlyph->topRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y + texCoord.w);
-	
-	newGlyph->bottomLeft.colour = colour;
-	newGlyph->bottomLeft.setPosition(destQuad.x, destQuad.y);
-	newGlyph->bottomLeft.setTexCoord(texCoord.x, texCoord.y);
-	
-	newGlyph->bottomRight.colour = colour;
-	newGlyph->bottomRight.setPosition(destQuad.x + destQuad.z, destQuad.y);
-	newGlyph->bottomRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y);
-
-	mGlyphs.push_back(newGlyph);
+	mQuads.emplace_back(destQuad, texCoord, texture, depth, colour);
 }
 
 //Render the spritebatch
@@ -109,48 +87,48 @@ void SpriteBatch::renderBatch()
 	glBindVertexArray(0);
 }
 
-void SpriteBatch::sortGlyphs()
+void SpriteBatch::sortQuads()
 {
 	switch (mSortType)
 	{
 	case BACK_TO_FRONT:
-		std::stable_sort(mGlyphs.begin(), mGlyphs.end(), compareFrontToBack);
+		std::stable_sort(mQuadPointers.begin(), mQuadPointers.end(), compareFrontToBack);
 
 	case FRONT_TO_BACK:
-		std::stable_sort(mGlyphs.begin(), mGlyphs.end(), compareBackToFront);
+		std::stable_sort(mQuadPointers.begin(), mQuadPointers.end(), compareBackToFront);
 
 	case TEXTURE:
-		std::stable_sort(mGlyphs.begin(), mGlyphs.end(), compareTexture);
+		std::stable_sort(mQuadPointers.begin(), mQuadPointers.end(), compareTexture);
 	}
 }
 
-//True if glyph a has a smaller depth than glyph b
-bool SpriteBatch::compareFrontToBack(Glyph* a, Glyph* b)
+//True if quad a has a smaller depth than quad b
+bool SpriteBatch::compareFrontToBack(Quad* a, Quad* b)
 {
 	return (a->depth < b->depth);
 }
 
-//True if glyph has a greater depth than glyph b 
-bool SpriteBatch::compareBackToFront(Glyph* a, Glyph* b)
+//True if quad has a greater depth than quad b 
+bool SpriteBatch::compareBackToFront(Quad* a, Quad* b)
 {
 	return (a->depth > b->depth);
 }
 
-//True if glyph a has a smaller texture id than glyph b
+//True if quad a has a smaller texture id than quad b
 //Sorting by texture means that sprites with the same texture will be drawn one after the other
-bool SpriteBatch::compareTexture(Glyph* a, Glyph* b)
+bool SpriteBatch::compareTexture(Quad* a, Quad* b)
 {
 	return (a->texture < b->texture);
 }
 
 void SpriteBatch::createRenderBatches()
 {
-	//Vertices for the glyph
+	//Vertices for the quad
 	std::vector<Vertex> vertices;
 	//Allocate memory for the vector by resizing it to the size needed
-	vertices.resize(mGlyphs.size() * GLYPH_VERTICES);
+	vertices.resize(mQuads.size() * QUAD_VERTICES);
 
-	if (mGlyphs.empty())
+	if (mQuads.empty())
 	{
 		return;
 	}
@@ -159,35 +137,35 @@ void SpriteBatch::createRenderBatches()
 	int currentVertex = 0;
 
 	//Add the first batch
-	mRenderBatches.emplace_back(0, GLYPH_VERTICES, mGlyphs[0]->texture);
-	vertices[currentVertex++] = mGlyphs[0]->topLeft;
-	vertices[currentVertex++] = mGlyphs[0]->bottomLeft;
-	vertices[currentVertex++] = mGlyphs[0]->bottomRight;
-	vertices[currentVertex++] = mGlyphs[0]->bottomRight;
-	vertices[currentVertex++] = mGlyphs[0]->topRight;
-	vertices[currentVertex++] = mGlyphs[0]->topLeft;
+	mRenderBatches.emplace_back(0, QUAD_VERTICES, mQuadPointers[0]->texture);
+	vertices[currentVertex++] = mQuadPointers[0]->topLeft;
+	vertices[currentVertex++] = mQuadPointers[0]->bottomLeft;
+	vertices[currentVertex++] = mQuadPointers[0]->bottomRight;
+	vertices[currentVertex++] = mQuadPointers[0]->bottomRight;
+	vertices[currentVertex++] = mQuadPointers[0]->topRight;
+	vertices[currentVertex++] = mQuadPointers[0]->topLeft;
 
-	//Add the rest of the glyphs
-	for (int i = 1; i < mGlyphs.size(); i++)
+	//Add the rest of the quads
+	for (int i = 1; i < mQuadPointers.size(); i++)
 	{
-		//if this glyph can't be part of the current batch (different textures)
-		if (mGlyphs[i]->texture != mGlyphs[i - 1]->texture)
+		//if this quad can't be part of the current batch (different textures)
+		if (mQuadPointers[i]->texture != mQuadPointers[i - 1]->texture)
 		{
 			//Make a new batch
-			mRenderBatches.emplace_back(currentVertex, GLYPH_VERTICES, mGlyphs[0]->texture);
+			mRenderBatches.emplace_back(currentVertex, QUAD_VERTICES, mQuadPointers[0]->texture);
 		}
-		//if this glyph can be part of the current batch (same textures)
+		//if this quad can be part of the current batch (same textures)
 		else
 		{
 			//increase the number of vertices
-			mRenderBatches.back().numVertices += GLYPH_VERTICES;
+			mRenderBatches.back().numVertices += QUAD_VERTICES;
 		}
-		vertices[currentVertex++] = mGlyphs[i]->topLeft;
-		vertices[currentVertex++] = mGlyphs[i]->bottomLeft;
-		vertices[currentVertex++] = mGlyphs[i]->bottomRight;
-		vertices[currentVertex++] = mGlyphs[i]->bottomRight;
-		vertices[currentVertex++] = mGlyphs[i]->topRight;
-		vertices[currentVertex++] = mGlyphs[i]->topLeft;
+		vertices[currentVertex++] = mQuadPointers[i]->topLeft;
+		vertices[currentVertex++] = mQuadPointers[i]->bottomLeft;
+		vertices[currentVertex++] = mQuadPointers[i]->bottomRight;
+		vertices[currentVertex++] = mQuadPointers[i]->bottomRight;
+		vertices[currentVertex++] = mQuadPointers[i]->topRight;
+		vertices[currentVertex++] = mQuadPointers[i]->topLeft;
 	}
 
 	//bind the VBO

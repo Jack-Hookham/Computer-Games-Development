@@ -12,7 +12,7 @@
 //#include "RenderBatch.h"
 
 //Type of sorting used for sorting the vector of glyphs
-enum GlyphSortType
+enum QuadSortType
 {
 	NONE,
 	FRONT_TO_BACK,
@@ -20,8 +20,32 @@ enum GlyphSortType
 	TEXTURE
 };
 
-struct Glyph
+//Quad to hold sprite data
+struct Quad
 {
+	Quad() {};
+	Quad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour) :
+		texture(texture), depth(depth)
+	{
+
+		topLeft.colour = colour;
+		topLeft.setPosition(destQuad.x, destQuad.y + destQuad.w);
+		topLeft.setTexCoord(texCoord.x, texCoord.y + texCoord.w);
+
+		topRight.colour = colour;
+		topRight.setPosition(destQuad.x + destQuad.z, destQuad.y + destQuad.w);
+		topRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y + texCoord.w);
+
+		bottomLeft.colour = colour;
+		bottomLeft.setPosition(destQuad.x, destQuad.y);
+		bottomLeft.setTexCoord(texCoord.x, texCoord.y);
+
+		bottomRight.colour = colour;
+		bottomRight.setPosition(destQuad.x + destQuad.z, destQuad.y);
+		bottomRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y);
+	}
+
+
 	GLuint texture;
 	float depth;
 
@@ -31,12 +55,12 @@ struct Glyph
 	Vertex bottomRight;
 };
 
-// Each render batch is used for a single draw call
-class RenderBatch {
-public:
+//Each render batch is used for a single draw call
+struct RenderBatch 
+{
 	RenderBatch(GLuint Offset, GLuint NumVertices, GLuint Texture) : offset(Offset),
-		numVertices(NumVertices), texture(Texture) {
-	}
+		numVertices(NumVertices), texture(Texture) {}
+
 	GLuint offset;
 	GLuint numVertices;
 	GLuint texture;
@@ -50,23 +74,23 @@ public:
 
 	void bufferData();
 
-	void begin(GlyphSortType sortType = TEXTURE);
+	void begin(QuadSortType sortType = TEXTURE);
 	void end();
 
-	void addGlyph(const glm::vec4& rectTo, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour);
+	void addQuad(const glm::vec4& rectTo, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour);
 
 	void renderBatch();
 
 private:
-	//glyphs are quads = 2 trianges = 6 vertices
-	const unsigned int GLYPH_VERTICES = 6;
+	//2 trianges = 6 vertices
+	const unsigned int QUAD_VERTICES = 6;
 
-	void sortGlyphs();
+	void sortQuads();
 
-	//Sorting functions used for std::stable_sort in sortGlyphs()
-	static bool compareFrontToBack(Glyph* a, Glyph* b);
-	static bool compareBackToFront(Glyph* a, Glyph* b);
-	static bool compareTexture(Glyph* a, Glyph* b);
+	//Sorting functions used for std::stable_sort in sortQuads()
+	static bool compareFrontToBack(Quad* a, Quad* b);
+	static bool compareBackToFront(Quad* a, Quad* b);
+	static bool compareTexture(Quad* a, Quad* b);
 
 	void createRenderBatches();
 
@@ -76,9 +100,13 @@ private:
 	//VAO for the sprite
 	GLuint mArrayObject;
 
-	std::vector<Glyph*> mGlyphs;
+	//Quads
+	std::vector<Quad> mQuads;
+	//Quad pointers for sorting
+	std::vector<Quad*> mQuadPointers;
+
 	std::vector<RenderBatch> mRenderBatches;
 
-	GlyphSortType mSortType;
+	QuadSortType mSortType;
 };
 

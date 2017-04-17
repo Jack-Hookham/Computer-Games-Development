@@ -222,7 +222,7 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 	glm::vec4 pos(0.0f, 0.0f, 50.0f, 50.0f);
 	glm::vec4 texCoords(0.0f, 0.0f, 1.0f, 1.0f);
 	static GLTexture texture = ResourceManager::getTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
-	Colour colour{ 255, 255, 255, 255 };
+	Colour colour(255, 255, 255, 255);
 
 	//for (int i = 0; i < 10; i++)
 	//{
@@ -234,7 +234,7 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 	//mSpriteBatch.draw(pos, texCoords, texture.id, 0.0f, colour);
 
 	//Add a sprite
-	mSpriteBatch.addGlyph(pos, texCoords, texture.id, 0.0f, colour);
+	mSpriteBatch.addQuad(pos, texCoords, texture.id, 0.0f, colour);
 
 	for (int i = 0; i < bullets.size(); i++)
 	{
