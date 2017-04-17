@@ -48,7 +48,7 @@ void SpriteBatch::begin(QuadSortType sortType)
 void SpriteBatch::end()
 {
 	mQuadPointers.resize(mQuads.size());
-	for (int i = 0; i < mQuads.size(); i++)
+	for (unsigned int i = 0; i < mQuads.size(); i++)
 	{
 		mQuadPointers[i] = &mQuads[i];
 	}
@@ -73,7 +73,7 @@ void SpriteBatch::renderBatch()
 {
 	glBindVertexArray(mArrayObject);
 
-	for (int i = 0; i < mRenderBatches.size(); i++)
+	for (unsigned int i = 0; i < mRenderBatches.size(); i++)
 	{
 		glBindTexture(GL_TEXTURE_2D, mRenderBatches[i].texture);
 		glDrawArrays(GL_TRIANGLES, mRenderBatches[i].offset, mRenderBatches[i].numVertices);
@@ -141,7 +141,7 @@ void SpriteBatch::createRenderBatches()
 	vertices[currentVertex++] = mQuadPointers[0]->topLeft;
 
 	//Add the rest of the quads
-	for (int i = 1; i < mQuadPointers.size(); i++)
+	for (unsigned int i = 1; i < mQuadPointers.size(); i++)
 	{
 		//if this quad can't be part of the current batch (different textures)
 		if (mQuadPointers[i]->texture != mQuadPointers[i - 1]->texture)
@@ -167,7 +167,7 @@ void SpriteBatch::createRenderBatches()
 	glBindBuffer(GL_ARRAY_BUFFER, mBufferObject);
 
 	//Orphan and upload the vertice data
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), NULL, GL_DYNAMIC_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex), vertices.data());
 
 	//unbind the VBO

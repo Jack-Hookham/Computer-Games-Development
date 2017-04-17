@@ -266,7 +266,7 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 		mEntitySpriteBatch.addQuad(pos, texCoords, texture.id, 0.0f, colour);
 	}
 
-	for (int i = 0; i < bullets.size(); i++)
+	for (unsigned int i = 0; i < bullets.size(); i++)
 	{
 		bullets[i].draw(mEntitySpriteBatch);
 	}

@@ -77,19 +77,19 @@ int GameManager::gameLoop()
 
 	mFPSTimer.start();
 
-	float previousTicks = SDL_GetTicks();
+	Uint32 previousTicks = SDL_GetTicks();
 
 	while (mGameState != QUIT)
 	{
 		//Start cap timer at the start of each frame (each loop)
 		mFrameTimer.start();
 		
-		float newTicks = SDL_GetTicks();
-		float frameTime = newTicks - previousTicks;
+		Uint32 newTicks = SDL_GetTicks();
+		Uint32 frameTime = newTicks - previousTicks;
 		previousTicks = newTicks;
 		float totalTimeStep = frameTime / SCREEN_TICKS_PER_FRAME;
 
-		mTimeMod += 0.01;
+		mTimeMod += 0.01f;
 
 		manageInput();
 

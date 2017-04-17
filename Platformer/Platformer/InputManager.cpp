@@ -41,6 +41,7 @@ bool InputManager::isKeyPressed(unsigned int keyID)
 	return false;
 }
 
+//True if key was down in the previous map but isn't down anymore
 bool InputManager::isKeyReleased(unsigned int keyID)
 {
 	if (!isKeyDown(keyID) && wasKeyDown(keyID))

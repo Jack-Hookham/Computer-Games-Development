@@ -132,7 +132,7 @@ void Shader::dispose()
 void Shader::compileShader(const char* source, const std::string& name, GLuint id) 
 {
 	//tell opengl that we want to use fileContents as the contents of the shader file
-	glShaderSource(id, 1, &source, nullptr);
+	glShaderSource(id, 1, &source, NULL);
 
 	//compile the shader
 	glCompileShader(id);

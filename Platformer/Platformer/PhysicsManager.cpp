@@ -15,7 +15,7 @@ bool PhysicsManager::initPhysics()
 
 void PhysicsManager::updatePhysics(float timeStep, std::vector<Bullet> &bullets)
 {
-	for (int i = 0; i < bullets.size();)
+	for (unsigned int i = 0; i < bullets.size();)
 	{
 		if (bullets[i].update(timeStep) == true) 
 		{
