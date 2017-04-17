@@ -2,7 +2,7 @@
 
 Player::Player()
 {
-	mPosition = Vector2(0, 0);
+	mPosition = glm::vec2(0, 0);
 }
 
 Player::Player(int screenWidth, int screenHeight)
@@ -10,7 +10,7 @@ Player::Player(int screenWidth, int screenHeight)
 	mScreenWidth = screenWidth;
 	mScreenHeight = screenHeight;
 
-	mPosition = Vector2(mScreenWidth / 2, mScreenHeight / 2);
+	mPosition = glm::vec2(mScreenWidth / 2, mScreenHeight / 2);
 	mHealth = 100.0f;
 
 	mSpeed = 3.0f;
@@ -26,22 +26,22 @@ Player::~Player()
 {
 }
 
-Vector2 Player::getPosition()
+glm::vec2 Player::getPosition()
 {
 	return mPosition;
 }
 
 void Player::setPosition(const int x, const int y)
 {
-	mPosition = Vector2(x, y);
+	mPosition = glm::vec2(x, y);
 }
 
 void Player::setPosition(const int x, const int y, const int z)
 {
-	mPosition = Vector2(x, y);
+	mPosition = glm::vec2(x, y);
 }
 
-void Player::setPosition(const Vector2 position)
+void Player::setPosition(const glm::vec2 position)
 {
 	mPosition = position;
 }
@@ -88,28 +88,28 @@ void Player::setWidth(float width)
 
 void Player::move()
 {
-	mPosition += Vector2(mVelX, mVelY);
+	mPosition += glm::vec2(mVelX, mVelY);
 
 	//If the player went too far to the left or right
-	if ((mPosition.getX() < 0) || (mPosition.getX() + mWidth > mScreenWidth))
+	if ((mPosition.x < 0) || (mPosition.x + mWidth > mScreenWidth))
 	{
 		//Move back
-		mPosition -= Vector2(mVelX, 0);
+		mPosition -= glm::vec2(mVelX, 0);
 	}
 }
 
 void Player::moveLeft()
 {
 	log("Move Left");
-	mPosition += Vector2(-mSpeed, 0);
-	cout << mPosition << endl;
+	mPosition += glm::vec2(-mSpeed, 0);
+	std::cout << mPosition.x << " " << mPosition.y << std::endl;
 };
 
 void Player::moveRight()
 {
 	log("Move Right");
-	mPosition += Vector2(mSpeed, 0);
-	cout << mPosition << endl;
+	mPosition += glm::vec2(mSpeed, 0);
+	std::cout << mPosition.x << " " << mPosition.y << std::endl;
 }
 
 void Player::jump()

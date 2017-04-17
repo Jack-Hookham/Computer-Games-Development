@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 
-#include "Vector2.h"
 #include "Camera.h"
 
 class Player
@@ -12,10 +11,10 @@ public:
 	Player(const int x, const int y);
 	~Player();
 
-	Vector2 getPosition();
+	glm::vec2 getPosition();
 	void setPosition(const int x, const int y);
 	void setPosition(const int x, const int y, const int z);
-	void setPosition(const Vector2 position);
+	void setPosition(const glm::vec2 position);
 
 	//Health
 	float getHealth();
@@ -53,7 +52,7 @@ private:
 	//Log for Player
 	void log(const std::string text);
 
-	Vector2 mPosition;
+	glm::vec2 mPosition;
 	Camera mCamera;
 
 	float mHealth;
