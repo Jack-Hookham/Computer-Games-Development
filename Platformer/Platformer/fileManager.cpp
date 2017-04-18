@@ -1,8 +1,6 @@
 #include "fileManager.h"
 
-//Namespace alias
-//namespace fs = std::tr2::sys;
-
+//Used by ImageLoader to read image files
 bool FileManager::readFile(std::string filePath, std::vector<unsigned char>& buffer) 
 {
 	bool success = true;
@@ -33,6 +31,7 @@ bool FileManager::readFile(std::string filePath, std::vector<unsigned char>& buf
 	return success;
 }
 
+//Used by Shader to read shader files
 bool FileManager::readFile(std::string filePath, std::string& buffer)
 {
 	bool success = true;
@@ -62,31 +61,6 @@ bool FileManager::readFile(std::string filePath, std::string& buffer)
 
 	return success;
 }
-
-//bool FileManager::getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries)
-//{
-//	auto dpath = fs::path(path);
-//	// Must be directory
-//	if (!fs::is_directory(dpath)) return false;
-//
-//	for (auto it = fs::directory_iterator(dpath); it != fs::directory_iterator(); ++it) 
-//	{
-//		rvEntries.emplace_back();
-//		rvEntries.back().path = it->path().string();
-//		if (is_directory(it->path())) {
-//			rvEntries.back().isDirectory = true;
-//		}
-//		else {
-//			rvEntries.back().isDirectory = false;
-//		}
-//	}
-//	return true;
-//}
-
-//bool FileManager::makeDirectory(const char* path)
-//{
-//	return fs::create_directory(fs::path(path));
-//}
 
 void FileManager::log(const std::string text)
 {

@@ -8,7 +8,7 @@ PhysicsManager::~PhysicsManager()
 {
 }
 
-bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world, std::vector<Entity>& entities)
+bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world, std::vector<Entity>& entities, Player& player)
 {
 	//Initialisation flag
 	bool success = true;
@@ -29,6 +29,15 @@ bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world
 	groundBox.SetAsBox(50.0f, 10.0f);
 	groundBody->CreateFixture(&groundBox, 0.0f);
 
+	//Init player
+	glm::vec2 playerPos(0.0f, 30.0f);
+	glm::vec2 playerDims(1.0f, 2.0f);
+	Colour playerColour(255, 255, 255, 255);
+	GLTexture playerTexture = ResourceManager::getTexture("../res/textures/ninja_adventure/png/Idle__000.png");
+	glm::vec4 playerTexCoords(0.0f, 0.0f, 1.0f, 1.0f);
+
+	player.init(world.get(), playerPos, playerDims, playerColour, playerTexture, playerTexCoords, true);
+
 	//Random box gen
 	std::mt19937 randGenerator;
 	std::uniform_real_distribution<float> xGen(-10.0f, 10.0f);
@@ -36,8 +45,7 @@ bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world
 	std::uniform_real_distribution<float> sizeGen(0.5f, 2.5f);
 	std::uniform_int_distribution<int> colourGen(150, 255);
 	std::uniform_int_distribution<int> textureGen(0, 9);
-
-	GLTexture texture = ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate002.png");
+	GLTexture boxTexture = ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate002.png");
 
 	const int NUM_BOXES = 100;
 
@@ -51,7 +59,7 @@ bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world
 		glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 		Box newBox;
-		newBox.init(world.get(), glm::vec2(xPos, yPos), glm::vec2(sizeX, sizeY), colour, texture);
+		newBox.init(world.get(), glm::vec2(xPos, yPos), glm::vec2(sizeX, sizeY), colour, boxTexture);
 		entities.push_back(newBox);
 	}
 
@@ -59,7 +67,7 @@ bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world
 }
 
 //Update the world
-void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, std::vector<Entity>& entities)
+void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, std::vector<Entity>& entities, Player& player)
 {
 	//Step the b2World with the timestep
 	world->Step(mBox2DTimeStep, mVelocityIterations, mPositionIterations);

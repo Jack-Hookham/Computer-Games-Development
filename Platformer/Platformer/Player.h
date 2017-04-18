@@ -1,23 +1,33 @@
 #pragma once
 
-#include "Box.h"
+#include "Entity.h"
 #include "InputManager.h"
 
-class Player
+enum playerMoveState
+{
+	STANDING,
+	RUNNING,
+	PUNCHING,
+	IN_AIR,
+	AIR_ATTACK
+};
+
+class Player : public Entity
 {
 public:
 	Player();
 	~Player();
 
-	void init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, Colour& color);
+	//void init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
+	//	const GLTexture& texture, const glm::vec4& texCoords = { 0.0f, 0.0f, 1.0f, 1.0f });
 
-	void update(InputManager& inputManager);
+	void input(InputManager& inputManager);
 
-	void draw(SpriteBatch& spriteBatch);
-
-	const Box& getBox() const { return mCollisionBox; }
+	const Entity& getBox() const { return mCollisionBox; }
 
 private:
-	Box mCollisionBox;
+	playerMoveState mMoveState;
+
+	Entity mCollisionBox;
 };
 

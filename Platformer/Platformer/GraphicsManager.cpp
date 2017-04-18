@@ -220,7 +220,7 @@ void GraphicsManager::drawHUD(float avgFPS)
 //	return newTexture;
 //}
 
-void GraphicsManager::updateGraphics(float avgFPS, std::vector<Entity>& entities)
+void GraphicsManager::updateGraphics(float avgFPS, std::vector<Entity>& entities, Player& player)
 {
 	mWorldCamera.updateCamera();
 	mHUDCamera.updateCamera();
@@ -274,6 +274,8 @@ void GraphicsManager::updateGraphics(float avgFPS, std::vector<Entity>& entities
 		e.draw(mEntitySpriteBatch);
 		//mEntitySpriteBatch.addQuad(destQuad, boxTexCoords, boxTexture.id, 0.0f, b.getColour(), b.getBody()->GetAngle());
 	}
+
+	player.draw(mEntitySpriteBatch);
 
 	mEntitySpriteBatch.end();
 	mEntitySpriteBatch.renderBatches();

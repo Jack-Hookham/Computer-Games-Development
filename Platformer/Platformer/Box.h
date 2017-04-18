@@ -4,9 +4,6 @@
 #include <glm/glm.hpp>
 
 #include "Entity.h"
-#include "SpriteBatch.h"
-#include "GLTexture.h"
-#include "ResourceManager.h"
 
 class Box : public Entity
 {

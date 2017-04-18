@@ -4,28 +4,32 @@ Entity::Entity()
 {
 }
 
-
 Entity::~Entity()
 {
 }
 
-void Entity::init(b2World* world, const glm::vec2 &position, const glm::vec2 &dimensions,
-	const Colour& colour, const GLTexture texture, const glm::vec4 texCoords)
+void Entity::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
+	const GLTexture& texture, const glm::vec4& texCoords, bool fixedRotation)
 {
+	//Initialise the entity's variables
 	mPosition = position;
 	mDimensions = dimensions;
 	mColour = colour;
 	mTexture = texture;
 	mTexCoords = texCoords;
 
+	//box2D body definition
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(position.x, position.y);
+	bodyDef.fixedRotation = fixedRotation;
 	mBody = world->CreateBody(&bodyDef);
 
+	//box2D shape definition
 	b2PolygonShape boxShape;
 	boxShape.SetAsBox(dimensions.x / 2.0f, dimensions.y / 2.0f);
 
+	//box2D fixture definition
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
 	fixtureDef.density = 1.0f;

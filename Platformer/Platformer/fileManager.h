@@ -15,11 +15,11 @@ struct DirEntry
 class FileManager
 {
 public:
+	//Used by ImageLoader to read image files
 	static bool readFile(std::string filePath, std::vector<unsigned char>& buffer);
-	static bool readFile(std::string filePath, std::string& buffer);
 
-	static bool getDirectoryEntries(const char* path, std::vector<DirEntry>& rvEntries);
-	static bool makeDirectory(const char* path);
+	//Used by Shader to read shader files
+	static bool readFile(std::string filePath, std::string& buffer);
 
 private:
 	static void log(const std::string text);

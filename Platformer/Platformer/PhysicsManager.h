@@ -6,8 +6,10 @@
 #include <vector>
 #include <random>
 
+#include "Entity.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "Box.h"
 
 class PhysicsManager
 {
@@ -16,10 +18,10 @@ public:
 	~PhysicsManager();
 
 	//initialise box2D physics
-	bool initPhysics(int desiredFPS, std::unique_ptr<b2World>& b2World, std::vector<Entity>& entities);
+	bool initPhysics(int desiredFPS, std::unique_ptr<b2World>& b2World, std::vector<Entity>& entities, Player& player);
 
 	//Update the world
-	void updatePhysics(std::unique_ptr<b2World>& world, std::vector<Entity>& entities);
+	void updatePhysics(std::unique_ptr<b2World>& world, std::vector<Entity>& entities, Player& player);
 
 private:
 	//Log for PhysicsManager

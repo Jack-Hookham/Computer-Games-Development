@@ -42,7 +42,7 @@ public:
 	//Loads individual image as texture
 	//SDL_Texture* loadTexture(std::string path);
 
-	void updateGraphics(float avgFPS, std::vector<Entity>& entities);
+	void updateGraphics(float avgFPS, std::vector<Entity>& entities, Player& player);
 
 	void translateCamera(glm::vec2 translation);
 	void setCameraScale(float scale);

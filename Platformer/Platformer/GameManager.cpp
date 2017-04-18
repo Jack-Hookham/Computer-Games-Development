@@ -43,7 +43,7 @@ int GameManager::init()
 	}
 
 	//Initialise physics
-	if (mPhysicsManager.initPhysics(mDesiredFPS, mB2World, mEntities))
+	if (mPhysicsManager.initPhysics(mDesiredFPS, mB2World, mEntities, mPlayer))
 	{
 		log("Physics successfully initialised");
 	}
@@ -114,7 +114,7 @@ int GameManager::gameLoop()
 			float timeStep = std::min(totalTimeStep, MAX_TIME_STEP);
 			
 			//Update all physics
-			mPhysicsManager.updatePhysics(mB2World, mEntities);
+			mPhysicsManager.updatePhysics(mB2World, mEntities, mPlayer);
 
 			totalTimeStep -= timeStep;
 			stepCount++;
@@ -128,7 +128,7 @@ int GameManager::gameLoop()
 			avgFPS = 0;
 		}
 
-		mGraphicsManager.updateGraphics(avgFPS, mEntities);
+		mGraphicsManager.updateGraphics(avgFPS, mEntities, mPlayer);
 		++countedFrames;
 
 		//cout << "FPS: " << avgFPS << endl;
@@ -238,34 +238,6 @@ void GameManager::manageInput()
 		//zoom out
 		mGraphicsManager.setCameraScale(-SCALE_SPEED);
 	}
-
-	//Timers
-	//if (mInputManager.isKeyPressed(SDLK_s))
-	//{
-	//	if (mTimer.isStarted())
-	//	{
-	//		mTimer.stop();
-	//	}
-	//	else
-	//	{
-	//		mTimer.start();
-	//	}
-	//}
-	//if (mInputManager.isKeyPressed(SDLK_p))
-	//{
-	//	if (mTimer.isPaused())
-	//	{
-	//		mTimer.unpause();
-	//	}
-	//	else
-	//	{
-	//		mTimer.pause();
-	//	}
-	//}
-	//if (mInputManager.isKeyPressed(SDLK_r))
-	//{
-	//	mTimer.restart();
-	//}
 
 	//Update the input manager - copys current input map to previous input map
 	mInputManager.update();
