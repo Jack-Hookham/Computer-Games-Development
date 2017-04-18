@@ -19,6 +19,8 @@ public:
 	SoundEffect loadSoundEffect(const std::string& path);
 	Music loadMusic(const std::string& path);
 
+	void setVolume(int volume);
+
 private:
 	//Log for AudioManager
 	void log(const std::string text);

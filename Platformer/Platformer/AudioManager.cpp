@@ -129,6 +129,10 @@ Music AudioManager::loadMusic(const std::string & path)
 	return music;
 }
 
+void AudioManager::setVolume(int volume)
+{
+}
+
 void AudioManager::log(const std::string text)
 {
 	std::cout << "[AudioManager] " << text << std::endl;

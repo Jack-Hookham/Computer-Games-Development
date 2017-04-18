@@ -51,7 +51,7 @@ private:
 };
 
 //Each render batch is used for a single draw call
-struct RenderBatch 
+struct RenderBatch
 {
 	RenderBatch(GLuint Offset, GLuint NumVertices, GLuint Texture) : offset(Offset),
 		numVertices(NumVertices), texture(Texture) {}

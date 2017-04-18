@@ -85,7 +85,7 @@ bool GameManager::init()
 	std::uniform_real_distribution<float> yDist(-15.0f, 15.0f);
 
 	Box newBox;
-	newBox.init(mB2World.get(), glm::vec2(0.0f, 50.0f), glm::vec2(2.0f, 2.0f));
+	newBox.init(mB2World.get(), glm::vec2(0.0f, 20.0f), glm::vec2(2.0f, 2.0f));
 	mBoxes.push_back(newBox);
 
 	return success;
