@@ -11,19 +11,19 @@ Quad::Quad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture,
 	this->texture = texture;
 	this->depth = depth;
 
-	topLeft.colour = colour;
+	topLeft.setColour(colour);
 	topLeft.setPosition(destQuad.x, destQuad.y + destQuad.w);
 	topLeft.setTexCoord(texCoord.x, texCoord.y + texCoord.w);
 
-	topRight.colour = colour;
+	topRight.setColour(colour);
 	topRight.setPosition(destQuad.x + destQuad.z, destQuad.y + destQuad.w);
 	topRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y + texCoord.w);
 
-	bottomLeft.colour = colour;
+	bottomLeft.setColour(colour);
 	bottomLeft.setPosition(destQuad.x, destQuad.y);
 	bottomLeft.setTexCoord(texCoord.x, texCoord.y);
 
-	bottomRight.colour = colour;
+	bottomRight.setColour(colour);
 	bottomRight.setPosition(destQuad.x + destQuad.z, destQuad.y);
 	bottomRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y);
 }
@@ -33,42 +33,47 @@ Quad::Quad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture,
 	this->texture = texture;
 	this->depth = depth;
 
-	glm::vec2 halfDims(destQuad.z / 2.0f, destQuad.w / 2.0f);
+	glm::vec2 halfDimensions(destQuad.z / 2.0f, destQuad.w / 2.0f);
 
-	// Get points centered at origin
-	glm::vec2 tl(-halfDims.x, halfDims.y);
-	glm::vec2 bl(-halfDims.x, -halfDims.y);
-	glm::vec2 br(halfDims.x, -halfDims.y);
-	glm::vec2 tr(halfDims.x, halfDims.y);
+	//Get points centered at origin
+	glm::vec2 tl(-halfDimensions.x, halfDimensions.y);
+	glm::vec2 bl(-halfDimensions.x, -halfDimensions.y);
+	glm::vec2 br(halfDimensions.x, -halfDimensions.y);
+	glm::vec2 tr(halfDimensions.x, halfDimensions.y);
 
-	// Rotate the points
-	tl = rotatePoint(tl, angle) + halfDims;
-	bl = rotatePoint(bl, angle) + halfDims;
-	br = rotatePoint(br, angle) + halfDims;
-	tr = rotatePoint(tr, angle) + halfDims;
+	//Rotate the points
+	tl = rotatePoint(tl, angle) + halfDimensions;
+	bl = rotatePoint(bl, angle) + halfDimensions;
+	br = rotatePoint(br, angle) + halfDimensions;
+	tr = rotatePoint(tr, angle) + halfDimensions;
 
-	topLeft.colour = colour;
+	topLeft.setColour(colour);
 	topLeft.setPosition(destQuad.x + tl.x, destQuad.y + tl.y);
 	topLeft.setTexCoord(texCoord.x, texCoord.y + texCoord.w);
 
-	bottomLeft.colour = colour;
+	topRight.setColour(colour);
+	topRight.setPosition(destQuad.x + tr.x, destQuad.y + tr.y);
+	topRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y + texCoord.w);
+
+	bottomLeft.setColour(colour);
 	bottomLeft.setPosition(destQuad.x + bl.x, destQuad.y + bl.y);
 	bottomLeft.setTexCoord(texCoord.x, texCoord.y);
 
-	bottomRight.colour = colour;
+	bottomRight.setColour(colour);
 	bottomRight.setPosition(destQuad.x + br.x, destQuad.y + br.y);
 	bottomRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y);
-
-	topRight.colour = colour;
-	topRight.setPosition(destQuad.x + tr.x, destQuad.y + tr.y);
-	topRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y + texCoord.w);
 }
 
 glm::vec2 Quad::rotatePoint(const glm::vec2& pos, float angle) 
 {
 	glm::vec2 newVec2;
-	newVec2.x = pos.x * cos(angle) - pos.y * sin(angle);
-	newVec2.y = pos.x * sin(angle) + pos.y * cos(angle);
+
+	float s = sin(angle);
+	float c = cos(angle);
+
+	newVec2.x = pos.x * c - pos.y * s;
+	newVec2.y = pos.x * s + pos.y * c;
+
 	return newVec2;
 }
 

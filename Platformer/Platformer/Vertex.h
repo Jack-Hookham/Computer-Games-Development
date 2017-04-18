@@ -1,3 +1,5 @@
+//Contains some basic structs to make up a vertex struct
+
 #pragma once
 
 #include <GL/glew.h>
@@ -10,9 +12,21 @@ struct Position
 
 struct Colour 
 {
-	Colour() : r(0), g(0), b(0), a(255) { }
-	Colour(GLubyte R, GLubyte G, GLubyte B, GLubyte A) : 
-		r(R), g(G), b(B), a(A) { }
+	Colour()
+	{
+		r = 0;
+		g = 0;
+		b = 0;
+		a = 255;
+	}
+
+	Colour(GLubyte r, GLubyte g, GLubyte b, GLubyte a)
+	{ 
+		this->r = r;
+		this->g = g;
+		this->b = b;
+		this->a = a;
+	}
 
 	GLubyte r;
 	GLubyte g;
@@ -44,6 +58,11 @@ struct Vertex
 		colour.g = g;
 		colour.b = b;
 		colour.a = a;
+	}
+
+	void setColour(Colour colour)
+	{
+		this->colour = colour;
 	}
 
 	void setTexCoord(float x, float y)

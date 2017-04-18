@@ -23,6 +23,8 @@ public:
 	//Update the world
 	void updatePhysics(std::unique_ptr<b2World>& world, std::vector<Entity>& entities, Player& player);
 
+	void addBoxToWorld(std::unique_ptr<b2World>& b2World, std::vector<Entity>& entities);
+
 private:
 	//Log for PhysicsManager
 	void log(const std::string text);

@@ -43,7 +43,7 @@ int GameManager::init()
 	}
 
 	//Initialise physics
-	if (mPhysicsManager.initPhysics(mDesiredFPS, mB2World, mEntities, mPlayer))
+	if (mPhysicsManager.initPhysics(mDesiredFPS, mWorld, mEntities, mPlayer))
 	{
 		log("Physics successfully initialised");
 	}
@@ -114,7 +114,7 @@ int GameManager::gameLoop()
 			float timeStep = std::min(totalTimeStep, MAX_TIME_STEP);
 			
 			//Update all physics
-			mPhysicsManager.updatePhysics(mB2World, mEntities, mPlayer);
+			mPhysicsManager.updatePhysics(mWorld, mEntities, mPlayer);
 
 			totalTimeStep -= timeStep;
 			stepCount++;
@@ -198,12 +198,18 @@ void GameManager::manageInput()
 		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
 		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
 		std::cout << worldCoords.x << " " << worldCoords.y << std::endl;
+		Colour colour(255, 255, 255, 255);
+		Texture boxTexture = ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate002.png");
 
-		glm::vec2 playerPosition(0.0f, 0.0f);
-		glm::vec2 direction = worldCoords - playerPosition;
-		direction = glm::normalize(direction);
+		Box newBox;
+		newBox.init(mWorld.get(), worldCoords, glm::vec2(2.0f), colour, boxTexture);
+		mEntities.push_back(newBox);
 
-		mBullets.emplace_back(playerPosition, direction, 5.0f, 1000);
+		//glm::vec2 playerPosition(0.0f, 0.0f);
+		//glm::vec2 direction = worldCoords - playerPosition;
+		//direction = glm::normalize(direction);
+
+		//mBullets.emplace_back(playerPosition, direction, 5.0f, 1000);
 
 		mShotSound1.play();
 	}

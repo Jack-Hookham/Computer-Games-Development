@@ -53,6 +53,7 @@ void Player::input(InputManager& inputManager)
 				if (worldManifold.points[i].y < mBody->GetPosition().y - mDimensions.y / 2.0f + 0.01f)
 				{
 					below = true;
+					break;
 				}
 			}
 			if (below)

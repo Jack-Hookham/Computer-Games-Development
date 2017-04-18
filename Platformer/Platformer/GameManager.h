@@ -95,7 +95,7 @@ private:
 
 	std::vector<Bullet> mBullets;
 
-	std::unique_ptr<b2World> mB2World;
+	std::unique_ptr<b2World> mWorld;
 	std::vector<Entity> mEntities;
 };
 

@@ -86,6 +86,10 @@ void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, std::vector<
 	//}
 }
 
+void PhysicsManager::addBoxToWorld(std::unique_ptr<b2World>& b2World, std::vector<Entity>& entities)
+{
+}
+
 void PhysicsManager::log(const std::string text)
 {
 	std::cout << "[PhysicsManager] " << text << std::endl;
