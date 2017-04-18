@@ -29,5 +29,8 @@ private:
 	playerMoveState mMoveState;
 
 	Entity mCollisionBox;
+
+	//Limit the player's speed
+	const float MAX_SPEED = 10.0f;
 };
 
