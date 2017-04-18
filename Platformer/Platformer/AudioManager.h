@@ -14,7 +14,7 @@ public:
 	AudioManager();
 	~AudioManager();
 
-	bool init();
+	bool initAudio();
 
 	SoundEffect loadSoundEffect(const std::string& path);
 	Music loadMusic(const std::string& path);

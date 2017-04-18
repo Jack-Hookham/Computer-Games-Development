@@ -25,16 +25,16 @@
 #include "Bullet.h"
 #include "SpriteFont.h"
 #include "Box.h"
-
+#include "Entity.h"
 class GraphicsManager
 {
 
 public:
-	GraphicsManager(Player* player, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
+	GraphicsManager();
 	~GraphicsManager();
 
 	//initialise SDL and create window
-	bool initGraphics();
+	bool initGraphics(const int screenWidth, const int screenHeight);
 
 	//Loads media needed for the game
 	bool loadMedia();
@@ -42,8 +42,7 @@ public:
 	//Loads individual image as texture
 	//SDL_Texture* loadTexture(std::string path);
 
-	void updateGraphics(Timer timer, float avgFPS, float timeMod, std::vector<Bullet> &bullets, 
-		std::vector<Box> &boxes);
+	void updateGraphics(float avgFPS, std::vector<Entity>& entities);
 
 	void translateCamera(glm::vec2 translation);
 	void setCameraScale(float scale);
@@ -73,7 +72,7 @@ private:
 	//Camera for the HUD
 	Camera mHUDCamera;
 
-	Player* mPlayer;
+	Player mPlayer;
 
 	//Entity sprite batch
 	SpriteBatch mEntitySpriteBatch;
@@ -100,7 +99,5 @@ private:
 	//In memory text stream
 	//std::stringstream timeText;
 	//std::stringstream fpsText;
-
-
 };
 

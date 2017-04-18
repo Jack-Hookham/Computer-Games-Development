@@ -1,3 +1,6 @@
+//
+#pragma once
+
 #include <vector>
 
 extern int decodePNG(std::vector<unsigned char>& out_image, unsigned long& image_width, 

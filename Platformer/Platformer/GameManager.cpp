@@ -2,118 +2,87 @@
 
 GameManager::GameManager()
 {
-	mPlayer = new Player(mScreenWidth, mScreenHeight);
-
-	mPhysicsManager = new PhysicsManager();
-	mGraphicsManager = new GraphicsManager(mPlayer, mScreenWidth, mScreenHeight);
 }
 
 GameManager::~GameManager()
 {
-	delete mPhysicsManager;
-	delete mGraphicsManager;
-	delete mPlayer;
 }
 
 int GameManager::run()
 {
-	if (init())
+	int failedInits = init();
+	if (failedInits > 0)
 	{
-		log("All systems successfully initialised");
+		const std::string text = "Failed to initialise " + std::to_string(failedInits) + "";
+		log("Failed to initialise " + std::to_string(failedInits) + " subsystems");
 	}
 	else
 	{
-		log("Failed to initialise 1 or more sub systems");
+		log("All subsystems successfully initialised");
 	}
 
 	return gameLoop();
 }
 
-bool GameManager::init()
+int GameManager::init()
 {
-	//initialisation flag
-	bool success = true;
+	//Track the number of failed inits
+	int failedInits = 0;
 
-	//initialise physics
-	if (!(mPhysicsManager->initPhysics()))
-	{
-		log("Failed to initialise physics");
-		success = false;
-	}
-	else
-	{
-		log("Physics successfully initialised");
-	}
-
-	//initialise graphics
-	if (!(mGraphicsManager->initGraphics()))
-	{
-		log("Failed to initialise graphics");
-		success = false;
-	}
-	else
+	//Initialise graphics
+	//Done before the PhysicsManager because the PhysicsManager adds textures to entities
+	//using the ResourceManager which requires OpenGl to be setup first
+	if (mGraphicsManager.initGraphics(mScreenWidth, mScreenHeight))
 	{
 		log("Graphics successfully initialised");
 	}
-
-	//Audio must initialise after graphics because SDL is initialised in graphics
-	//Audio uses SDL_mixer
-	mAudioManager.init();
-	mAudioManager.setVolume(10);
-
-	mMusic = mAudioManager.loadMusic("../res/sound/tutorial/XYZ.ogg");
-	mMusic.play(-1);
-
-	mShotSound1 = mAudioManager.loadSoundEffect("../res/sound/tutorial/shots/cg1.wav");
-
-	//Box2D world setup
-	b2Vec2 gravity(0.0f, -25.0);
-	mB2World = std::make_unique<b2World>(gravity);
-
-	//Make the ground
-	b2BodyDef groundBodyDef;
-	groundBodyDef.position.Set(0.0f, -20.0f);
-	b2Body* groundBody = mB2World->CreateBody(&groundBodyDef);
-
-	// Make the ground fixture
-	b2PolygonShape groundBox;
-	groundBox.SetAsBox(50.0f, 10.0f);
-	groundBody->CreateFixture(&groundBox, 0.0f);
-
-	//Random box gen
-	std::mt19937 randGenerator;
-	std::uniform_real_distribution<float> xGen(-10.0f, 10.0f);
-	std::uniform_real_distribution<float> yGen(-10.0f, 20.0);
-	std::uniform_real_distribution<float> sizeGen(0.5f, 2.5f);
-	std::uniform_int_distribution<int> colourGen(150, 255);
-	std::uniform_int_distribution<int> textureGen(0, 9);
-
-	GLTexture texture = ResourceManager::getTexture("../res/textures/platform_tutorial/bricks_top.png");
-
-	const int NUM_BOXES = 100;
-
-	for (unsigned int i = 0; i < NUM_BOXES; i++)
+	else
 	{
-		float xPos = xGen(randGenerator);
-		float yPos = yGen(randGenerator);
-		float sizeX = sizeGen(randGenerator);
-		float sizeY = sizeGen(randGenerator);
-		Colour colour(colourGen(randGenerator), colourGen(randGenerator), colourGen(randGenerator), 255);
-		glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
-
-		Box newBox;
-		newBox.init(mB2World.get(), glm::vec2(xPos, yPos), glm::vec2(sizeX, sizeY), colour, texture);
-		mBoxes.push_back(newBox);
+		log("Failed to initialise graphics");
+		failedInits++;
 	}
 
-	return success;
+	//Initialise physics
+	if (mPhysicsManager.initPhysics(mDesiredFPS, mB2World, mEntities))
+	{
+		log("Physics successfully initialised");
+	}
+	else
+	{
+		log("Failed to initialise physics");
+		failedInits++;
+	}
+
+	//Initialise audio
+	//Audio must initialise after graphics because SDL is initialised in graphics
+	//Audio uses SDL_mixer
+	if (mAudioManager.initAudio())
+	{
+		log("Audio successfully initialised");
+
+		//Set initial volume (max 128)
+		mAudioManager.setVolume(30);
+
+		//Load the background music file
+		mMusic = mAudioManager.loadMusic("../res/sound/8_bit_pack/bgm_action_3.mp3");
+		//Play the background music file
+		mMusic.play(-1);
+
+		//Load sound effect
+		mShotSound1 = mAudioManager.loadSoundEffect("../res/sound/tutorial/shots/cg1.wav");
+	}
+	else
+	{
+		log("Failed to initialise audio");
+		failedInits++;
+	}
+
+	return failedInits;
 }
 
 int GameManager::gameLoop()
 {
-	//Set text colour as black
-	SDL_Color textColour = { 0, 0, 0, 255 };
-
+	//Number of frames
 	int countedFrames = 0;
 
 	mFPSTimer.start();
@@ -124,22 +93,17 @@ int GameManager::gameLoop()
 	{
 		//Start cap timer at the start of each frame (each loop)
 		mFrameTimer.start();
-		
+
+		//Manage the user input
+		manageInput();
+
 		Uint32 newTicks = SDL_GetTicks();
 		Uint32 frameTime = newTicks - previousTicks;
 		previousTicks = newTicks;
-		float totalTimeStep = frameTime / SCREEN_TICKS_PER_FRAME;
-
-		mTimeMod += 0.01f;
-
-		manageInput();
-
-		//mPlayer->move();
+		float totalTimeStep = frameTime / mScreenTicksPerFrame;
 		
+		//Physics update
 		int stepCount = 0;
-
-		int32 velocityIterations = 6;
-		int32 positionIterations = 2;
 
 		//This loop ensures that physics updates are not effected by fps
 		while (totalTimeStep > 0.0f && stepCount < MAX_PHYSICS_STEPS)
@@ -150,21 +114,12 @@ int GameManager::gameLoop()
 			float timeStep = std::min(totalTimeStep, MAX_TIME_STEP);
 			
 			//Update all physics
-			mPhysicsManager->updatePhysics(timeStep, mBullets);
-
-			//b2World velocity and position iterations, similar to the values recommended in the box2d manual
-			//http://box2d.org/manual.pdf
-
-			//Step the b2World with the timestep
-			//mB2World->Step(timeStep / DESIRED_FPS, velocityIterations, positionIterations);
+			mPhysicsManager.updatePhysics(mB2World, mEntities);
 
 			totalTimeStep -= timeStep;
 			stepCount++;
 			//std::cout << "Step Count " << stepCount << std::endl;
 		}
-
-
-		mB2World->Step(1.0f / 60.0f, velocityIterations, positionIterations);
 
 		//Calculate and correct fps
 		float avgFPS = countedFrames / (mFPSTimer.getTicks() / MS_PER_SECOND);
@@ -173,21 +128,13 @@ int GameManager::gameLoop()
 			avgFPS = 0;
 		}
 
-		//mGraphicsManager->loadTexture("PATH");
-		mGraphicsManager->updateGraphics(mTimer, avgFPS, mTimeMod, mBullets, mBoxes);
+		mGraphicsManager.updateGraphics(avgFPS, mEntities);
 		++countedFrames;
 
 		//cout << "FPS: " << avgFPS << endl;
 
 		//If frame finished early
 		int frameTicks = mFrameTimer.getTicks();
-
-		//if (frameTicks < SCREEN_TICKS_PER_FRAME)
-		////mMaxFPS = 60;
-		//{
-		//	//Wait remaining time
-		//	SDL_Delay(SCREEN_TICKS_PER_FRAME - frameTicks);
-		//}
 	}
 
 	return 0;
@@ -249,7 +196,7 @@ void GameManager::manageInput()
 	if (mInputManager.isKeyPressed(SDL_BUTTON_LEFT) || mInputManager.isKeyPressed(SDL_JOYBUTTONDOWN))
 	{
 		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
-		glm::vec2 worldCoords = mGraphicsManager->getCamera().screenToWorld(mouseCoords);
+		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
 		std::cout << worldCoords.x << " " << worldCoords.y << std::endl;
 
 		glm::vec2 playerPosition(0.0f, 0.0f);
@@ -264,73 +211,61 @@ void GameManager::manageInput()
 	//Movement
 	if (mInputManager.isKeyDown(SDLK_a))
 	{
-		//mPlayer->setVelX(-(mPlayer->getSpeed()));
-		mGraphicsManager->translateCamera(glm::vec2(-CAMERA_SPEED, 0.0f));
+		mGraphicsManager.translateCamera(glm::vec2(-CAMERA_SPEED, 0.0f));
 	}
 	if (mInputManager.isKeyDown(SDLK_d))
 	{
-		//mPlayer->setVelX(mPlayer->getSpeed());
-		mGraphicsManager->translateCamera(glm::vec2(CAMERA_SPEED, 0.0f));
+		mGraphicsManager.translateCamera(glm::vec2(CAMERA_SPEED, 0.0f));
 	}
 
 	if (mInputManager.isKeyDown(SDLK_w))
 	{
-		mGraphicsManager->translateCamera(glm::vec2(0.0f, CAMERA_SPEED));
+		mGraphicsManager.translateCamera(glm::vec2(0.0f, CAMERA_SPEED));
 	}
 
 	if (mInputManager.isKeyDown(SDLK_s))
 	{
-		mGraphicsManager->translateCamera(glm::vec2(0.0f, -CAMERA_SPEED));
+		mGraphicsManager.translateCamera(glm::vec2(0.0f, -CAMERA_SPEED));
 	}
-
-	//if (!mInputManager.isKeyDown(SDLK_a) && !mInputManager.isKeyDown(SDLK_d))
-	//{
-	//	mPlayer->setVelX(0);
-	//}
 
 	if (mInputManager.isKeyDown(SDLK_q))
 	{
 		//zoom in
-		mGraphicsManager->setCameraScale(SCALE_SPEED);
+		mGraphicsManager.setCameraScale(SCALE_SPEED);
 	}
 	if (mInputManager.isKeyDown(SDLK_e))
 	{
 		//zoom out
-		mGraphicsManager->setCameraScale(-SCALE_SPEED);
+		mGraphicsManager.setCameraScale(-SCALE_SPEED);
 	}
 
 	//Timers
-	if (mInputManager.isKeyPressed(SDLK_s))
-	{
-		if (mTimer.isStarted())
-		{
-			mTimer.stop();
-		}
-		else
-		{
-			mTimer.start();
-		}
-	}
-	if (mInputManager.isKeyPressed(SDLK_p))
-	{
-		if (mTimer.isPaused())
-		{
-			mTimer.unpause();
-		}
-		else
-		{
-			mTimer.pause();
-		}
-	}
-	if (mInputManager.isKeyPressed(SDLK_r))
-	{
-		mTimer.restart();
-	}
-
-
-	//case SDLK_SPACE:
-	//	mPlayer->jump();
-	//	break;
+	//if (mInputManager.isKeyPressed(SDLK_s))
+	//{
+	//	if (mTimer.isStarted())
+	//	{
+	//		mTimer.stop();
+	//	}
+	//	else
+	//	{
+	//		mTimer.start();
+	//	}
+	//}
+	//if (mInputManager.isKeyPressed(SDLK_p))
+	//{
+	//	if (mTimer.isPaused())
+	//	{
+	//		mTimer.unpause();
+	//	}
+	//	else
+	//	{
+	//		mTimer.pause();
+	//	}
+	//}
+	//if (mInputManager.isKeyPressed(SDLK_r))
+	//{
+	//	mTimer.restart();
+	//}
 
 	//Update the input manager - copys current input map to previous input map
 	mInputManager.update();

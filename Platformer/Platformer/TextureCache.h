@@ -14,6 +14,9 @@ public:
 	GLTexture getTexture(std::string path);
 
 private:
+	//Log for TextureCache
+	void log(const std::string text);
+
 	std::map<std::string, GLTexture> mTextureMap;
 };
 

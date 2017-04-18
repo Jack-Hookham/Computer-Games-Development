@@ -30,7 +30,7 @@ AudioManager::~AudioManager()
 	}
 }
 
-bool AudioManager::init()
+bool AudioManager::initAudio()
 {
 	//Initilisation flag
 	bool success = true;

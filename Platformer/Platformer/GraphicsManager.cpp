@@ -1,10 +1,7 @@
 #include "GraphicsManager.h"
 
-GraphicsManager::GraphicsManager(Player* player,  const int screenWidth, const int screenHeight) 
+GraphicsManager::GraphicsManager() 
 {
-	mPlayer = player;
-	mScreenWidth = screenWidth;
-	mScreenHeight = screenHeight;
 }
 
 GraphicsManager::~GraphicsManager()
@@ -33,10 +30,13 @@ GraphicsManager::~GraphicsManager()
 	delete mSpriteFont;
 }
 
-bool GraphicsManager::initGraphics()
+bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight)
 {
 	//Initialisation flag
 	bool success = true;
+
+	mScreenWidth = screenWidth;
+	mScreenHeight = screenHeight;
 
 	//Initialise SDL
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -54,7 +54,7 @@ bool GraphicsManager::initGraphics()
 
 	//Initialise the cameras
 	mWorldCamera.initCamera(mScreenWidth, mScreenHeight);
-	mWorldCamera.setScale(8.0f);
+	mWorldCamera.setScale(16.0f);
 	mHUDCamera.initCamera(mScreenWidth, mScreenHeight);
 	//Offset the hud camera to align 0, 0 with the bottom left corner
 	mHUDCamera.setPosition(glm::vec2(mScreenWidth / 2, mScreenHeight / 2));
@@ -220,13 +220,11 @@ void GraphicsManager::drawHUD(float avgFPS)
 //	return newTexture;
 //}
 
-void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, std::vector<Bullet> &bullets,
-	std::vector<Box> &boxes)
+void GraphicsManager::updateGraphics(float avgFPS, std::vector<Entity>& entities)
 {
 	mWorldCamera.updateCamera();
 	mHUDCamera.updateCamera();
 
-	//std::cout << timeMod << std::endl;
 	//Set depth to 1.0
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -236,9 +234,6 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 
 	GLuint textureLocation = mColourShader.getUniformLocation("sampler");
 	glUniform1i(textureLocation, 0);
-	
-	//GLuint timeLocation = mColourShader.getUniformLocation("timeMod");
-	//glUniform1f(timeLocation, timeMod);
 
 	glm::mat4 cameraMatrix = mWorldCamera.getCamerMatrix();
 	GLuint projMatrixLocation = mColourShader.getUniformLocation("projMatrix");
@@ -268,15 +263,15 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 	//	mEntitySpriteBatch.addQuad(pos, texCoords, texture.id, 0.0f, colour);
 	//}
 
-	for (unsigned int i = 0; i < bullets.size(); i++)
-	{
-		bullets[i].draw(mEntitySpriteBatch);
-	}
+	//for (unsigned int i = 0; i < bullets.size(); i++)
+	//{
+	//	bullets[i].draw(mEntitySpriteBatch);
+	//}
 
 	//Draw all boxes
-	for (auto b : boxes)
+	for (Entity e : entities)
 	{
-		b.draw(mEntitySpriteBatch);
+		e.draw(mEntitySpriteBatch);
 		//mEntitySpriteBatch.addQuad(destQuad, boxTexCoords, boxTexture.id, 0.0f, b.getColour(), b.getBody()->GetAngle());
 	}
 
@@ -285,78 +280,11 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 
 	drawHUD(avgFPS);
 
-	//for (int i = 0; i < mSprites.size(); i++)
-	//{
-	//	mSprites[i]->draw();
-	//}
-
 	glBindTexture(GL_TEXTURE_2D, 0);
 	mColourShader.unuse();
 
 	//Swap buffer and draw everything
 	mWindow.swapWindow();
-
-	////Clear screen
-	//SDL_SetRenderDrawColor(mRenderer, 0x88, 0x88, 0x88, 0xFF);
-	//SDL_RenderClear(mRenderer);
-
-	//SDL_Color textColour = { 0, 0, 60, 255 };
-
-	//////Render red filled quad
-	////SDL_Rect fillRect = { mScreenWidth / 4, mScreenHeight / 4, mScreenWidth / 2, mScreenHeight / 2 };
-	////SDL_SetRenderDrawColor(mRenderer, 0xFF, 0x00, 0x00, 0xFF);
-	////SDL_RenderFillRect(mRenderer, &fillRect);
-
-	//////Render green outlined quad
-	////SDL_Rect outlineRect = { mScreenWidth / 6, mScreenHeight / 6, mScreenWidth * 2 / 3, mScreenHeight * 2 / 3 };
-	////SDL_SetRenderDrawColor(mRenderer, 0x00, 0xFF, 0x00, 0xFF);
-	////SDL_RenderDrawRect(mRenderer, &outlineRect);
-
-	//////Draw blue horizontal line
-	////SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
-	////SDL_RenderDrawLine(mRenderer, 0, mScreenHeight / 2, mScreenWidth, mScreenHeight / 2);
-
-	//////Draw vertical line of yellow dots
-	////SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0x00, 0xFF);
-	////for (int i = 0; i < mScreenHeight; i += 4)
-	////{
-	////	SDL_RenderDrawPoint(mRenderer, mScreenWidth / 2, i);
-	////}
-
-	////Render player
-	//SDL_Rect playerRect = { mPlayer->getPosition().getX(), mPlayer->getPosition().getY(),
-	//						mPlayer->getWidth() * WORLD_TO_SCREEN, mPlayer->getHeight() * WORLD_TO_SCREEN };
-	//SDL_SetRenderDrawColor(mRenderer, 0x66, 0x00, 0xFF, 0xFF);
-	//SDL_RenderFillRect(mRenderer, &playerRect);
-	//
-	////Render text
-	//mTextTexture->render((mScreenWidth - mTextTexture->getWidth()) / 2, (mScreenHeight - mTextTexture->getHeight()) / 3);
-	//mPromptTextTexture->render((mScreenWidth - mPromptTextTexture->getWidth()) / 2, 0);
-
-	//timeText.str("");
-	//timeText << "Milliseconds since start time " << timer.getTicks();
-
-	////Update time texture with new time
-	//if (!mTimeTextTexture->loadFromRenderedText(mMainFont, timeText.str().c_str(), textColour))
-	//{
-	//	log("Unable to render time texture!");
-	//}
-
-	//mTimeTextTexture->render((mScreenWidth - mPromptTextTexture->getWidth()) / 2, (mScreenHeight - mPromptTextTexture->getHeight()) / 2);
-
-	//fpsText.str("");
-	//fpsText << std::setprecision(2) << "avgFPS: " << avgFPS;
-
-	////Update fps texture with new fps
-	//if (!mFPSTextTexture->loadFromRenderedText(mMainFont, fpsText.str().c_str(), textColour))
-	//{
-	//	log("Unable to render fps texture!");
-	//}
-
-	//mFPSTextTexture->render((mScreenWidth - mFPSTextTexture->getWidth()) / 2, (mScreenHeight - mFPSTextTexture->getHeight()) / 1.5);
-
-	////Update screen
-	//SDL_RenderPresent(mRenderer);
 }
 
 void GraphicsManager::translateCamera(glm::vec2 translation)

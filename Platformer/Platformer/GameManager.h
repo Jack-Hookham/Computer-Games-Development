@@ -42,7 +42,7 @@ public:
 
 private:
 	//Start up SDL and create window
-	bool init();
+	int init();
 
 	//Main loop for the game
 	int gameLoop();	
@@ -58,13 +58,13 @@ private:
 	int mScreenHeight= 720;
 
 	//Desired fps for the game
-	const int DESIRED_FPS = 60;
+	int mDesiredFPS = 60;
 
 	//Store this as const as it's used multiple times
 	const float MS_PER_SECOND = 1000.0f;
 
 	//Store this to save multiple divides
-	const float SCREEN_TICKS_PER_FRAME = MS_PER_SECOND / DESIRED_FPS;
+	float mScreenTicksPerFrame = MS_PER_SECOND / mDesiredFPS;
 
 	//Physics step limiter
 	const int MAX_PHYSICS_STEPS = 6;
@@ -73,16 +73,16 @@ private:
 	const float CAMERA_SPEED = 1.0f;
 	const float SCALE_SPEED = 0.1f;
 
-	Player* mPlayer;
-
-	PhysicsManager* mPhysicsManager;
-	GraphicsManager* mGraphicsManager;
+	PhysicsManager mPhysicsManager;
+	GraphicsManager mGraphicsManager;
 	InputManager mInputManager;
 
 	//Audio stuff
 	AudioManager mAudioManager;
 	Music mMusic;
 	SoundEffect mShotSound1;
+
+	Player mPlayer;
 
 	//Application timer
 	Timer mTimer;
@@ -93,11 +93,9 @@ private:
 	//Timer for each frame
 	Timer mFrameTimer;
 
-	float mTimeMod = 0.0f;
-
 	std::vector<Bullet> mBullets;
 
 	std::unique_ptr<b2World> mB2World;
-	std::vector<Box> mBoxes;
+	std::vector<Entity> mEntities;
 };
 

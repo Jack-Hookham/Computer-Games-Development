@@ -22,10 +22,15 @@ GLTexture TextureCache::getTexture(std::string path)
 		//Add texture to map
 		mTextureMap.insert(make_pair(path, newTexture));
 
-		std::cout << "Loaded new texture\n";
+		log("Loaded new texture");
 
 		return newTexture;
 	}
-	std::cout << "Loaded cached texture\n";
+	log("Loaded cached texture");
 	return mapIterator->second;
+}
+
+void TextureCache::log(const std::string text)
+{
+	std::cout << "[TextureCache] " << text << std::endl;
 }
