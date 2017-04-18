@@ -9,7 +9,7 @@ Entity::~Entity()
 }
 
 void Entity::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
-	const GLTexture& texture, const glm::vec4& texCoords, bool fixedRotation)
+	const Texture& texture, const glm::vec4& texCoords, bool fixedRotation)
 {
 	//Initialise the entity's variables
 	mPosition = position;

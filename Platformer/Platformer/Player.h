@@ -19,7 +19,7 @@ public:
 	~Player();
 
 	//void init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
-	//	const GLTexture& texture, const glm::vec4& texCoords = { 0.0f, 0.0f, 1.0f, 1.0f });
+	//	const Texture& texture, const glm::vec4& texCoords = { 0.0f, 0.0f, 1.0f, 1.0f });
 
 	void input(InputManager& inputManager);
 

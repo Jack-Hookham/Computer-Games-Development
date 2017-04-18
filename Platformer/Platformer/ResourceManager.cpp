@@ -2,7 +2,7 @@
 
 TextureCache ResourceManager::mTextureCache;
 
-GLTexture ResourceManager::getTexture(std::string path)
+Texture ResourceManager::getTexture(std::string path)
 {
 	return mTextureCache.getTexture(path);
 }

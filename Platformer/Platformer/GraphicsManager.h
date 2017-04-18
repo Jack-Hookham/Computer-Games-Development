@@ -16,7 +16,6 @@
 #include "Player.h"
 #include "Timer.h"
 #include "Shader.h"
-#include "GLTexture.h"
 #include "ImageManager.h"
 #include "Window.h"
 #include "Camera.h"

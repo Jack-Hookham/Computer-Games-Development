@@ -9,7 +9,7 @@ Player::~Player()
 }
 
 //void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
-//	const GLTexture& texture, const glm::vec4& texCoords)
+//	const Texture& texture, const glm::vec4& texCoords)
 //{
 //	mPosition = position;
 //	mDimensions = dimensions;

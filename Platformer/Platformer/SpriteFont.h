@@ -33,7 +33,7 @@ Modified By: Jack Hookham
 #include "SpriteBatch.h"
 #include "Vertex.h"
 
-struct GLTexture;
+struct Texture;
 class SpriteBatch;
 
 struct CharGlyph {

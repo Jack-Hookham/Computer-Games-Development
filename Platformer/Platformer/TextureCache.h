@@ -1,9 +1,10 @@
 #pragma once
 
+#include <GL/glew.h>
 #include <map>
 
-#include "GLTexture.h"
 #include "ImageManager.h"
+#include "Texture.h"
 
 class TextureCache
 {
@@ -11,12 +12,12 @@ public:
 	TextureCache();
 	~TextureCache();
 
-	GLTexture getTexture(std::string path);
+	Texture getTexture(std::string path);
 
 private:
 	//Log for TextureCache
 	void log(const std::string text);
 
-	std::map<std::string, GLTexture> mTextureMap;
+	std::map<std::string, Texture> mTextureMap;
 };
 

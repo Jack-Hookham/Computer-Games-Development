@@ -2,6 +2,10 @@
 
 #include <algorithm>
 
+Quad::Quad()
+{
+}
+
 Quad::Quad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
 {
 	this->texture = texture;

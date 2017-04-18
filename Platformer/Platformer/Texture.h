@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <string>
 
-struct GLTexture
+struct Texture
 {
 	std::string filePath = "";
 	GLuint id;

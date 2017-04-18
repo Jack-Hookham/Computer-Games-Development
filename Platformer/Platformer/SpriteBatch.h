@@ -6,7 +6,7 @@
 #include <algorithm>
 
 #include "Vertex.h"
-#include "GLTexture.h"
+#include "TextureCache.h"
 
 enum BufferType
 {

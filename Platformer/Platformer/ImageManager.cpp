@@ -1,9 +1,9 @@
 #include "ImageManager.h"
 
-GLTexture ImageManager::loadTexture(std::string filePath)
+Texture ImageManager::loadTexture(std::string filePath)
 {
 	//Initialise texure values to 0;
-	GLTexture texture = {};
+	Texture texture = {};
 
 	//Input for picoPNG decodePNG
 	std::vector<unsigned char> input;

@@ -245,8 +245,8 @@ void GraphicsManager::updateGraphics(float avgFPS, std::vector<Entity>& entities
 
 	glm::vec4 pos(0.0f, 0.0f, 50.0f, 50.0f);
 	glm::vec4 texCoords(0.0f, 0.0f, 1.0f, 1.0f);
-	//GLTexture texture = ResourceManager::getTexture("../res/textures/platform_tutorial/bricks_top.png");
-	//GLTexture texture = ResourceManager::getTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+	//Texture texture = ResourceManager::getTexture("../res/textures/platform_tutorial/bricks_top.png");
+	//Texture texture = ResourceManager::getTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 	Colour colour(255, 255, 255, 255);
 
 	//for (int i = 0; i < 10; i++)

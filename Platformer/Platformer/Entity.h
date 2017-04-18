@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "SpriteBatch.h"
-#include "GLTexture.h"
+#include "TextureCache.h"
 #include "ResourceManager.h"
 
 class Box;
@@ -17,7 +17,7 @@ public:
 	~Entity();
 
 	void init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
-		const GLTexture& texture, const glm::vec4& texCoords = glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f }, bool fixedRotation = false);
+		const Texture& texture, const glm::vec4& texCoords = glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f }, bool fixedRotation = false);
 
 	b2Body* getBody() const { return mBody; };
 	b2Fixture* getFixture() const { return mFixture; };
@@ -33,7 +33,7 @@ protected:
 	glm::vec2 mPosition;
 	glm::vec2 mDimensions;
 	Colour mColour;
-	GLTexture mTexture;
+	Texture mTexture;
 	glm::vec4 mTexCoords;
 };
 
