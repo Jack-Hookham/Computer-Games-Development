@@ -71,7 +71,7 @@ bool GameManager::init()
 
 	//Make the ground
 	b2BodyDef groundBodyDef;
-	groundBodyDef.position.Set(0.0f, -20.0f);
+	groundBodyDef.position.Set(0.0f, -30.0f);
 	b2Body* groundBody = mB2World->CreateBody(&groundBodyDef);
 
 	//Make the ground fixture
@@ -79,8 +79,13 @@ bool GameManager::init()
 	groundBox.SetAsBox(50.0f, 10.0f);
 	groundBody->CreateFixture(&groundBox, 0.0f);
 
+	//Boxes
+	std::mt19937 randGenerator();
+	std::uniform_real_distribution<float> xDist(-10.0f, 10.0f);
+	std::uniform_real_distribution<float> yDist(-15.0f, 15.0f);
+
 	Box newBox;
-	newBox.init(mB2World.get(), glm::vec2(0.0f, 14.0f), glm::vec2(2.0f, 2.0f));
+	newBox.init(mB2World.get(), glm::vec2(0.0f, 50.0f), glm::vec2(2.0f, 2.0f));
 	mBoxes.push_back(newBox);
 
 	return success;
@@ -124,10 +129,18 @@ int GameManager::gameLoop()
 			
 			//Update all physics
 			mPhysicsManager->updatePhysics(timeStep, mBullets);
-			mB2World->Step(timeStep, 6, 2);
+
+			//b2World velocity and position iterations, similar to the values recommended in the box2d manual
+			//http://box2d.org/manual.pdf
+			int32 velocityIterations = 6;
+			int32 positionIterations = 2;
+
+			//Step the b2World with the timestep
+			mB2World->Step(timeStep / DESIRED_FPS, velocityIterations, positionIterations);
 
 			totalTimeStep -= timeStep;
 			stepCount++;
+			//std::cout << "Step Count " << stepCount << std::endl;
 		}
 
 		//Calculate and correct fps

@@ -6,7 +6,7 @@ Quad::Quad()
 }
 
 //Params constructor no angle
-Quad::Quad(const glm::vec4 & destQuad, const glm::vec4 & texCoord, GLuint texture, float depth, const Colour & colour)
+Quad::Quad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
 {
 	this->texture = texture;
 	this->depth = depth;
@@ -29,7 +29,7 @@ Quad::Quad(const glm::vec4 & destQuad, const glm::vec4 & texCoord, GLuint textur
 }
 
 //Params constructor with angle
-Quad::Quad(const glm::vec4 & destRect, const glm::vec4 & uvRect, GLuint Texture, float Depth, const Colour & color, float angle)
+Quad::Quad(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint Texture, float Depth, const Colour& color, float angle)
 {
 	this->texture = texture;
 	this->depth = depth;

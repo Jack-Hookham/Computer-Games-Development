@@ -54,7 +54,7 @@ bool GraphicsManager::initGraphics()
 
 	//Initialise the cameras
 	mWorldCamera.initCamera(mScreenWidth, mScreenHeight);
-	mWorldCamera.setScale(32.0f);
+	mWorldCamera.setScale(16.0f);
 	mHUDCamera.initCamera(mScreenWidth, mScreenHeight);
 	//Offset the hud camera to align 0, 0 with the bottom left corner
 	mHUDCamera.setPosition(glm::vec2(mScreenWidth / 2, mScreenHeight / 2));
@@ -250,8 +250,8 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 
 	glm::vec4 pos(0.0f, 0.0f, 50.0f, 50.0f);
 	glm::vec4 texCoords(0.0f, 0.0f, 1.0f, 1.0f);
-	static GLTexture texture = ResourceManager::getTexture("../res/textures/platform_tutorial/bricks_top.png");
-	//static GLTexture texture = ResourceManager::getTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
+	//GLTexture texture = ResourceManager::getTexture("../res/textures/platform_tutorial/bricks_top.png");
+	GLTexture texture = ResourceManager::getTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
 	Colour colour(255, 255, 255, 255);
 
 	//for (int i = 0; i < 10; i++)
@@ -263,15 +263,18 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 	//}
 	//mEntitySpriteBatch.draw(pos, texCoords, texture.id, 0.0f, colour);
 
-
+	if (mWorldCamera.cullOffScreen(glm::vec2(pos.x, pos.y), glm::vec2(pos.z, pos.w)))
+	{
+		mEntitySpriteBatch.addQuad(pos, texCoords, texture.id, 0.0f, colour);
+	}
 
 	for (unsigned int i = 0; i < bullets.size(); i++)
 	{
 		bullets[i].draw(mEntitySpriteBatch);
 	}
 
-	static GLTexture boxTexture = ResourceManager::getTexture("../res/textures/platform_tutorial/bricks_top.png");
-	Colour boxColour(255, 0, 0, 255);
+	GLTexture boxTexture = ResourceManager::getTexture("../res/textures/platform_tutorial/bricks_top.png");
+	Colour boxColour(255, 255, 255, 255);
 	glm::vec4 boxTexCoords(0.0f, 0.0f, 1.0f, 1.0f);
 
 	//Draw all boxes
@@ -284,12 +287,6 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 		destQuad.w = b.getDimensions().y;			//height
 
 		mEntitySpriteBatch.addQuad(destQuad, boxTexCoords, boxTexture.id, 0.0f, boxColour, b.getBody()->GetAngle());
-	}
-
-	//Cull offscreen entitys
-	if (mWorldCamera.cullOffScreen(glm::vec2(pos.x, pos.y), glm::vec2(pos.z, pos.w)))
-	{
-		mEntitySpriteBatch.addQuad(pos, texCoords, texture.id, 0.0f, colour);
 	}
 
 	mEntitySpriteBatch.end();
