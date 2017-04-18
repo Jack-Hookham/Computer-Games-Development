@@ -67,17 +67,17 @@ bool GameManager::init()
 	mShotSound1 = mAudioManager.loadSoundEffect("../res/sound/tutorial/shots/cg1.wav");
 
 	//Box2D world setup
-	b2Vec2 gravity(0.0f, -9.8f);
+	b2Vec2 gravity(0.0f, -25.0);
 	mB2World = std::make_unique<b2World>(gravity);
 
 	//Make the ground
 	b2BodyDef groundBodyDef;
-	groundBodyDef.position.Set(0.0f, -25.0f);
+	groundBodyDef.position.Set(0.0f, -20.0f);
 	b2Body* groundBody = mB2World->CreateBody(&groundBodyDef);
 
-	//Make the ground fixture
+	// Make the ground fixture
 	b2PolygonShape groundBox;
-	groundBox.SetAsBox(50.0f, 5.0);
+	groundBox.SetAsBox(50.0f, 10.0f);
 	groundBody->CreateFixture(&groundBox, 0.0f);
 
 	//Random box gen
@@ -85,9 +85,12 @@ bool GameManager::init()
 	std::uniform_real_distribution<float> xGen(-10.0f, 10.0f);
 	std::uniform_real_distribution<float> yGen(-10.0f, 20.0);
 	std::uniform_real_distribution<float> sizeGen(0.5f, 2.5f);
-	std::uniform_int_distribution<int> colourGen(50, 255);
+	std::uniform_int_distribution<int> colourGen(150, 255);
+	std::uniform_int_distribution<int> textureGen(0, 9);
 
-	const int NUM_BOXES = 10;
+	GLTexture texture = ResourceManager::getTexture("../res/textures/platform_tutorial/bricks_top.png");
+
+	const int NUM_BOXES = 100;
 
 	for (unsigned int i = 0; i < NUM_BOXES; i++)
 	{
@@ -97,10 +100,9 @@ bool GameManager::init()
 		float sizeY = sizeGen(randGenerator);
 		Colour colour(colourGen(randGenerator), colourGen(randGenerator), colourGen(randGenerator), 255);
 		glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
-		GLTexture texture = ResourceManager::getTexture("../res/textures/platform_tutorial/bricks_top.png");
 
 		Box newBox;
-		newBox.init(mB2World.get(), glm::vec2(xPos, yPos), glm::vec2(sizeX, sizeY), colour, texture, texCoords);
+		newBox.init(mB2World.get(), glm::vec2(xPos, yPos), glm::vec2(sizeX, sizeY), colour, texture);
 		mBoxes.push_back(newBox);
 	}
 
@@ -135,6 +137,10 @@ int GameManager::gameLoop()
 		//mPlayer->move();
 		
 		int stepCount = 0;
+
+		int32 velocityIterations = 6;
+		int32 positionIterations = 2;
+
 		//This loop ensures that physics updates are not effected by fps
 		while (totalTimeStep > 0.0f && stepCount < MAX_PHYSICS_STEPS)
 		{
@@ -148,16 +154,17 @@ int GameManager::gameLoop()
 
 			//b2World velocity and position iterations, similar to the values recommended in the box2d manual
 			//http://box2d.org/manual.pdf
-			int32 velocityIterations = 6;
-			int32 positionIterations = 2;
 
 			//Step the b2World with the timestep
-			mB2World->Step(timeStep / DESIRED_FPS, velocityIterations, positionIterations);
+			//mB2World->Step(timeStep / DESIRED_FPS, velocityIterations, positionIterations);
 
 			totalTimeStep -= timeStep;
 			stepCount++;
 			//std::cout << "Step Count " << stepCount << std::endl;
 		}
+
+
+		mB2World->Step(1.0f / 60.0f, velocityIterations, positionIterations);
 
 		//Calculate and correct fps
 		float avgFPS = countedFrames / (mFPSTimer.getTicks() / MS_PER_SECOND);

@@ -94,9 +94,9 @@ glm::vec2 Camera::screenToWorld(glm::vec2 screenCoords)
 bool Camera::cullOffScreen(const glm::vec2& position, const glm::vec2& dimensions)
 {
 	//Scale screen dimensions to mScale
-	//glm::vec2 scaledScreenDimensions = glm::vec2(mScreenWidth, mScreenHeight) / (mScale);
+	glm::vec2 scaledScreenDimensions = glm::vec2(mScreenWidth, mScreenHeight) / (mScale);
 	//cull testing
-	glm::vec2 scaledScreenDimensions = glm::vec2(mScreenWidth, mScreenHeight) / (mScale * 2.0f);
+	//glm::vec2 scaledScreenDimensions = glm::vec2(mScreenWidth, mScreenHeight) / (mScale * 2.0f);
 
 	//Minimum distance before a collision occurs
 	const float MIN_DISTANCE_X = dimensions.x / 2.0f + scaledScreenDimensions.x / 2.0f;

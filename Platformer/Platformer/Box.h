@@ -13,8 +13,8 @@ public:
 	Box();
 	~Box();
 
-	void init(b2World* world, const glm::vec2 &position, const glm::vec2 &dimensions,
-		const Colour& colour, const GLTexture texture, const glm::vec4 texCoords);
+	void init(b2World* world, const glm::vec2 &position, const glm::vec2 &dimensions, const Colour& colour, 
+		const GLTexture texture, const glm::vec4 texCoords = glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f });
 
 	b2Body* getBody() const { return mBody; };
 	b2Fixture* getFixture() const { return mFixture; };
