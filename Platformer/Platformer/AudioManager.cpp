@@ -129,8 +129,11 @@ Music AudioManager::loadMusic(const std::string & path)
 	return music;
 }
 
+//Set the audio volume (0 to 128)
 void AudioManager::setVolume(int volume)
 {
+	Mix_Volume(-1, volume);
+	Mix_VolumeMusic(volume);
 }
 
 void AudioManager::log(const std::string text)

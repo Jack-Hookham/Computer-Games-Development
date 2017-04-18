@@ -9,9 +9,14 @@ Box::~Box()
 {
 }
 
-void Box::init(b2World* world, const glm::vec2 &position, const glm::vec2 &dimensions)
+void Box::init(b2World* world, const glm::vec2 &position, const glm::vec2 &dimensions,
+	const Colour& colour, const GLTexture texture, const glm::vec4 texCoords)
 {
+	mPosition = position;
 	mDimensions = dimensions;
+	mColour = colour;
+	mTexture = texture;
+	mTexCoords = texCoords;
 
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
@@ -25,15 +30,17 @@ void Box::init(b2World* world, const glm::vec2 &position, const glm::vec2 &dimen
 	fixtureDef.shape = &boxShape;
 	fixtureDef.density = 1.0f;
 	fixtureDef.friction = 0.3f;
+	fixtureDef.restitution = 0.0f;
 	mFixture = mBody->CreateFixture(&fixtureDef);
 }
 
 void Box::draw(SpriteBatch &spriteBatch)
 {
-	glm::vec4 dimensions(mBody->GetPosition().x, mBody->GetPosition().y, 30.0f, 30.0f);
-	glm::vec4 texCoords(0.0f, 0.0f, 1.0f, 1.0f);
-	static GLTexture texture = ResourceManager::getTexture("../res/textures/jimmyJump_pack/PNG/CharacterRight_Standing.png");
-	Colour colour(255, 255, 255, 255);
+	glm::vec4 destQuad;
+	destQuad.x = mBody->GetPosition().x - mDimensions.x / 2.0f;
+	destQuad.y = mBody->GetPosition().y - mDimensions.y / 2.0f;
+	destQuad.z = mDimensions.x;
+	destQuad.w = mDimensions.y;
 
-	spriteBatch.addQuad(dimensions, texCoords, texture.id, 0.0f, colour);
+	spriteBatch.addQuad(destQuad, mTexCoords, mTexture.id, 0.0f, mColour, mBody->GetAngle());
 }

@@ -75,7 +75,7 @@ public:
 	void addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour);
 	void addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, float angle);
 
-	void renderBatch();
+	void renderBatches();
 
 private:
 	//2 trianges = 6 vertices

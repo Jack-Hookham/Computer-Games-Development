@@ -187,7 +187,7 @@ void GraphicsManager::drawHUD(float avgFPS)
 		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
 
 	mHUDSpriteBatch.end();
-	mHUDSpriteBatch.renderBatch();
+	mHUDSpriteBatch.renderBatches();
 }
 
 //SDL_Texture* GraphicsManager::loadTexture(std::string path)
@@ -273,24 +273,15 @@ void GraphicsManager::updateGraphics(Timer timer, float avgFPS, float timeMod, s
 		bullets[i].draw(mEntitySpriteBatch);
 	}
 
-	GLTexture boxTexture = ResourceManager::getTexture("../res/textures/platform_tutorial/bricks_top.png");
-	Colour boxColour(255, 255, 255, 255);
-	glm::vec4 boxTexCoords(0.0f, 0.0f, 1.0f, 1.0f);
-
 	//Draw all boxes
 	for (auto b : boxes)
 	{
-		glm::vec4 destQuad;
-		destQuad.x = b.getBody()->GetPosition().x;	//x
-		destQuad.y = b.getBody()->GetPosition().y;	//y
-		destQuad.z = b.getDimensions().x;			//width
-		destQuad.w = b.getDimensions().y;			//height
-
-		mEntitySpriteBatch.addQuad(destQuad, boxTexCoords, boxTexture.id, 0.0f, boxColour, b.getBody()->GetAngle());
+		b.draw(mEntitySpriteBatch);
+		//mEntitySpriteBatch.addQuad(destQuad, boxTexCoords, boxTexture.id, 0.0f, b.getColour(), b.getBody()->GetAngle());
 	}
 
 	mEntitySpriteBatch.end();
-	mEntitySpriteBatch.renderBatch();
+	mEntitySpriteBatch.renderBatches();
 
 	drawHUD(avgFPS);
 

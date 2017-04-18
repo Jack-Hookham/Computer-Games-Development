@@ -26,11 +26,6 @@ int GameManager::run()
 		log("Failed to initialise 1 or more sub systems");
 	}
 
-	mMusic = mAudioManager.loadMusic("../res/sound/tutorial/XYZ.ogg");
-	mMusic.play(-1);
-
-	mShotSound1 = mAudioManager.loadSoundEffect("../res/sound/tutorial/shots/cg1.wav");
-
 	return gameLoop();
 }
 
@@ -64,6 +59,12 @@ bool GameManager::init()
 	//Audio must initialise after graphics because SDL is initialised in graphics
 	//Audio uses SDL_mixer
 	mAudioManager.init();
+	mAudioManager.setVolume(10);
+
+	mMusic = mAudioManager.loadMusic("../res/sound/tutorial/XYZ.ogg");
+	mMusic.play(-1);
+
+	mShotSound1 = mAudioManager.loadSoundEffect("../res/sound/tutorial/shots/cg1.wav");
 
 	//Box2D world setup
 	b2Vec2 gravity(0.0f, -9.8f);
@@ -71,22 +72,37 @@ bool GameManager::init()
 
 	//Make the ground
 	b2BodyDef groundBodyDef;
-	groundBodyDef.position.Set(0.0f, -30.0f);
+	groundBodyDef.position.Set(0.0f, -25.0f);
 	b2Body* groundBody = mB2World->CreateBody(&groundBodyDef);
 
 	//Make the ground fixture
 	b2PolygonShape groundBox;
-	groundBox.SetAsBox(50.0f, 10.0f);
+	groundBox.SetAsBox(50.0f, 5.0);
 	groundBody->CreateFixture(&groundBox, 0.0f);
 
-	//Boxes
-	std::mt19937 randGenerator();
-	std::uniform_real_distribution<float> xDist(-10.0f, 10.0f);
-	std::uniform_real_distribution<float> yDist(-15.0f, 15.0f);
+	//Random box gen
+	std::mt19937 randGenerator;
+	std::uniform_real_distribution<float> xGen(-10.0f, 10.0f);
+	std::uniform_real_distribution<float> yGen(-10.0f, 20.0);
+	std::uniform_real_distribution<float> sizeGen(0.5f, 2.5f);
+	std::uniform_int_distribution<int> colourGen(50, 255);
 
-	Box newBox;
-	newBox.init(mB2World.get(), glm::vec2(0.0f, 20.0f), glm::vec2(2.0f, 2.0f));
-	mBoxes.push_back(newBox);
+	const int NUM_BOXES = 10;
+
+	for (unsigned int i = 0; i < NUM_BOXES; i++)
+	{
+		float xPos = xGen(randGenerator);
+		float yPos = yGen(randGenerator);
+		float sizeX = sizeGen(randGenerator);
+		float sizeY = sizeGen(randGenerator);
+		Colour colour(colourGen(randGenerator), colourGen(randGenerator), colourGen(randGenerator), 255);
+		glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
+		GLTexture texture = ResourceManager::getTexture("../res/textures/platform_tutorial/bricks_top.png");
+
+		Box newBox;
+		newBox.init(mB2World.get(), glm::vec2(xPos, yPos), glm::vec2(sizeX, sizeY), colour, texture, texCoords);
+		mBoxes.push_back(newBox);
+	}
 
 	return success;
 }

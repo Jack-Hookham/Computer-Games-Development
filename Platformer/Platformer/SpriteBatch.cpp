@@ -76,10 +76,6 @@ SpriteBatch::~SpriteBatch()
 {
 }
 
-//void SpriteBatch::init() {
-//	bufferData();
-//}
-
 void SpriteBatch::begin(QuadSortType sortType ) 
 {
 	mSortType = sortType;
@@ -117,7 +113,7 @@ void SpriteBatch::addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, 
 //	mQuads.emplace_back(destQuad, texCoord, texture, depth, colour, angle);
 //}
 
-void SpriteBatch::renderBatch() 
+void SpriteBatch::renderBatches() 
 {
 	glBindVertexArray(mArrayObject);
 
