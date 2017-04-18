@@ -21,6 +21,8 @@ public:
 
 	b2Body* getBody() const { return mBody; };
 	b2Fixture* getFixture() const { return mFixture; };
+
+	const glm::vec2& getPosition() const { return mPosition; }
 	const glm::vec2& getDimensions() const { return mDimensions; }
 	const Colour getColour() { return mColour; }
 

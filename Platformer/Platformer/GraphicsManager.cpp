@@ -222,7 +222,11 @@ void GraphicsManager::drawHUD(float avgFPS)
 
 void GraphicsManager::updateGraphics(float avgFPS, std::vector<Entity>& entities, Player& player)
 {
+	//Update cameras
+	glm::vec2 playerPos = glm::vec2(player.getBody()->GetPosition().x, player.getBody()->GetPosition().y);
+	mWorldCamera.setPosition(playerPos);
 	mWorldCamera.updateCamera();
+
 	mHUDCamera.updateCamera();
 
 	//Set depth to 1.0

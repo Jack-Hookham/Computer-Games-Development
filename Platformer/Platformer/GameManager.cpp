@@ -208,25 +208,27 @@ void GameManager::manageInput()
 		mShotSound1.play();
 	}
 
-	//Movement
-	if (mInputManager.isKeyDown(SDLK_a))
-	{
-		mGraphicsManager.translateCamera(glm::vec2(-CAMERA_SPEED, 0.0f));
-	}
-	if (mInputManager.isKeyDown(SDLK_d))
-	{
-		mGraphicsManager.translateCamera(glm::vec2(CAMERA_SPEED, 0.0f));
-	}
+	mPlayer.input(mInputManager);
 
-	if (mInputManager.isKeyDown(SDLK_w))
-	{
-		mGraphicsManager.translateCamera(glm::vec2(0.0f, CAMERA_SPEED));
-	}
+	//Camera Movement
+	//if (mInputManager.isKeyDown(SDLK_LEFT))
+	//{
+	//	mGraphicsManager.translateCamera(glm::vec2(-CAMERA_SPEED, 0.0f));
+	//}
+	//if (mInputManager.isKeyDown(SDLK_RIGHT))
+	//{
+	//	mGraphicsManager.translateCamera(glm::vec2(CAMERA_SPEED, 0.0f));
+	//}
 
-	if (mInputManager.isKeyDown(SDLK_s))
-	{
-		mGraphicsManager.translateCamera(glm::vec2(0.0f, -CAMERA_SPEED));
-	}
+	//if (mInputManager.isKeyDown(SDLK_UP))
+	//{
+	//	mGraphicsManager.translateCamera(glm::vec2(0.0f, CAMERA_SPEED));
+	//}
+
+	//if (mInputManager.isKeyDown(SDLK_DOWN))
+	//{
+	//	mGraphicsManager.translateCamera(glm::vec2(0.0f, -CAMERA_SPEED));
+	//}
 
 	if (mInputManager.isKeyDown(SDLK_q))
 	{
