@@ -123,10 +123,6 @@ int GameManager::gameLoop()
 
 		//Calculate and correct fps
 		float avgFPS = countedFrames / (mFPSTimer.getTicks() / MS_PER_SECOND);
-		if (avgFPS > 2000000)
-		{
-			avgFPS = 0;
-		}
 
 		mGraphicsManager.updateGraphics(avgFPS, mEntities, mPlayer);
 		++countedFrames;

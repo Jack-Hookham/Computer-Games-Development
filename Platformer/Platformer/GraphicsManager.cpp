@@ -29,6 +29,7 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 		success = false;
 	}
 
+	//Create the window and error check
 	if (!mWindow.createWindow("Platformer", mScreenWidth, mScreenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL))
 	{
 		log("Failed to create window");
@@ -37,7 +38,7 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 
 	//Initialise the cameras
 	mWorldCamera.initCamera(mScreenWidth, mScreenHeight);
-	mWorldCamera.setScale(16.0f);
+	mWorldCamera.setScale(20.0f);
 	mHUDCamera.initCamera(mScreenWidth, mScreenHeight);
 
 	//Offset the hud camera to align 0, 0 with the bottom left corner
@@ -59,7 +60,6 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 	mHUDSpriteBatch.bufferData();
 
 	loadMedia();
-
 
 	return success;
 }
