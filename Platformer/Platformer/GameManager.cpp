@@ -197,13 +197,11 @@ void GameManager::manageInput()
 	{
 		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
 		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
-		std::cout << worldCoords.x << " " << worldCoords.y << std::endl;
+		glm::vec2 dimensions = glm::vec2(2.0f);
 		Colour colour(255, 255, 255, 255);
 		Texture boxTexture = ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate002.png");
 
-		Box newBox;
-		newBox.init(mWorld.get(), worldCoords, glm::vec2(2.0f), colour, boxTexture);
-		mEntities.push_back(newBox);
+		mPhysicsManager.addBoxToWorld(mEntities, mWorld, worldCoords, dimensions, colour, boxTexture);
 
 		//glm::vec2 playerPosition(0.0f, 0.0f);
 		//glm::vec2 direction = worldCoords - playerPosition;
@@ -215,26 +213,6 @@ void GameManager::manageInput()
 	}
 
 	mPlayer.input(mInputManager);
-
-	//Camera Movement
-	//if (mInputManager.isKeyDown(SDLK_LEFT))
-	//{
-	//	mGraphicsManager.translateCamera(glm::vec2(-CAMERA_SPEED, 0.0f));
-	//}
-	//if (mInputManager.isKeyDown(SDLK_RIGHT))
-	//{
-	//	mGraphicsManager.translateCamera(glm::vec2(CAMERA_SPEED, 0.0f));
-	//}
-
-	//if (mInputManager.isKeyDown(SDLK_UP))
-	//{
-	//	mGraphicsManager.translateCamera(glm::vec2(0.0f, CAMERA_SPEED));
-	//}
-
-	//if (mInputManager.isKeyDown(SDLK_DOWN))
-	//{
-	//	mGraphicsManager.translateCamera(glm::vec2(0.0f, -CAMERA_SPEED));
-	//}
 
 	if (mInputManager.isKeyDown(SDLK_q))
 	{

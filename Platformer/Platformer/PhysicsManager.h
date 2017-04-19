@@ -11,6 +11,8 @@
 #include "Bullet.h"
 #include "Box.h"
 
+//Manages the physics updates as well as the box2D world
+
 class PhysicsManager
 {
 public:
@@ -23,7 +25,8 @@ public:
 	//Update the world
 	void updatePhysics(std::unique_ptr<b2World>& world, std::vector<Entity>& entities, Player& player);
 
-	void addBoxToWorld(std::unique_ptr<b2World>& b2World, std::vector<Entity>& entities);
+	void addBoxToWorld(std::vector<Entity>& entities, std::unique_ptr<b2World>& world,
+		const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, const Texture& texture);
 
 private:
 	//Log for PhysicsManager

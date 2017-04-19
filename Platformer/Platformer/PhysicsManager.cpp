@@ -51,16 +51,11 @@ bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world
 
 	for (unsigned int i = 0; i < NUM_BOXES; i++)
 	{
-		float xPos = xGen(randGenerator);
-		float yPos = yGen(randGenerator);
-		float sizeX = sizeGen(randGenerator);
-		float sizeY = sizeGen(randGenerator);
+		glm::vec2 position = glm::vec2(xGen(randGenerator), yGen(randGenerator));
+		glm::vec2 dimensions = glm::vec2(sizeGen(randGenerator), sizeGen(randGenerator));
 		Colour colour(colourGen(randGenerator), colourGen(randGenerator), colourGen(randGenerator), 255);
-		glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
 
-		Box newBox;
-		newBox.init(world.get(), glm::vec2(xPos, yPos), glm::vec2(sizeX, sizeY), colour, boxTexture);
-		entities.push_back(newBox);
+		addBoxToWorld(entities, world,  position, dimensions, colour, boxTexture);
 	}
 
 	return success;
@@ -86,8 +81,12 @@ void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, std::vector<
 	//}
 }
 
-void PhysicsManager::addBoxToWorld(std::unique_ptr<b2World>& b2World, std::vector<Entity>& entities)
+void PhysicsManager::addBoxToWorld(std::vector<Entity>& entities, std::unique_ptr<b2World>& world,
+	const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, const Texture& texture)
 {
+	Box newBox;
+	newBox.init(world.get(), position, dimensions, colour, texture);
+	entities.push_back(newBox);
 }
 
 void PhysicsManager::log(const std::string text)
