@@ -120,7 +120,7 @@ void GraphicsManager::drawHUD(float avgFPS)
 	mHUDSpriteBatch.renderBatches();
 }
 
-void GraphicsManager::updateGraphics(float avgFPS, std::vector<Entity>& entities, Player& player)
+void GraphicsManager::updateGraphics(float avgFPS, Player& player, std::vector<Box>& boxEntities, std::vector<Ground>& groundEntities)
 {
 	//Update cameras
 	glm::vec2 playerPos = glm::vec2(player.getBody()->GetPosition().x, player.getBody()->GetPosition().y);
@@ -147,14 +147,20 @@ void GraphicsManager::updateGraphics(float avgFPS, std::vector<Entity>& entities
 	//begin sorts by texture by default
 	mEntitySpriteBatch.begin();
 
-	//Add entities to entity SpriteBatch
-	for (Entity e : entities)
+	//Add the player the entity sprite batch
+	player.add(mEntitySpriteBatch, mWorldCamera);
+
+	//Add the boxes to the entity sprite batch
+	for (Box e : boxEntities)
 	{
 		e.add(mEntitySpriteBatch, mWorldCamera);
 	}
 
-	//Add player to enttiy SpriteBatch
-	player.add(mEntitySpriteBatch, mWorldCamera);
+	//Add the ground to the entity sprite batch
+	for (Ground e : groundEntities)
+	{
+		e.add(mEntitySpriteBatch, mWorldCamera);
+	}
 
 	//End the SpriteBatch
 	mEntitySpriteBatch.end();

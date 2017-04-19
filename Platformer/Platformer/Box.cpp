@@ -4,7 +4,6 @@ Box::Box()
 {
 }
 
-
 Box::~Box()
 {
 }

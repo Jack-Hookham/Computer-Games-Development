@@ -13,7 +13,6 @@
 #include <iomanip>
 #include <vector>
 
-#include "Player.h"
 #include "Timer.h"
 #include "Shader.h"
 #include "ImageManager.h"
@@ -22,8 +21,11 @@
 #include "SpriteBatch.h"
 #include "ResourceManager.h"
 #include "SpriteFont.h"
-#include "Box.h"
 #include "Entity.h"
+#include "Player.h"
+#include "Box.h"
+#include "Ground.h"
+
 class GraphicsManager
 {
 
@@ -40,7 +42,7 @@ public:
 	//Loads individual image as texture
 	//SDL_Texture* loadTexture(std::string path);
 
-	void updateGraphics(float avgFPS, std::vector<Entity>& entities, Player& player);
+	void updateGraphics(float avgFPS, Player& player, std::vector<Box>& boxEntities, std::vector<Ground>& groundEntities);
 
 	void translateCamera(glm::vec2 translation);
 	void setCameraScale(float scale);

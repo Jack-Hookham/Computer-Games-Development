@@ -99,11 +99,8 @@
     <ClCompile Include="Box.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="Capsule.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
     <ClCompile Include="Ground.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,14 +170,11 @@
     <ClInclude Include="Box.h">
       <Filter>Header Files\Enitities</Filter>
     </ClInclude>
-    <ClInclude Include="Capsule.h">
-      <Filter>Header Files\Enitities</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Ground.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Enitities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

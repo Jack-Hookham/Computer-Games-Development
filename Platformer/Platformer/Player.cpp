@@ -57,17 +57,6 @@ void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& di
 	mFixtures[2] = mBody->CreateFixture(&circleDef);
 }
 
-//Cull and add Player to SpriteBatch
-void Player::add(SpriteBatch& spriteBatch, Camera& camera)
-{
-	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x / 2.0f, mBody->GetPosition().y - (mDimensions.y) / 2.0f);
-
-	if (camera.isOnCamera(position, mDimensions))
-	{
-		spriteBatch.addQuad(position, mDimensions, mTexCoords, mTexture.id, 0.0f, mColour, mBody->GetAngle());
-	}
-}
-
 void Player::input(InputManager& inputManager)
 {
 	//Cap the player's speed

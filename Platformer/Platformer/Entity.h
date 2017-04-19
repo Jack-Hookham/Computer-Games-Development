@@ -9,6 +9,7 @@
 #include "Camera.h"
 
 class Box;
+class Ground;
 class Player;
 
 class Entity
@@ -18,8 +19,9 @@ public:
 	~Entity();
 
 	//Initialise the entity
-	virtual void init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
-		const Texture& texture, const glm::vec4& texCoords = glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f }, bool fixedRotation = false);
+	virtual void init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, const Texture& texture, 
+		const float density = 1.0f, const float friction = 0.3f, const glm::vec4& texCoords = glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f }, 
+		const bool fixedRotation = false);
 
 	const b2Body* getBody() const { return mBody; };
 	const b2Fixture* getFixture() const { return mFixture; };

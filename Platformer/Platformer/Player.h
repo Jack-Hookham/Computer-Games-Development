@@ -30,8 +30,6 @@ public:
 
 	void input(InputManager& inputManager);
 
-	//Cull and add player to spritebatch
-	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
 private:
 	playerMoveState mMoveState;

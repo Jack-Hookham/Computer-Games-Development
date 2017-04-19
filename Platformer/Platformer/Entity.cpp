@@ -9,7 +9,7 @@ Entity::~Entity()
 }
 
 void Entity::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
-	const Texture& texture, const glm::vec4& texCoords, bool fixedRotation)
+	const Texture& texture, const float density, const float friction, const glm::vec4& texCoords, const bool fixedRotation)
 {
 	//Initialise the entity's variables
 	mPosition = position;
@@ -32,9 +32,8 @@ void Entity::init(b2World* world, const glm::vec2& position, const glm::vec2& di
 	//Box fixture definition
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.3f;
-	fixtureDef.restitution = 0.0f;
+	fixtureDef.density = density;
+	fixtureDef.friction = friction;
 	mFixture = mBody->CreateFixture(&fixtureDef);
 }
 

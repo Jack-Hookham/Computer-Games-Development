@@ -43,7 +43,7 @@ int GameManager::init()
 	}
 
 	//Initialise physics
-	if (mPhysicsManager.initPhysics(mDesiredFPS, mWorld, mEntities, mPlayer))
+	if (mPhysicsManager.initPhysics(mDesiredFPS, mWorld, mPlayer,  mBoxEntities, mGroundEntities))
 	{
 		log("Physics successfully initialised");
 	}
@@ -114,7 +114,7 @@ int GameManager::gameLoop()
 			float timeStep = std::min(totalTimeStep, MAX_TIME_STEP);
 			
 			//Update all physics
-			mPhysicsManager.updatePhysics(mWorld, mEntities, mPlayer);
+			mPhysicsManager.updatePhysics(mWorld);
 
 			totalTimeStep -= timeStep;
 			stepCount++;
@@ -124,7 +124,7 @@ int GameManager::gameLoop()
 		//Calculate and correct fps
 		float avgFPS = countedFrames / (mFPSTimer.getTicks() / MS_PER_SECOND);
 
-		mGraphicsManager.updateGraphics(avgFPS, mEntities, mPlayer);
+		mGraphicsManager.updateGraphics(avgFPS, mPlayer, mBoxEntities, mGroundEntities);
 		++countedFrames;
 
 		//cout << "FPS: " << avgFPS << endl;
@@ -203,7 +203,21 @@ void GameManager::manageInput()
 		Colour colour(255, 255, 255, 255);
 		Texture boxTexture = ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box2.png");
 
-		mPhysicsManager.addBoxToWorld(mEntities, mWorld, worldCoords, dimensions, colour, boxTexture);
+		mPhysicsManager.addBoxToWorld(mBoxEntities, mWorld, worldCoords, dimensions, colour, boxTexture);
+
+		mShotSound1.play();
+	}
+
+	if (mInputManager.isKeyPressed(SDL_BUTTON_RIGHT))
+	{
+		//Create ground at the mouse position when RMB is pressed
+		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
+		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
+		glm::vec2 dimensions = glm::vec2(1.0f);
+		Colour colour(255, 255, 255, 255);
+		Texture groundTexture = ResourceManager::getTexture("../res/textures/platformerArt/png/ground.png");
+
+		mPhysicsManager.addGroundToWorld(mGroundEntities, mWorld, worldCoords, dimensions, colour, groundTexture);
 
 		mShotSound1.play();
 	}

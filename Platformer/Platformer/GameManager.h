@@ -84,8 +84,6 @@ private:
 	Music mMusic;
 	SoundEffect mShotSound1;
 
-	Player mPlayer;
-
 	//Application timer
 	Timer mTimer;
 
@@ -96,6 +94,10 @@ private:
 	Timer mFrameTimer;
 
 	std::unique_ptr<b2World> mWorld;
-	std::vector<Entity> mEntities;
+
+	//Entities
+	Player mPlayer;
+	std::vector<Box> mBoxEntities;
+	std::vector<Ground> mGroundEntities;
 };
 
