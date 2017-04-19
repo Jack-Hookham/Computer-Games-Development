@@ -42,7 +42,7 @@ bool PhysicsManager::initPhysics(const int desiredFPS, std::unique_ptr<b2World>&
 	glm::vec2 playerPos(0.0f, 15.0f);
 	glm::vec2 playerDims(1.0f, 2.0f);
 	Colour playerColour(255, 255, 255, 255);
-	Texture playerTexture = ResourceManager::getTexture("../res/textures/ninja_adventure/png/Idle__000.png");
+	Texture playerTexture = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/running.png");
 	glm::vec4 playerTexCoords(0.0f, 0.0f, 1.0f, 1.0f);
 
 	//Initialise player instance

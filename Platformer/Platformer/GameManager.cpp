@@ -96,7 +96,7 @@ int GameManager::gameLoop()
 
 		//Manage the user input
 		manageInput();
-			
+
 		//Update all physics
 		mPhysicsManager.updatePhysics(mWorld);
 
