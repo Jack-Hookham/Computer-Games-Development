@@ -18,18 +18,18 @@ void Entity::init(b2World* world, const glm::vec2& position, const glm::vec2& di
 	mTexture = texture;
 	mTexCoords = texCoords;
 
-	//box2D body definition
+	//Box body definition
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(position.x, position.y);
 	bodyDef.fixedRotation = fixedRotation;
 	mBody = world->CreateBody(&bodyDef);
 
-	//box2D shape definition
+	//Box shape definition
 	b2PolygonShape boxShape;
 	boxShape.SetAsBox(dimensions.x / 2.0f, dimensions.y / 2.0f);
 
-	//box2D fixture definition
+	//Box fixture definition
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
 	fixtureDef.density = 1.0f;

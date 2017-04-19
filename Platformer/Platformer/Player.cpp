@@ -8,6 +8,67 @@ Player::~Player()
 {
 }
 
+//Override entity init to add capsule collision to the player
+void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, 
+	const Texture& texture, const glm::vec4& texCoords, bool fixedRotation)
+{
+	//Initialise the entity's variables
+	mPosition = position;
+	mDimensions = dimensions;
+	mColour = colour;
+	mTexture = texture;
+	mTexCoords = texCoords;
+
+	//Box body definition
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(position.x, position.y);
+	bodyDef.fixedRotation = fixedRotation;
+	mBody = world->CreateBody(&bodyDef);
+
+	//Box shape definition
+	b2PolygonShape boxShape;
+	boxShape.SetAsBox(dimensions.x / 2.0f, (dimensions.y - dimensions.x) / 2.0f);
+
+	//Box fixture definition
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &boxShape;
+	fixtureDef.density = 1.0f;
+	fixtureDef.friction = 0.3f;
+	mFixtures[0] = mBody->CreateFixture(&fixtureDef);
+
+	//Circles on the top and bottom of the player for better movement
+	//Circle shape definition
+	b2CircleShape circleShape;
+	circleShape.m_radius = dimensions.x / 2.0f;
+
+	//Circle fixture definition
+	b2FixtureDef circleDef;
+	circleDef.shape = &circleShape;
+	circleDef.density = 1.0f;
+	circleDef.friction = 0.3f;
+
+	//Top
+	circleShape.m_p.Set(0.0f, (mDimensions.y - dimensions.x) / 2.0f);
+	mFixtures[1] = mBody->CreateFixture(&circleDef);
+
+	//Bottom
+	circleShape.m_p.Set(0.0f, (-mDimensions.y + dimensions.x) / 2.0f);
+	mFixtures[2] = mBody->CreateFixture(&circleDef);
+}
+
+//Cull and add Player to SpriteBatch
+void Player::add(SpriteBatch& spriteBatch, Camera& camera)
+{
+	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x / 2.0f, mBody->GetPosition().y - (mDimensions.y) / 2.0f);
+	//glm::vec2 dimensions = glm::vec2(mDimensions.x, mDimensions.y - mDimensions.x);
+
+	if (camera.isOnCamera(position, mDimensions))
+	{
+		spriteBatch.addQuad(position, mDimensions, mTexCoords, mTexture.id, 0.0f, mColour, mBody->GetAngle());
+	}
+}
+
 void Player::input(InputManager& inputManager)
 {
 	//Cap the player's speed

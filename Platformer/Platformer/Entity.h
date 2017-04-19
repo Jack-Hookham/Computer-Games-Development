@@ -21,15 +21,15 @@ public:
 	virtual void init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
 		const Texture& texture, const glm::vec4& texCoords = glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f }, bool fixedRotation = false);
 
-	b2Body* getBody() const { return mBody; };
-	b2Fixture* getFixture() const { return mFixture; };
+	const b2Body* getBody() const { return mBody; };
+	const b2Fixture* getFixture() const { return mFixture; };
 
 	const glm::vec2& getPosition() const { return mPosition; }
 	const glm::vec2& getDimensions() const { return mDimensions; }
-	const Colour getColour() { return mColour; }
+	const Colour& getColour() const { return mColour; }
 
 	//Cull then add Entity to SpriteBatch
-	void add(SpriteBatch& spriteBatch, Camera& camera);
+	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
 protected:
 	b2Body* mBody = NULL;
