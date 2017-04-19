@@ -205,7 +205,7 @@ void GameManager::manageInput()
 		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
 		glm::vec2 dimensions = glm::vec2(2.0f);
 		Colour colour(255, 255, 255, 255);
-		Texture boxTexture = ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate002.png");
+		Texture boxTexture = ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box2.png");
 
 		mPhysicsManager.addBoxToWorld(mEntities, mWorld, worldCoords, dimensions, colour, boxTexture);
 

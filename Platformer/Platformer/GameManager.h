@@ -23,6 +23,9 @@
 #include "Timer.h"
 #include "Box.h"
 
+//Manager for the whole engine
+//Clicking on the screen will create a box at the mouse position
+
 enum GameState
 {
 	MENU,

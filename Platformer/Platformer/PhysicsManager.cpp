@@ -25,17 +25,19 @@ bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world
 		success = false;
 	}
 
-	//Make the ground
+	//Ground body definition
 	b2BodyDef groundBodyDef;
 	groundBodyDef.position.Set(0.0f, -30.0f);
 	b2Body* groundBody = world->CreateBody(&groundBodyDef);
 
-	// Make the ground fixture
+	//Ground fixture definition
 	b2PolygonShape groundBox;
 	groundBox.SetAsBox(50.0f, 10.0f);
 	groundBody->CreateFixture(&groundBox, 0.0f);
 
-	//Init player
+	//addGroundToWorld();
+
+	//Initialise player
 	glm::vec2 playerPos(0.0f, 30.0f);
 	glm::vec2 playerDims(1.0f, 2.0f);
 	Colour playerColour(255, 255, 255, 255);
@@ -50,9 +52,7 @@ bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world
 	std::uniform_real_distribution<float> yGen(0.0f, 30.0f);
 	std::uniform_real_distribution<float> sizeGen(0.5f, 2.5f);
 	std::uniform_int_distribution<int> colourGen(200, 255);
-	std::uniform_int_distribution<int> textureGen(1, 5);
-	std::uniform_int_distribution<int> textureGenX(0, 4);
-	std::uniform_int_distribution<int> textureGenY(0, 1);
+	std::uniform_int_distribution<int> textureGen(1, 10);
 
 	//Number of boxes to generate
 	const int NUM_BOXES = 100;
@@ -63,12 +63,8 @@ bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world
 		glm::vec2 position = glm::vec2(xGen(randGenerator), yGen(randGenerator));
 		glm::vec2 dimensions = glm::vec2(sizeGen(randGenerator), sizeGen(randGenerator));
 		Colour colour(colourGen(randGenerator), colourGen(randGenerator), colourGen(randGenerator), 255);
-		std::string textureString = "../res/textures/boxes_and_crates/obj_crate00" + std::to_string(textureGen(randGenerator)) + ".png";
+		std::string textureString = "../res/textures/boxes_and_crates/obj_box" + std::to_string(textureGen(randGenerator)) + ".png";
 		Texture boxTexture = ResourceManager::getTexture(textureString);
-		//Texture boxTextures = ResourceManager::getTexture("../res/textures/boxes_and_crates/boxes_sheet.png");
-		//float textureX = textureGenX(randGenerator);
-		//float textureY = textureGenY(randGenerator);
-		//glm::vec4 texCoords = { textureX * 0.2f, textureY * 0.5f,  (textureX + 1) * 0.2f, (textureY + 1) * 0.5f };
 
 		//Add the box
 		addBoxToWorld(entities, world, position, dimensions, colour, boxTexture);

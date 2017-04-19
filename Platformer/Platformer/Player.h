@@ -3,6 +3,12 @@
 #include "Entity.h"
 #include "InputManager.h"
 
+//Player class
+//***Controls***
+//A - move left
+//D - move right
+//Space - jump
+
 enum playerMoveState
 {
 	STANDING,
@@ -24,17 +30,15 @@ public:
 
 	void input(InputManager& inputManager);
 
-	//const Entity& getBox() const { return mCollisionBox; }
-
 	//Cull and add player to spritebatch
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
 private:
 	playerMoveState mMoveState;
 
+	//Player has 3 fixtures - middle square and a circle on the top and bottom
+	//This creates a capsule shape and gives smoother movement
 	b2Fixture* mFixtures[3];
-
-	//Entity mCollisionBox;
 
 	//Limit the player's speed
 	const float MAX_SPEED = 10.0f;

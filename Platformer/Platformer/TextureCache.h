@@ -16,12 +16,15 @@ public:
 	TextureCache();
 	~TextureCache();
 
+	//Get a texture
+	//If the texture doesn't already exist add it to the map
 	Texture getTexture(std::string path);
 
 private:
 	//Log for TextureCache
 	void log(const std::string text);
 
+	//Map of cached textures
 	std::map<std::string, Texture> mTextureMap;
 };
 

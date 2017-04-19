@@ -2,6 +2,9 @@
 
 #include <SDL/SDL_mixer.h>
 
+//Stores sound effect information
+//Managed by AudioManager
+
 class SoundEffect
 {
 public:
@@ -16,6 +19,7 @@ public:
 	bool play(int n = 0);
 
 private:
+	//Sound effect chunk
 	Mix_Chunk* mChunk = NULL;
 };
 

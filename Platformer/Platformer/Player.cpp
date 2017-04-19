@@ -61,7 +61,6 @@ void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& di
 void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 {
 	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x / 2.0f, mBody->GetPosition().y - (mDimensions.y) / 2.0f);
-	//glm::vec2 dimensions = glm::vec2(mDimensions.x, mDimensions.y - mDimensions.x);
 
 	if (camera.isOnCamera(position, mDimensions))
 	{

@@ -61,7 +61,7 @@ private:
 	int mScreenWidth;
 	int mScreenHeight;
 
-	//The window we'll be rendering to
+	//The window to render to
 	Window mWindow;
 
 	//Camera for the world
@@ -81,21 +81,7 @@ private:
 	//HUD font
 	SpriteFont* mSpriteFont;
 
-	Shader mColourShader;
-	//The window renderer
-	//SDL_Renderer* mRenderer = NULL;
-
-	//OpenGL context
-	//SDL_GLContext mContext;
-
-	//TTF_Font* mMainFont;
-	//Texture* mTextTexture;
-	//Texture* mPromptTextTexture;
-	//Texture* mTimeTextTexture;
-	//Texture* mFPSTextTexture;
-
-	//In memory text stream
-	//std::stringstream timeText;
-	//std::stringstream fpsText;
+	//Shader for the engine
+	Shader mTextureShader;
 };
 

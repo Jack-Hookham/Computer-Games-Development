@@ -67,6 +67,7 @@ bool AudioManager::initAudio()
 
 SoundEffect AudioManager::loadSoundEffect(const std::string& path)
 {
+	//Iterator for the sound effect map
 	std::map<std::string, Mix_Chunk*>::iterator mapIterator = mSoundEffectMap.find(path);
 
 	SoundEffect soundEffect;
@@ -98,8 +99,10 @@ SoundEffect AudioManager::loadSoundEffect(const std::string& path)
 	return soundEffect;
 }
 
-Music AudioManager::loadMusic(const std::string & path)
+//Load a music file from the given file path
+Music AudioManager::loadMusic(const std::string& path)
 {
+	//Iterator for the music map
 	std::map<std::string, Mix_Music*>::iterator mapIterator = mMusicMap.find(path);
 
 	Music music;

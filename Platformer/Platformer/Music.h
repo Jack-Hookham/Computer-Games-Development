@@ -2,6 +2,9 @@
 
 #include <SDL/SDL_mixer.h>
 
+//Stores music information
+//Managed by AudioManager
+
 class Music
 {
 public:
@@ -21,7 +24,7 @@ public:
 	static void pause();
 
 private:
-	//Give AudioManager access to mMusic
+	//Music chunk
 	Mix_Music* mMusic = NULL;
 };
 

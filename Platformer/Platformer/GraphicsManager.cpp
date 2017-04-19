@@ -70,16 +70,16 @@ void GraphicsManager::loadMedia()
 	mSpriteFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 32);
 
 	//Initialise textures
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box001.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box002.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box003.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box004.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box005.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate001.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate002.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate003.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate004.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate005.png");
+	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box1.png");
+	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box2.png");
+	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box3.png");
+	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box4.png");
+	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box5.png");
+	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box6.png");
+	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box7.png");
+	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box8.png");
+	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box9.png");
+	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box10.png");
 
 	log("Media successfully loaded");
 }
@@ -92,12 +92,12 @@ void GraphicsManager::log(const std::string text)
 //Compile and link the shaders used for the engine
 void GraphicsManager::initShaders()
 {
-	mColourShader.compileShaders("../res/shaders/colourVert.glsl", "../res/shaders/colourFrag.glsl");
+	mTextureShader.compileShaders("../res/shaders/colourVert.glsl", "../res/shaders/colourFrag.glsl");
 
-	mColourShader.addAttribute("position");
-	mColourShader.addAttribute("colour");
-	mColourShader.addAttribute("texCoord");
-	mColourShader.linkShaders();
+	mTextureShader.addAttribute("position");
+	mTextureShader.addAttribute("colour");
+	mTextureShader.addAttribute("texCoord");
+	mTextureShader.linkShaders();
 }
 
 //Draw the HUD using the HUD camera
@@ -106,7 +106,7 @@ void GraphicsManager::drawHUD(float avgFPS)
 	char buffer[256];
 
 	glm::mat4 cameraMatrix = mHUDCamera.getCamerMatrix();
-	GLuint projMatrixLocation = mColourShader.getUniformLocation("projMatrix");
+	GLuint projMatrixLocation = mTextureShader.getUniformLocation("projMatrix");
 	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 	mHUDSpriteBatch.begin();
@@ -133,14 +133,14 @@ void GraphicsManager::updateGraphics(float avgFPS, std::vector<Entity>& entities
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	mColourShader.use();
+	mTextureShader.use();
 	glActiveTexture(GL_TEXTURE0);
 
-	GLuint textureLocation = mColourShader.getUniformLocation("sampler");
+	GLuint textureLocation = mTextureShader.getUniformLocation("sampler");
 	glUniform1i(textureLocation, 0);
 
 	glm::mat4 cameraMatrix = mWorldCamera.getCamerMatrix();
-	GLuint projMatrixLocation = mColourShader.getUniformLocation("projMatrix");
+	GLuint projMatrixLocation = mTextureShader.getUniformLocation("projMatrix");
 	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 	//SpriteBatch functions
@@ -168,7 +168,7 @@ void GraphicsManager::updateGraphics(float avgFPS, std::vector<Entity>& entities
 	//Undbind texture
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	mColourShader.unuse();
+	mTextureShader.unuse();
 
 	//Swap buffer and draw everything
 	mWindow.swapWindow();
