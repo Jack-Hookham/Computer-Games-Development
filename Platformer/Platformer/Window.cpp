@@ -10,38 +10,17 @@ Window::~Window()
 
 bool Window::createWindow(std::string name, int screenWidth, int screenHeight, Uint32 flags)
 {
-	//Init flag
+	//Initialisation flag
 	bool success = true;
 
 	mWindowWidth = screenWidth;
 	mWindowHeight = screenHeight;
-
-	//Uint32 flags = SDL_WINDOW_OPENGL;
-
-	//if (currentFlags & INVISIBLE) 
-	//{
-	//	flags |= SDL_WINDOW_HIDDEN;
-	//}
-	//if (currentFlags & FULLSCREEN) 
-	//{
-	//	flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-	//}
-	//if (currentFlags & BORDERLESS) 
-	//{
-	//	flags |= SDL_WINDOW_BORDERLESS;
-	//}
 
 	//Use OpenGL 3.1 core
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-	//Set texture filtering to linear
-	//if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
-	//{
-	//	log("Warning: Linear texture filtering not enabled!");
-	//}
 
 	//Create window and error check
 	mSDLwindow = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, mWindowWidth, mWindowHeight, flags);
@@ -53,15 +32,6 @@ bool Window::createWindow(std::string name, int screenWidth, int screenHeight, U
 	}
 	else
 	{
-		//Create renderer for window
-		//mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
-		//if (mRenderer == NULL)
-		//{
-		//	const std::string text = "Renderer could not be created! SDL Error: " + std::string(SDL_GetError());
-		//	log(text);
-		//	success = false;
-		//}
-
 		//Create context and error check
 		SDL_GLContext glContext = SDL_GL_CreateContext(mSDLwindow);
 		if (glContext == NULL)
@@ -86,11 +56,14 @@ bool Window::createWindow(std::string name, int screenWidth, int screenHeight, U
 			//Set the background colour
 			glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-			//Use Vsync
-			//if (SDL_GL_SetSwapInterval(1) < 0)
-			//{
-			//	log("Warning: Unable to set VSync! SDL Error: " + std::string(SDL_GetError()));
-			//}
+			//Vsync
+			//0 - immediate updates
+			//1 - updates synchronized with the vertical retrace
+			//-1  late swap tearing
+			if (SDL_GL_SetSwapInterval(0) < 0)
+			{
+				log("Warning: Unable to set VSync! SDL Error: " + std::string(SDL_GetError()));
+			}
 
 			//Enable alpha blending
 			glEnable(GL_BLEND);

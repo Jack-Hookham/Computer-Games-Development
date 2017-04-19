@@ -2,6 +2,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+//2D camera class
+//Engine currently uses two cameras - one to follow the player and one to draw the HUD
+
 class Camera
 {
 public:
@@ -22,7 +25,7 @@ public:
 
 	glm::vec2 screenToWorld(glm::vec2 screenCoords);
 
-	bool cullOffScreen(const glm::vec2& position, const glm::vec2& dimensions);
+	bool isOnCamera(const glm::vec2& position, const glm::vec2& dimensions);
 
 private:
 	int mScreenWidth = 1280;

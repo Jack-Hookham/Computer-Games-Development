@@ -135,6 +135,11 @@ int GameManager::gameLoop()
 
 		//If frame finished early
 		int frameTicks = mFrameTimer.getTicks();
+		if (frameTicks < mScreenTicksPerFrame)
+		{
+			//Wait remaining time
+			SDL_Delay(mScreenTicksPerFrame - (float)frameTicks);
+		}
 	}
 
 	return 0;
@@ -193,8 +198,9 @@ void GameManager::manageInput()
 	}
 
 	//Mouse buttons
-	if (mInputManager.isKeyPressed(SDL_BUTTON_LEFT) || mInputManager.isKeyPressed(SDL_JOYBUTTONDOWN))
+	if (mInputManager.isKeyPressed(SDL_BUTTON_LEFT))
 	{
+		//Create a box at the mouse position when LMB is pressed
 		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
 		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
 		glm::vec2 dimensions = glm::vec2(2.0f);
@@ -202,12 +208,6 @@ void GameManager::manageInput()
 		Texture boxTexture = ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate002.png");
 
 		mPhysicsManager.addBoxToWorld(mEntities, mWorld, worldCoords, dimensions, colour, boxTexture);
-
-		//glm::vec2 playerPosition(0.0f, 0.0f);
-		//glm::vec2 direction = worldCoords - playerPosition;
-		//direction = glm::normalize(direction);
-
-		//mBullets.emplace_back(playerPosition, direction, 5.0f, 1000);
 
 		mShotSound1.play();
 	}

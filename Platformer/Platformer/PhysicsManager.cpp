@@ -13,11 +13,17 @@ bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world
 	//Initialisation flag
 	bool success = true;
 
+	//Timestep variable for the box2D step function
 	mBox2DTimeStep = 1.0f / desiredFPS;
 
 	//Box2D world setup
 	b2Vec2 gravity(0.0f, -9.8f);
 	world = std::make_unique<b2World>(gravity);
+
+	if (world == NULL)
+	{
+		success = false;
+	}
 
 	//Make the ground
 	b2BodyDef groundBodyDef;
@@ -43,19 +49,29 @@ bool PhysicsManager::initPhysics(int desiredFPS, std::unique_ptr<b2World>& world
 	std::uniform_real_distribution<float> xGen(-10.0f, 10.0f);
 	std::uniform_real_distribution<float> yGen(0.0f, 30.0f);
 	std::uniform_real_distribution<float> sizeGen(0.5f, 2.5f);
-	std::uniform_int_distribution<int> colourGen(150, 255);
-	std::uniform_int_distribution<int> textureGen(0, 9);
-	Texture boxTexture = ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_crate002.png");
+	std::uniform_int_distribution<int> colourGen(200, 255);
+	std::uniform_int_distribution<int> textureGen(1, 5);
+	std::uniform_int_distribution<int> textureGenX(0, 4);
+	std::uniform_int_distribution<int> textureGenY(0, 1);
 
+	//Number of boxes to generate
 	const int NUM_BOXES = 100;
 
 	for (unsigned int i = 0; i < NUM_BOXES; i++)
 	{
+		//Setup random box params (position, dimensions, colour, texture)
 		glm::vec2 position = glm::vec2(xGen(randGenerator), yGen(randGenerator));
 		glm::vec2 dimensions = glm::vec2(sizeGen(randGenerator), sizeGen(randGenerator));
 		Colour colour(colourGen(randGenerator), colourGen(randGenerator), colourGen(randGenerator), 255);
+		std::string textureString = "../res/textures/boxes_and_crates/obj_crate00" + std::to_string(textureGen(randGenerator)) + ".png";
+		Texture boxTexture = ResourceManager::getTexture(textureString);
+		//Texture boxTextures = ResourceManager::getTexture("../res/textures/boxes_and_crates/boxes_sheet.png");
+		//float textureX = textureGenX(randGenerator);
+		//float textureY = textureGenY(randGenerator);
+		//glm::vec4 texCoords = { textureX * 0.2f, textureY * 0.5f,  (textureX + 1) * 0.2f, (textureY + 1) * 0.5f };
 
-		addBoxToWorld(entities, world,  position, dimensions, colour, boxTexture);
+		//Add the box
+		addBoxToWorld(entities, world, position, dimensions, colour, boxTexture);
 	}
 
 	return success;
@@ -66,26 +82,14 @@ void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, std::vector<
 {
 	//Step the b2World with the timestep
 	world->Step(mBox2DTimeStep, mVelocityIterations, mPositionIterations);
-
-	//for (unsigned int i = 0; i < bullets.size();)
-	//{
-	//	if (bullets[i].update(timeStep) == true) 
-	//	{
-	//		bullets[i] = bullets.back();
-	//		bullets.pop_back();
-	//	}
-	//	else
-	//	{
-	//		i++;
-	//	}
-	//}
 }
 
 void PhysicsManager::addBoxToWorld(std::vector<Entity>& entities, std::unique_ptr<b2World>& world,
-	const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, const Texture& texture)
+	const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, const Texture& texture, 
+	const glm::vec4& texCoords)
 {
 	Box newBox;
-	newBox.init(world.get(), position, dimensions, colour, texture);
+	newBox.init(world.get(), position, dimensions, colour, texture, texCoords);
 	entities.push_back(newBox);
 }
 

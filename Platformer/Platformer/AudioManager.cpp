@@ -22,9 +22,11 @@ AudioManager::~AudioManager()
 			Mix_FreeMusic(mapIterator.second);
 		}
 
+		//Clear the maps
 		mSoundEffectMap.clear();
 		mMusicMap.clear();
 
+		//Quit SDL system
 		Mix_CloseAudio();
 		Mix_Quit();
 	}
@@ -45,7 +47,7 @@ bool AudioManager::initAudio()
 	if (Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG) == -1)
 	{
 		log("Mix_Init failed: " + std::string(Mix_GetError()));
-		return success = false;
+		success = false;
 	}
 
 	//Initialise OpenAudio with default frequency and format
@@ -54,7 +56,7 @@ bool AudioManager::initAudio()
 	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
 	{
 		log("Mix_OpenAudio failed: " + std::string(Mix_GetError()));
-		return success = false;
+		success = false;
 	}
 	
 	//Set initialised bool to true

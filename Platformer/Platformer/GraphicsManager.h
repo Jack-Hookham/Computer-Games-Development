@@ -21,7 +21,6 @@
 #include "Camera.h"
 #include "SpriteBatch.h"
 #include "ResourceManager.h"
-#include "Bullet.h"
 #include "SpriteFont.h"
 #include "Box.h"
 #include "Entity.h"
@@ -36,7 +35,7 @@ public:
 	bool initGraphics(const int screenWidth, const int screenHeight);
 
 	//Loads media needed for the game
-	bool loadMedia();
+	void loadMedia();
 
 	//Loads individual image as texture
 	//SDL_Texture* loadTexture(std::string path);

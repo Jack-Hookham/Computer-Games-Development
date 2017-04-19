@@ -21,7 +21,6 @@
 #include "AudioManager.h"
 #include "Player.h"
 #include "Timer.h"
-#include "Bullet.h"
 #include "Box.h"
 
 enum GameState
@@ -92,8 +91,6 @@ private:
 
 	//Timer for each frame
 	Timer mFrameTimer;
-
-	std::vector<Bullet> mBullets;
 
 	std::unique_ptr<b2World> mWorld;
 	std::vector<Entity> mEntities;

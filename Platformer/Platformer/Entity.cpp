@@ -38,13 +38,13 @@ void Entity::init(b2World* world, const glm::vec2& position, const glm::vec2& di
 	mFixture = mBody->CreateFixture(&fixtureDef);
 }
 
-void Entity::draw(SpriteBatch &spriteBatch)
+//Add Entity to SpriteBatch
+void Entity::add(SpriteBatch& spriteBatch, Camera& camera)
 {
-	glm::vec4 destQuad;
-	destQuad.x = mBody->GetPosition().x - mDimensions.x / 2.0f;
-	destQuad.y = mBody->GetPosition().y - mDimensions.y / 2.0f;
-	destQuad.z = mDimensions.x;
-	destQuad.w = mDimensions.y;
+	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x / 2.0f, mBody->GetPosition().y - mDimensions.y / 2.0f);
 
-	spriteBatch.addQuad(destQuad, mTexCoords, mTexture.id, 0.0f, mColour, mBody->GetAngle());
+	if (camera.isOnCamera(position, mDimensions))
+	{
+		spriteBatch.addQuad(position, mDimensions, mTexCoords, mTexture.id, 0.0f, mColour, mBody->GetAngle());
+	}
 }

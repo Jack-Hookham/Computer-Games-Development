@@ -8,6 +8,9 @@
 #include "Vertex.h"
 #include "TextureCache.h"
 
+//SpriteBatch class used for managing and drawing the different sprites used in the engine
+//Based on the sprite batch class used here: https://www.youtube.com/watch?v=jXKMfsiVkLA
+
 enum BufferType
 {
 	VERTEX_BUFFER,
@@ -32,10 +35,12 @@ public:
 	Quad();
 
 	//Params constructor no angle
-	Quad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour);
+	Quad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture, 
+		float depth, const Colour& colour);
 
 	//Params constructor with angle
-	Quad(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint Texture, float Depth, const Colour& color, float angle);
+	Quad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& uvRect, GLuint Texture, 
+		float Depth, const Colour& color, float angle);
 
 	GLuint texture;
 	float depth;
@@ -72,8 +77,10 @@ public:
 	void begin(QuadSortType sortType = TEXTURE);
 	void end();
 
-	void addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour);
-	void addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, float angle);
+	void addQuad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture,
+		float depth, const Colour& colour);
+	void addQuad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture,
+		float depth, const Colour& colour, float angle);
 
 	void renderBatches();
 

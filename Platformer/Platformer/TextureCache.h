@@ -6,6 +6,10 @@
 #include "ImageManager.h"
 #include "Texture.h"
 
+//Stores previously loaded textures in a map
+//if a texture hasn't been loaded before it gets added to the map
+//The TextureCache is used by the ResourceManger to get the textures it needs
+
 class TextureCache
 {
 public:

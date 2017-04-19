@@ -90,12 +90,14 @@ glm::vec2 Camera::screenToWorld(glm::vec2 screenCoords)
 	return screenCoords;
 }
 
-//True if the entity is off the screen
-bool Camera::cullOffScreen(const glm::vec2& position, const glm::vec2& dimensions)
+//True if the entity is off the camera
+//Used for culling off screen entities
+bool Camera::isOnCamera(const glm::vec2& position, const glm::vec2& dimensions)
 {
 	//Scale screen dimensions to mScale
-	glm::vec2 scaledScreenDimensions = glm::vec2(mScreenWidth, mScreenHeight) / (mScale);
-	//cull testing
+	glm::vec2 scaledScreenDimensions = glm::vec2(mScreenWidth, mScreenHeight) / mScale;
+
+	//cull testing (multiply scale)
 	//glm::vec2 scaledScreenDimensions = glm::vec2(mScreenWidth, mScreenHeight) / (mScale * 2.0f);
 
 	//Minimum distance before a collision occurs
@@ -113,10 +115,9 @@ bool Camera::cullOffScreen(const glm::vec2& position, const glm::vec2& dimension
 	float xDepth = MIN_DISTANCE_X - abs(distVec.x);
 	float yDepth = MIN_DISTANCE_Y - abs(distVec.y);
 
-	//If both the depths are > 0, then we collided
+	//If both the depths are > 0, then there was a collision
 	if (xDepth > 0 && yDepth > 0) 
 	{
-		//There was a collision
 		return true;
 	}
 	return false;

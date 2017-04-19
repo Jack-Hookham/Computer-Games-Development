@@ -8,6 +8,12 @@
 #include "SoundEffect.h"
 #include "Music.h"
 
+//Similar to ResourceManager and TextureCache
+//Stores previously loaded sound effects and music files in two different maps
+//When trying to load a sound file it checks the map to see if the file has already been used
+//if it hasn't it adds it to the map
+//if it has it loads it from the map
+
 class AudioManager
 {
 public:

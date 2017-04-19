@@ -6,34 +6,36 @@ Quad::Quad()
 {
 }
 
-Quad::Quad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
+Quad::Quad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture,
+	float depth, const Colour& colour)
 {
 	this->texture = texture;
 	this->depth = depth;
 
 	topLeft.setColour(colour);
-	topLeft.setPosition(destQuad.x, destQuad.y + destQuad.w);
+	topLeft.setPosition(position.x, position.y + dimensions.y);
 	topLeft.setTexCoord(texCoord.x, texCoord.y + texCoord.w);
 
 	topRight.setColour(colour);
-	topRight.setPosition(destQuad.x + destQuad.z, destQuad.y + destQuad.w);
+	topRight.setPosition(position.x + dimensions.x, position.y + dimensions.y);
 	topRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y + texCoord.w);
 
 	bottomLeft.setColour(colour);
-	bottomLeft.setPosition(destQuad.x, destQuad.y);
+	bottomLeft.setPosition(position.x, position.y);
 	bottomLeft.setTexCoord(texCoord.x, texCoord.y);
 
 	bottomRight.setColour(colour);
-	bottomRight.setPosition(destQuad.x + destQuad.z, destQuad.y);
+	bottomRight.setPosition(position.x + dimensions.x, position.y);
 	bottomRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y);
 }
 
-Quad::Quad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, float angle)
+Quad::Quad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture,
+	float depth, const Colour& colour, float angle)
 {
 	this->texture = texture;
 	this->depth = depth;
 
-	glm::vec2 halfDimensions(destQuad.z / 2.0f, destQuad.w / 2.0f);
+	glm::vec2 halfDimensions(dimensions.x / 2.0f, dimensions.y / 2.0f);
 
 	//Get points centered at origin
 	glm::vec2 tl(-halfDimensions.x, halfDimensions.y);
@@ -48,19 +50,19 @@ Quad::Quad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture,
 	tr = rotatePoint(tr, angle) + halfDimensions;
 
 	topLeft.setColour(colour);
-	topLeft.setPosition(destQuad.x + tl.x, destQuad.y + tl.y);
+	topLeft.setPosition(position.x + tl.x, position.y + tl.y);
 	topLeft.setTexCoord(texCoord.x, texCoord.y + texCoord.w);
 
 	topRight.setColour(colour);
-	topRight.setPosition(destQuad.x + tr.x, destQuad.y + tr.y);
+	topRight.setPosition(position.x + tr.x, position.y + tr.y);
 	topRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y + texCoord.w);
 
 	bottomLeft.setColour(colour);
-	bottomLeft.setPosition(destQuad.x + bl.x, destQuad.y + bl.y);
+	bottomLeft.setPosition(position.x + bl.x, position.y + bl.y);
 	bottomLeft.setTexCoord(texCoord.x, texCoord.y);
 
 	bottomRight.setColour(colour);
-	bottomRight.setPosition(destQuad.x + br.x, destQuad.y + br.y);
+	bottomRight.setPosition(position.x + br.x, position.y + br.y);
 	bottomRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y);
 }
 
@@ -104,14 +106,14 @@ void SpriteBatch::end()
 	createRenderBatches();
 }
 
-void SpriteBatch::addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour) 
+void SpriteBatch::addQuad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
 {
-	mQuads.emplace_back(destQuad, texCoord, texture, depth, colour);
+	mQuads.emplace_back(position, dimensions, texCoord, texture, depth, colour);
 }
 
-void SpriteBatch::addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, float angle)
+void SpriteBatch::addQuad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, float angle)
 {
-	mQuads.emplace_back(destQuad, texCoord, texture, depth, colour, angle);
+	mQuads.emplace_back(position, dimensions, texCoord, texture, depth, colour, angle);
 }
 
 //void SpriteBatch::addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, const glm::vec2& dir) {

@@ -6,6 +6,7 @@
 #include "SpriteBatch.h"
 #include "TextureCache.h"
 #include "ResourceManager.h"
+#include "Camera.h"
 
 class Box;
 class Player;
@@ -16,6 +17,7 @@ public:
 	Entity();
 	~Entity();
 
+	//Initialise the entity
 	virtual void init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
 		const Texture& texture, const glm::vec4& texCoords = glm::vec4{ 0.0f, 0.0f, 1.0f, 1.0f }, bool fixedRotation = false);
 
@@ -26,7 +28,8 @@ public:
 	const glm::vec2& getDimensions() const { return mDimensions; }
 	const Colour getColour() { return mColour; }
 
-	void draw(SpriteBatch& spriteBatch);
+	//Cull then add Entity to SpriteBatch
+	void add(SpriteBatch& spriteBatch, Camera& camera);
 
 protected:
 	b2Body* mBody = NULL;

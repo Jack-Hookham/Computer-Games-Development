@@ -245,7 +245,7 @@ void SpriteFont::draw(SpriteBatch& batch, const char* s, glm::vec2 position, glm
 			if (gi < 0 || gi >= _regLength)
 				gi = _regLength;
 			glm::vec4 destRect(tp, _glyphs[gi].size * scaling);
-			batch.addQuad(destRect, _glyphs[gi].uvRect, _texID, depth, tint);
+			batch.addQuad(glm::vec2(destRect.x, destRect.y), glm::vec2(destRect.z, destRect.w), _glyphs[gi].uvRect, _texID, depth, tint);
 			tp.x += _glyphs[gi].size.x * scaling.x;
 		}
 	}
