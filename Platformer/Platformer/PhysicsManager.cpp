@@ -26,29 +26,28 @@ bool PhysicsManager::initPhysics(const int desiredFPS, std::unique_ptr<b2World>&
 		success = false;
 	}
 
-	////Ground body definition
-	//b2BodyDef groundBodyDef;
-	//groundBodyDef.position.Set(0.0f, -30.0f);
-	//b2Body* groundBody = world->CreateBody(&groundBodyDef);
-
-	////Ground fixture definition
-	//b2PolygonShape groundBox;
-	//groundBox.SetAsBox(50.0f, 10.0f);
-	//groundBody->CreateFixture(&groundBox, 0.0f);
-
 	generateGround(world, groundEntities);
 
 	//Initialise player params
-	glm::vec2 playerPos(0.0f, 15.0f);
+	glm::vec2 playerPos(0.0f, 5.0f);
 	glm::vec2 playerDims(1.0f, 2.0f);
 	Colour playerColour(255, 255, 255, 255);
-	Texture playerTexture = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/running.png");
+	Texture playerTexture[4];
+	playerTexture[IDLE] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/idle.png");
+	playerTexture[RUN] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/run.png");
+	playerTexture[IN_AIR] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
+	playerTexture[ATTACK] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/attack.png");
 	glm::vec4 playerTexCoords(0.0f, 0.0f, 1.0f, 1.0f);
 
 	//Initialise player instance
 	player.init(world.get(), playerPos, playerDims, playerColour, playerTexture, playerTexCoords, true);
 
 	generateBoxes(world, boxEntities);
+
+	if (success)
+	{
+		log("Initialised");
+	}
 
 	return success;
 }

@@ -157,6 +157,7 @@
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="ImageManager.h" />
     <ClInclude Include="Music.h" />
     <ClInclude Include="picoPNG.h" />

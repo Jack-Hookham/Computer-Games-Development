@@ -94,7 +94,7 @@ int GameManager::gameLoop()
 		//Start cap timer at the start of each frame (each loop)
 		mFrameTimer.start();
 
-		//Manage the user input
+		//Manage the user input, check the players
 		manageInput();
 
 		//Update all physics
@@ -199,7 +199,8 @@ void GameManager::manageInput()
 		mShotSound1.play();
 	}
 
-	mPlayer.input(mInputManager);
+	//Manage input for the player, check the player state and update the state if needed
+	mPlayer.update(mInputManager);
 
 	if (mInputManager.isKeyDown(SDLK_q))
 	{

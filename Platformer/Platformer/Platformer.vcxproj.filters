@@ -176,5 +176,8 @@
     <ClInclude Include="Ground.h">
       <Filter>Header Files\Enitities</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteSheet.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,13 +10,16 @@ Player::~Player()
 
 //Override entity init to add capsule collision to the player
 void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, 
-	const Texture& texture, const glm::vec4& texCoords, bool fixedRotation)
+	const Texture textures[], const glm::vec4& texCoords, bool fixedRotation)
 {
 	//Initialise the entity's variables
 	mPosition = position;
 	mDimensions = dimensions;
 	mColour = colour;
-	mTexture = texture;
+	mSpriteSheets[IDLE].init(textures[IDLE], glm::ivec2(4, 3));
+	mSpriteSheets[RUN].init(textures[RUN], glm::ivec2(5, 2));
+	mSpriteSheets[IN_AIR].init(textures[IN_AIR], glm::ivec2(5, 2));
+	mSpriteSheets[ATTACK].init(textures[ATTACK], glm::ivec2(4, 4));
 	mTexCoords = texCoords;
 
 	//Box body definition
@@ -57,7 +60,64 @@ void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& di
 	mFixtures[2] = mBody->CreateFixture(&circleDef);
 }
 
-void Player::input(InputManager& inputManager)
+void Player::add(SpriteBatch& spriteBatch, Camera& camera)
+{
+	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x / 2.0f, mBody->GetPosition().y - mDimensions.y / 2.0f);
+	glm::vec2 dimensions = mDimensions;
+
+	int numTiles;
+	int tileIndex;
+	float animationSpeed = 0.2f;
+
+	//Store the velocity
+	glm::vec2 velocity = glm::vec2(mBody->GetLinearVelocity().x, mBody->GetLinearVelocity().y);
+
+	if (camera.isOnCamera(position, mDimensions))
+	{
+		//Animation
+		//if in air
+		if (mInAir)
+		{
+			//if falling
+			if (velocity.y <= 0.0f)
+			{
+				numTiles = 10;
+				tileIndex = 10;
+				mMoveState = IN_AIR;
+				dimensions.x *= 1.56f;
+				dimensions.y *= 1.1f;
+			}
+			//if rising
+			else
+			{
+				numTiles = 10;
+				tileIndex = 10;
+				mMoveState = IN_AIR;
+				dimensions.x *= 1.56f;
+				dimensions.y *= 1.1f;
+			}
+		}
+		//if on ground
+		else
+		{
+			numTiles = 10;
+			tileIndex = 4;
+			mMoveState = IDLE;
+		}
+
+		//Increment animation time
+		mAnimationTime += animationSpeed;
+
+		//Apply animation
+		tileIndex += (int)mAnimationTime % numTiles;
+
+		//std::cout << "index: " << tileIndex << std::endl;
+		spriteBatch.addQuad(position, dimensions, mSpriteSheets[mMoveState].getTexCoords(tileIndex), mSpriteSheets[mMoveState].texture.id, 
+			0.0f, mColour, mBody->GetAngle());
+	}
+}
+
+void Player::update(InputManager& inputManager)
 {
 	//Cap the player's speed
 	if (mBody->GetLinearVelocity().x > MAX_SPEED)
@@ -85,6 +145,7 @@ void Player::input(InputManager& inputManager)
 
 	//Check if in air
 	//Loop through all contact edges
+	mInAir = true;
 	for (b2ContactEdge* ce = mBody->GetContactList(); ce; ce = ce->next)
 	{
 		b2Contact* c = ce->contact;
@@ -95,21 +156,25 @@ void Player::input(InputManager& inputManager)
 			c->GetWorldManifold(&worldManifold);
 
 			bool below = false;
+
 			//loop through all manifold points
 			for (unsigned int i = 0; i < b2_maxManifoldPoints; i++)
 			{
-				//if edges are below the player
-				if (worldManifold.points[i].y < mBody->GetPosition().y - mDimensions.y / 2.0f + 0.01f)
+				//if edges are below the player (add small value 0.01f to account for any error)
+				if (worldManifold.points[i].y <  0.01f + mBody->GetPosition().y - mDimensions.y / 2.0f)
 				{
+					//Player is on the ground
 					below = true;
 					break;
 				}
 			}
 			if (below)
 			{
-				//Jump
-				if (inputManager.isKeyPressed(SDLK_SPACE) && mMoveState != IN_AIR)
+				mInAir = false;
+				//Can jump
+				if (inputManager.isKeyPressed(SDLK_w))
 				{
+					//Jump
 					mBody->ApplyLinearImpulse(b2Vec2(0.0f, 30.0f), b2Vec2(0.0f, 0.0f), true);
 					break;
 				}

@@ -62,6 +62,11 @@ bool AudioManager::initAudio()
 	//Set initialised bool to true
 	mIsInitialised = true;
 
+	if (success)
+	{
+		log("Initialised");
+	}
+
 	return success;
 }
 

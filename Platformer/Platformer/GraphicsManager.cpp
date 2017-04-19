@@ -38,7 +38,7 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 
 	//Initialise the cameras
 	mWorldCamera.initCamera(mScreenWidth, mScreenHeight);
-	mWorldCamera.setScale(20.0f);
+	mWorldCamera.setScale(32.0f);
 	mHUDCamera.initCamera(mScreenWidth, mScreenHeight);
 
 	//Offset the hud camera to align 0, 0 with the bottom left corner
@@ -61,6 +61,11 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 
 	loadMedia();
 
+	if (success)
+	{
+		log("Initialised");
+	}
+
 	return success;
 }
 
@@ -69,7 +74,7 @@ void GraphicsManager::loadMedia()
 	//Initialise sprite font
 	mSpriteFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 32);
 
-	//Initialise textures
+	//Initialise textures (cache them so that they load quickly when needed)
 	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box1.png");
 	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box2.png");
 	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box3.png");
@@ -80,6 +85,12 @@ void GraphicsManager::loadMedia()
 	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box8.png");
 	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box9.png");
 	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box10.png");
+
+	//Spritesheets
+	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/run.png");
+	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/idle.png");
+	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
+	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/attack.png");
 
 	log("Media successfully loaded");
 }
