@@ -96,40 +96,17 @@ int GameManager::gameLoop()
 
 		//Manage the user input
 		manageInput();
-
-		Uint32 newTicks = SDL_GetTicks();
-		Uint32 frameTime = newTicks - previousTicks;
-		previousTicks = newTicks;
-		float totalTimeStep = frameTime / mScreenTicksPerFrame;
-		
-		//Physics update
-		int stepCount = 0;
-
-		//This loop ensures that physics updates are not effected by fps
-		while (totalTimeStep > 0.0f && stepCount < MAX_PHYSICS_STEPS)
-		{
-			//Set timestep to the smaller of the two
-			//This means that if the totalTimeStep is bigger than the max time step allowed
-			//We limit the timestep to the max time step
-			float timeStep = std::min(totalTimeStep, MAX_TIME_STEP);
 			
-			//Update all physics
-			mPhysicsManager.updatePhysics(mWorld);
+		//Update all physics
+		mPhysicsManager.updatePhysics(mWorld);
 
-			totalTimeStep -= timeStep;
-			stepCount++;
-			//std::cout << "Step Count " << stepCount << std::endl;
-		}
-
-		//Calculate and correct fps
+		//Calculate fps
 		float avgFPS = countedFrames / (mFPSTimer.getTicks() / MS_PER_SECOND);
 
 		mGraphicsManager.updateGraphics(avgFPS, mPlayer, mBoxEntities, mGroundEntities);
 		++countedFrames;
 
-		//cout << "FPS: " << avgFPS << endl;
-
-		//If frame finished early
+		//If frame finished early cap the frame rate
 		int frameTicks = mFrameTimer.getTicks();
 		if (frameTicks < mScreenTicksPerFrame)
 		{

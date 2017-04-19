@@ -38,8 +38,8 @@ bool PhysicsManager::initPhysics(const int desiredFPS, std::unique_ptr<b2World>&
 
 	generateGround(world, groundEntities);
 
-	//Initialise player param
-	glm::vec2 playerPos(0.0f, 30.0f);
+	//Initialise player params
+	glm::vec2 playerPos(0.0f, 15.0f);
 	glm::vec2 playerDims(1.0f, 2.0f);
 	Colour playerColour(255, 255, 255, 255);
 	Texture playerTexture = ResourceManager::getTexture("../res/textures/ninja_adventure/png/Idle__000.png");
@@ -64,7 +64,7 @@ void PhysicsManager::generateGround(std::unique_ptr<b2World>& world, std::vector
 {
 	float width = 50.0f;
 	float height = 1.0f;
-	glm::vec2 position = glm::vec2(0.0f, -20.0f);
+	glm::vec2 position = glm::vec2(0.0f, 0.0f);
 	glm::vec2 dimensions = glm::vec2(width, height);
 	Colour colour(255, 255, 255, 255);
 	Texture texture = ResourceManager::getTexture("../res/textures/platformerArt/png/ground.png");
@@ -77,14 +77,14 @@ void PhysicsManager::generateBoxes(std::unique_ptr<b2World>& world, std::vector<
 {
 	//Random box gen
 	std::mt19937 randGenerator;
-	std::uniform_real_distribution<float> xGen(-10.0f, 10.0f);
-	std::uniform_real_distribution<float> yGen(0.0f, 30.0f);
+	std::uniform_real_distribution<float> xGen(10.0f, 30.0f);
+	std::uniform_real_distribution<float> yGen(5.0f, 20.0f);
 	std::uniform_real_distribution<float> sizeGen(0.5f, 2.5f);
 	std::uniform_int_distribution<int> colourGen(200, 255);
 	std::uniform_int_distribution<int> textureGen(1, 10);
 
 	//Number of boxes to generate
-	const int NUM_BOXES = 100;
+	const int NUM_BOXES = 50;
 
 	for (unsigned int i = 0; i < NUM_BOXES; i++)
 	{

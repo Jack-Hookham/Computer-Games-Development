@@ -123,8 +123,8 @@ void GraphicsManager::drawHUD(float avgFPS)
 void GraphicsManager::updateGraphics(float avgFPS, Player& player, std::vector<Box>& boxEntities, std::vector<Ground>& groundEntities)
 {
 	//Update cameras
-	glm::vec2 playerPos = glm::vec2(player.getBody()->GetPosition().x, player.getBody()->GetPosition().y);
-	mWorldCamera.setPosition(playerPos);
+	glm::vec2 worldCameraPos = glm::vec2(player.getBody()->GetPosition().x, player.getBody()->GetPosition().y);
+	mWorldCamera.setPosition(worldCameraPos);
 	mWorldCamera.updateCamera();
 
 	mHUDCamera.updateCamera();
