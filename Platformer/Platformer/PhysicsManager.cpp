@@ -36,6 +36,7 @@ bool PhysicsManager::initPhysics(const int desiredFPS, std::unique_ptr<b2World>&
 	playerTexture[IDLE] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/idle.png");
 	playerTexture[RUN] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/run.png");
 	playerTexture[JUMP] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
+	playerTexture[IN_AIR] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
 	playerTexture[ATTACK] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/attack.png");
 	playerTexture[JUMP_ATTACK] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump_attack.png");
 	glm::vec4 playerTexCoords(0.0f, 0.0f, 1.0f, 1.0f);

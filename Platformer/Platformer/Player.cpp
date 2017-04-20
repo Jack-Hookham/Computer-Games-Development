@@ -12,15 +12,16 @@ Player::~Player()
 void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, 
 	const Texture textures[], const glm::vec4& texCoords, bool fixedRotation)
 {
-	//Initialise the entity's variables
+	//Initialise the player's variables
 	mPosition = position;
 	mDimensions = dimensions;
 	mColour = colour;
-	mSpriteSheets[IDLE].init(textures[IDLE], glm::ivec2(4, 3));
-	mSpriteSheets[RUN].init(textures[RUN], glm::ivec2(5, 2));
-	mSpriteSheets[JUMP].init(textures[JUMP], glm::ivec2(5, 2));
-	mSpriteSheets[ATTACK].init(textures[ATTACK], glm::ivec2(3, 4));
-	mSpriteSheets[JUMP_ATTACK].init(textures[JUMP_ATTACK], glm::ivec2(4, 3));
+	mSpriteSheets[IDLE].init(textures[IDLE], mSheetDimensions[IDLE]);
+	mSpriteSheets[RUN].init(textures[RUN], mSheetDimensions[RUN]);
+	mSpriteSheets[JUMP].init(textures[JUMP], mSheetDimensions[JUMP]);
+	mSpriteSheets[IN_AIR].init(textures[IN_AIR], mSheetDimensions[IN_AIR]);
+	mSpriteSheets[ATTACK].init(textures[ATTACK], mSheetDimensions[ATTACK]);
+	mSpriteSheets[JUMP_ATTACK].init(textures[JUMP_ATTACK], mSheetDimensions[JUMP_ATTACK]);
 	mTexCoords = texCoords;
 
 	//Box body definition
@@ -66,7 +67,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x / 2.0f, mBody->GetPosition().y - mDimensions.y / 2.0f);
 	glm::vec2 dimensions = mDimensions;
 
-	int numTiles;
+	//Track the current tile
 	int tileIndex;
 	float animationSpeed = 0.2f;
 
@@ -83,16 +84,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			//Jumping
 			if (mJumping)
 			{
-				numTiles = 10;
 				tileIndex = 5;
-
-				//Adjust position and dimensions
-				dimensions.x *= 1.56f;
-				dimensions.y *= 1.1f;
-				if (mDirection == -1)
-				{
-					position.x -= dimensions.x * 0.5f;
-				}
 
 				//if the state just started reset the animation time
 				if (mState != JUMP)
@@ -102,19 +94,16 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				}
 			}
 			//if falling
-			else
+			else if (velocity.y <= 0.0f)
 			{
-				numTiles = 1;
 				tileIndex = 4;
 				mState = IN_AIR;
-
-				//Adjust position and dimensions
-				dimensions.x *= 1.56f;
-				dimensions.y *= 1.1f;
-				if (mDirection == -1)
-				{
-					position.x -= dimensions.x * 0.5f;
-				}
+			}
+			//if rising
+			else
+			{
+				tileIndex = 0;
+				mState = IN_AIR;
 			}
 		}
 		//if on ground
@@ -123,18 +112,8 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			//if attacking on ground
 			if (mAttacking)
 			{
-				numTiles = 10;
 				tileIndex = 3;
 				animationSpeed = 0.4f;
-
-				//Adjust position and dimensions
-				dimensions.x *= 2.31;
-				dimensions.y *= 1.13f;
-				if (mDirection == -1)
-				{
-					position.x -= dimensions.x * 0.5f;
-				}
-				position.y -= dimensions.y * 0.1f;
 
 				//if the state just started reset the animation time
 				if (mState != ATTACK && mState != JUMP_ATTACK)
@@ -147,17 +126,8 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			//if moving
 			else if (abs(velocity.x) > 1.0f && ((velocity.x > 0 && mDirection > 0 || (velocity.x < 0 && mDirection < 0))))
 			{
-				numTiles = 10;
 				tileIndex = 5;
 				animationSpeed = abs(velocity.x) * 0.025f;
-				
-				//Adjust position and dimensions
-				dimensions.x *= 1.56f;
-				dimensions.y *= 1.04f;
-				if (mDirection == -1)
-				{
-					position.x -= dimensions.x * 0.5f;
-				}
 
 				//if the state just started reset the animation time
 				if (mState != RUN)
@@ -169,7 +139,6 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			//if stood still
 			else
 			{
-				numTiles = 10;
 				tileIndex = 4;
 
 				//if state just started reset the animation time
@@ -183,7 +152,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 
 		if (mJumping)
 		{
-			if (mJumpTimer < numTiles)
+			if (mJumpTimer < mNumSprites[mState])
 			{
 				mJumpTimer += animationSpeed;
 			}
@@ -196,7 +165,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 
 		if (mAttacking)
 		{
-			if (mAttackTimer < numTiles)
+			if (mAttackTimer < mNumSprites[mState])
 			{
 				mAttackTimer += animationSpeed;
 			}
@@ -207,25 +176,20 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			}
 		}
 
-		//if (mAttacking)
-		//{
-		//	if (mJumpTimer < numTiles)
-		//	{
-		//		mJumpTimer += animationSpeed;
-		//	}
-		//	else
-		//	{
-		//		mJumping = false;
-		//		mState = IN_AIR;
-		//		mJumpTimer = 0.0f;
-		//	}
-		//}
+		//Adjust position and dimensions
+		dimensions.x *= mStateMultipliers[mState].x;
+		dimensions.y *= mStateMultipliers[mState].y;
+		if (mDirection == -1)
+		{
+			position.x -= dimensions.x * 0.5f;
+		}
+		position.y -= dimensions.y * (mStateMultipliers[mState].y - 1.0f);
 
 		//Increment animation time
 		mAnimationTimer += animationSpeed;
 
 		//Apply animation
-		tileIndex += (int)mAnimationTimer % numTiles;
+		tileIndex += (int)mAnimationTimer % mNumSprites[mState];
 
 		glm::vec4 texCoords = mSpriteSheets[mState].getTexCoords(tileIndex);
 

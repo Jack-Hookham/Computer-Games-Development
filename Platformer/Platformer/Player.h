@@ -14,7 +14,8 @@ enum playerMoveState
 {
 	IDLE,
 	RUN,
-	JUMP, IN_AIR = 2,
+	JUMP, 
+	IN_AIR,
 	ATTACK,
 	JUMP_ATTACK,
 	NUM_STATES
@@ -44,12 +45,21 @@ private:
 
 	//Limit the player's speed
 	const float MAX_SPEED = 10.0f;
-
+	
+	//IDLE, RUN, JUMP, IN_AIR, ATTACK, JUMP_ATTACK
 	//Array of sprite sheets for the different states
-
 	SpriteSheet mSpriteSheets[NUM_STATES];
-	//Number of sprites in each sheet
-	int numSprites[4] = { 10, 10, 10, 10 };
+
+	//Number of sprites for each state
+	int mNumSprites[NUM_STATES] = { 10, 10, 3, 1, 10, 10};
+
+	//Rows and columns in the sprite sheet
+	glm::ivec2 mSheetDimensions[NUM_STATES] = { glm::ivec2(4, 3), glm::ivec2(5, 2), glm::ivec2(5, 2), 
+		glm::ivec2(5, 2), glm::ivec2(3, 4), glm::ivec2(4, 3) };
+
+	//Multipliers to adjust the sprite position and dimension based on the state
+	glm::vec2 mStateMultipliers[NUM_STATES] = { glm::vec2(1.0f), glm::vec2(1.56f, 1.04f),  glm::vec2(1.56f, 1.1f),
+		glm::vec2(1.56f, 1.1f), glm::vec2(2.31f, 1.13f), glm::vec2(2.31f, 1.13f) };
 
 	//Animation timer
 	float mAnimationTimer = 0.0f;
