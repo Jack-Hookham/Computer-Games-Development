@@ -54,11 +54,11 @@ void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& di
 	circleDef.friction = 0.3f;
 
 	//Top
-	circleShape.m_p.Set(0.0f, (mDimensions.y - dimensions.x) / 2.0f);
+	circleShape.m_p.Set(0.0f, (mDimensions.y - mDimensions.x) / 2.0f);
 	mFixtures[1] = mBody->CreateFixture(&circleDef);
 
 	//Bottom
-	circleShape.m_p.Set(0.0f, (-mDimensions.y + dimensions.x) / 2.0f);
+	circleShape.m_p.Set(0.0f, (-mDimensions.y + mDimensions.x) / 2.0f);
 	mFixtures[2] = mBody->CreateFixture(&circleDef);
 }
 
@@ -169,6 +169,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			}
 		}
 
+		//only play the jump animation once
 		if (mJumping)
 		{
 			if (mJumpTimer < mNumSprites[mState])
@@ -182,6 +183,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			}
 		}
 
+		//only play the attack animation once
 		if (mAttacking)
 		{
 			if (mAttackTimer < mNumSprites[mState])
@@ -272,8 +274,10 @@ void Player::update(InputManager& inputManager)
 			//loop through all manifold points
 			for (unsigned int i = 0; i < b2_maxManifoldPoints; i++)
 			{
-				//if edges are below the player (add small value 0.01f to account for any error)
-				if (worldManifold.points[i].y <  0.01f + mBody->GetPosition().y - mDimensions.y / 2.0f)
+				//if edges are below the player 
+				//add small value 0.01f to account for any error
+				//mDimensions.x * 0.25f accounts for the circle fixture on the bottom of the player body
+				if (worldManifold.points[i].y < mBody->GetPosition().y - mDimensions.y * 0.5f + mDimensions.x * 0.25f + 0.01f)
 				{
 					//Player is on the ground
 					mInAir = false;
