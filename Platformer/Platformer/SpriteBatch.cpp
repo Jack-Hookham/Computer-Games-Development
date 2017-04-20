@@ -33,11 +33,15 @@ void SpriteBatch::end()
 	createRenderBatches();
 }
 
+//Add the sprite to the sprite batch
+//No angle
 void SpriteBatch::addSprite(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
 {
 	mSprites.emplace_back(position, dimensions, texCoord, texture, depth, colour);
 }
 
+//Add the sprite to the sprite batch
+//With angle
 void SpriteBatch::addSprite(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, float angle)
 {
 	mSprites.emplace_back(position, dimensions, texCoord, texture, depth, colour, angle);
@@ -51,7 +55,9 @@ void SpriteBatch::renderBatches()
 
 	for (unsigned int i = 0; i < mRenderBatches.size(); i++)
 	{
+		//Bind the texture to the target GL_TEXTURE_2D
 		glBindTexture(GL_TEXTURE_2D, mRenderBatches[i].texture);
+		//Render triangle primitives from the 
 		glDrawArrays(GL_TRIANGLES, mRenderBatches[i].offset, mRenderBatches[i].numVertices);
 	}
 

@@ -9,7 +9,7 @@ Player::~Player()
 }
 
 //Override entity init to add capsule collision to the player
-void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, 
+void Player::init(b2World* world, AudioManager& audioManager, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, 
 	const Texture textures[], const glm::vec4& texCoords, bool fixedRotation)
 {
 	//Initialise the player's variables
@@ -17,6 +17,8 @@ void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& di
 	mDimensions = dimensions;
 	mColour = colour;
 	mTexCoords = texCoords;
+	mJumpSound = audioManager.loadSoundEffect("../res/sound/platformer_jumping/jump_01.wav");
+	mAttackSound = audioManager.loadSoundEffect("../res/sound/melee_sounds/sword_sound.wav");
 
 	for (unsigned int i = 0; i < NUM_STATES; i++)
 	{
@@ -291,6 +293,7 @@ void Player::update(InputManager& inputManager)
 					//Jump
 					mBody->ApplyLinearImpulse(b2Vec2(0.0f, 30.0f), b2Vec2(0.0f, 0.0f), true);
 					mJumping = true;
+					mJumpSound.play();
 					break;
 				}
 			}
@@ -299,6 +302,7 @@ void Player::update(InputManager& inputManager)
 
 	if (inputManager.isKeyPressed(SDLK_SPACE))
 	{
+		mAttackSound.play();
 		mAttacking = true;
 	}
 }

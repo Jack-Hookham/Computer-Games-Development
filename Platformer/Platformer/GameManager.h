@@ -52,8 +52,10 @@ private:
 	//Log for GameManager
 	void log(const std::string text);
 
+	//Manage user input
 	void manageInput();
 
+	//Current game state
 	GameState mGameState = PLAY;
 
 	int mScreenWidth = 1280;
@@ -82,10 +84,8 @@ private:
 	//Audio stuff
 	AudioManager mAudioManager;
 	Music mMusic;
-	SoundEffect mShotSound1;
-
-	//Application timer
-	Timer mTimer;
+	SoundEffect mPlaceBoxSound;
+	SoundEffect mPlaceGroundSound;
 
 	//FPS timer
 	Timer mFPSTimer;
@@ -93,6 +93,7 @@ private:
 	//Timer for each frame
 	Timer mFrameTimer;
 
+	//The box2D world
 	std::unique_ptr<b2World> mWorld;
 
 	//Entities

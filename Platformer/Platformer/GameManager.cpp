@@ -42,17 +42,6 @@ int GameManager::init()
 		failedInits++;
 	}
 
-	//Initialise physics
-	if (mPhysicsManager.initPhysics(mDesiredFPS, mWorld, mPlayer,  mBoxEntities, mGroundEntities))
-	{
-		log("Physics successfully initialised");
-	}
-	else
-	{
-		log("Failed to initialise physics");
-		failedInits++;
-	}
-
 	//Initialise audio
 	//Audio must initialise after graphics because SDL is initialised in graphics
 	//Audio uses SDL_mixer
@@ -69,11 +58,23 @@ int GameManager::init()
 		mMusic.play(-1);
 
 		//Load sound effect
-		mShotSound1 = mAudioManager.loadSoundEffect("../res/sound/tutorial/shots/cg1.wav");
+		mPlaceBoxSound = mAudioManager.loadSoundEffect("../res/sound/Menu_FX/Item1A.wav");
+		mPlaceGroundSound = mAudioManager.loadSoundEffect("../res/sound/Menu_FX/Item1B.wav");
 	}
 	else
 	{
 		log("Failed to initialise audio");
+		failedInits++;
+	}
+
+	//Initialise physics
+	if (mPhysicsManager.initPhysics(mDesiredFPS, mWorld, mAudioManager, mPlayer,  mBoxEntities, mGroundEntities))
+	{
+		log("Physics successfully initialised");
+	}
+	else
+	{
+		log("Failed to initialise physics");
 		failedInits++;
 	}
 
@@ -182,7 +183,7 @@ void GameManager::manageInput()
 
 		mPhysicsManager.addBoxToWorld(mBoxEntities, mWorld, worldCoords, dimensions, colour, boxTexture);
 
-		mShotSound1.play();
+		mPlaceBoxSound.play();
 	}
 
 	if (mInputManager.isKeyPressed(SDL_BUTTON_RIGHT))
@@ -196,7 +197,7 @@ void GameManager::manageInput()
 
 		mPhysicsManager.addGroundToWorld(mGroundEntities, mWorld, worldCoords, dimensions, colour, groundTexture);
 
-		mShotSound1.play();
+		mPlaceGroundSound.play();
 	}
 
 	//Manage input for the player, check the player state and update the state if needed

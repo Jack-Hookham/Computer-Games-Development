@@ -2,6 +2,9 @@
 
 #include "Entity.h"
 
+//Used to create ground in the world
+//Density should usually be 0.0f means it isn't effected by physics in the b2World
+
 class Ground : public Entity
 {
 public:

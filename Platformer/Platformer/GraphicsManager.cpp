@@ -15,6 +15,8 @@ GraphicsManager::~GraphicsManager()
 
 bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight)
 {
+	log("Initialising");
+
 	//Initialisation flag
 	bool success = true;
 
@@ -71,6 +73,8 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 
 void GraphicsManager::loadMedia()
 {
+	log("Loading media");
+
 	//Initialise sprite font
 	mSpriteFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 32);
 
@@ -91,6 +95,7 @@ void GraphicsManager::loadMedia()
 	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/idle.png");
 	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
 	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/attack.png");
+	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump_attack.png");
 
 	log("Media successfully loaded");
 }
@@ -103,12 +108,16 @@ void GraphicsManager::log(const std::string text)
 //Compile and link the shaders used for the engine
 void GraphicsManager::initShaders()
 {
+	log("Initialising shaders");
+
 	mTextureShader.compileShaders("../res/shaders/colourVert.glsl", "../res/shaders/colourFrag.glsl");
 
 	mTextureShader.addAttribute("position");
 	mTextureShader.addAttribute("colour");
 	mTextureShader.addAttribute("texCoord");
 	mTextureShader.linkShaders();
+
+	log("Shaders successfully initialised");
 }
 
 //Draw the HUD using the HUD camera

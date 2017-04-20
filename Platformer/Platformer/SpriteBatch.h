@@ -37,8 +37,11 @@ struct RenderBatch
 		this->texture = texture;
 	}
 
+	//The index offset for drawing the triangle primitives
 	GLuint offset;
+	//Number of vertices in the render batch = number of indices to be rendered
 	GLuint numVertices;
+	//The texture to use
 	GLuint texture;
 };
 

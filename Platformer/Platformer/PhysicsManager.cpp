@@ -8,9 +8,11 @@ PhysicsManager::~PhysicsManager()
 {
 }
 
-bool PhysicsManager::initPhysics(const int desiredFPS, std::unique_ptr<b2World>& world, Player& player, 
-	std::vector<Box>& boxEntities, std::vector<Ground>& groundEntities)
+bool PhysicsManager::initPhysics(const int desiredFPS, std::unique_ptr<b2World>& world, AudioManager& audioManager, 
+	Player& player, std::vector<Box>& boxEntities, std::vector<Ground>& groundEntities)
 {
+	log("Initialising");
+
 	//Initialisation flag
 	bool success = true;
 
@@ -42,7 +44,7 @@ bool PhysicsManager::initPhysics(const int desiredFPS, std::unique_ptr<b2World>&
 	glm::vec4 playerTexCoords(0.0f, 0.0f, 1.0f, 1.0f);
 
 	//Initialise player instance
-	player.init(world.get(), playerPos, playerDims, playerColour, playerTexture, playerTexCoords, true);
+	player.init(world.get(), audioManager, playerPos, playerDims, playerColour, playerTexture, playerTexCoords, true);
 
 	generateBoxes(world, boxEntities);
 

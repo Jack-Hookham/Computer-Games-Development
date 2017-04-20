@@ -20,8 +20,8 @@ public:
 	~PhysicsManager();
 
 	//initialise box2D physics
-	bool initPhysics(const int desiredFPS, std::unique_ptr<b2World>& world, Player& player,
-		std::vector<Box>& boxEntities, std::vector<Ground>& groundEntities);
+	bool initPhysics(const int desiredFPS, std::unique_ptr<b2World>& world, AudioManager& audioManager, 
+		Player& player, std::vector<Box>& boxEntities, std::vector<Ground>& groundEntities);
 
 	//Update the world
 	void updatePhysics(std::unique_ptr<b2World>& world);

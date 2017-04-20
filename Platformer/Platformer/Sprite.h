@@ -5,7 +5,8 @@
 
 #include "Vertex.h"
 
-//Sprite to hold sprite data
+//Sprite class to hold sprite data for sprites used in SpriteBatch
+
 class Sprite
 {
 public:

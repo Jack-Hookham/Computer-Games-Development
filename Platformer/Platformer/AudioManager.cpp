@@ -34,6 +34,8 @@ AudioManager::~AudioManager()
 
 bool AudioManager::initAudio()
 {
+	log("Initialising");
+
 	//Initilisation flag
 	bool success = true;
 

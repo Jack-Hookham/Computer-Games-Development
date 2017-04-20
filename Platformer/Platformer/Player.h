@@ -3,12 +3,14 @@
 #include "Entity.h"
 #include "InputManager.h"
 #include "SpriteSheet.h"
+#include "AudioManager.h"
 
 //Player class
 //***Controls***
 //A - move left
 //D - move right
-//Space - jump
+//W - jump
+//Space - attack
 
 enum playerMoveState
 {
@@ -28,7 +30,7 @@ public:
 	~Player();
 
 	//Override entity init to add capsule collision to the player
-	virtual void init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
+	virtual void init(b2World* world, AudioManager& audioManager, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
 		const Texture textures[], const glm::vec4& texCoords = { 0.0f, 0.0f, 1.0f, 1.0f }, bool fixedRotation = true);
 
 	void update(InputManager& inputManager);
@@ -73,5 +75,8 @@ private:
 
 	float mJumpTimer = 0.0f;
 	float mAttackTimer = 0.0f;
+
+	SoundEffect mJumpSound;
+	SoundEffect mAttackSound;
 };
 
