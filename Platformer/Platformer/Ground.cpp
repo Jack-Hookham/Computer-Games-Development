@@ -38,6 +38,6 @@ void Ground::add(SpriteBatch& spriteBatch, Camera& camera)
 
 	if (camera.isOnCamera(position, dimensions))
 	{
-		spriteBatch.addQuad(position, dimensions, mTexCoords, mTexture.id, 0.0f, mColour, mBody->GetAngle());
+		spriteBatch.addSprite(position, dimensions, mTexCoords, mTexture.id, 0.0f, mColour, mBody->GetAngle());
 	}
 }

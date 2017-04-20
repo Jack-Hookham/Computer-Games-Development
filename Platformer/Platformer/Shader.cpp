@@ -73,9 +73,8 @@ void Shader::linkShaders()
 		glDeleteShader(mVertShaderID);
 		glDeleteShader(mFragShaderID);
 
-		//print the error log and quit
-		const std::string error = &(errorLog[0]);
-		const std::string text = "Shaders failed to link: " + error;
+		//Print the error log
+		const std::string text = "Shaders failed to link: " + std::string(&(errorLog[0]));
 		log(text);
 	}
 

@@ -9,24 +9,15 @@ class SpriteSheet
 public:
 	void init(const Texture& texture, const glm::ivec2& dimensions)
 	{
-		this->texture = texture;
-		this->dimensions = dimensions;
+		mTexture = texture;
+		mDimensions = dimensions;
 	}
 
-	glm::vec4 getTexCoords(int index)
-	{
-		int xTile = index % dimensions.x;
-		int yTile = index / dimensions.x;
+	inline const Texture getTexture() const { return mTexture; }
+	inline const glm::ivec2 getDimensions() const { return mDimensions; }
+	const glm::vec4 getTexCoords(const int index) const;
 
-		glm::vec4 texCoords;
-		texCoords.x = xTile / (float)dimensions.x;
-		texCoords.y = 1.0f - yTile / (float)dimensions.y;
-		texCoords.z = 1.0f / dimensions.x;
-		texCoords.w = 1.0f / dimensions.y;
-
-		return texCoords;
-	}
-
-	Texture texture;
-	glm::ivec2 dimensions;
+private:
+	Texture mTexture;
+	glm::ivec2 mDimensions;
 };

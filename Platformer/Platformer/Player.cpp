@@ -16,13 +16,12 @@ void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& di
 	mPosition = position;
 	mDimensions = dimensions;
 	mColour = colour;
-	mSpriteSheets[IDLE].init(textures[IDLE], mSheetDimensions[IDLE]);
-	mSpriteSheets[RUN].init(textures[RUN], mSheetDimensions[RUN]);
-	mSpriteSheets[JUMP].init(textures[JUMP], mSheetDimensions[JUMP]);
-	mSpriteSheets[IN_AIR].init(textures[IN_AIR], mSheetDimensions[IN_AIR]);
-	mSpriteSheets[ATTACK].init(textures[ATTACK], mSheetDimensions[ATTACK]);
-	mSpriteSheets[JUMP_ATTACK].init(textures[JUMP_ATTACK], mSheetDimensions[JUMP_ATTACK]);
 	mTexCoords = texCoords;
+
+	for (unsigned int i = 0; i < NUM_STATES; i++)
+	{
+		mSpriteSheets[i].init(textures[i], mSheetDimensions[i]);
+	}
 
 	//Box body definition
 	b2BodyDef bodyDef;
@@ -221,12 +220,12 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 		if (mDirection == -1)
 		{
 			//flip x texCoords
-			texCoords.x += 1.0f / mSpriteSheets[mState].dimensions.x;
+			texCoords.x += 1.0f / mSpriteSheets[mState].getDimensions().x;
 			texCoords.z *= -1;
 		}
 
 		//std::cout << "index: " << tileIndex << std::endl;
-		spriteBatch.addQuad(position, dimensions, texCoords, mSpriteSheets[mState].texture.id, 
+		spriteBatch.addSprite(position, dimensions, texCoords, mSpriteSheets[mState].getTexture().id, 
 			0.0f, mColour, mBody->GetAngle());
 	}
 }

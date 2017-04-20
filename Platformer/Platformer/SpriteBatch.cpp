@@ -1,85 +1,6 @@
 #include "SpriteBatch.h"
 
-#include <algorithm>
-
-Quad::Quad()
-{
-}
-
-Quad::Quad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture,
-	float depth, const Colour& colour)
-{
-	this->texture = texture;
-	this->depth = depth;
-
-	topLeft.setColour(colour);
-	topLeft.setPosition(position.x, position.y + dimensions.y);
-	topLeft.setTexCoord(texCoord.x, texCoord.y + texCoord.w);
-
-	topRight.setColour(colour);
-	topRight.setPosition(position.x + dimensions.x, position.y + dimensions.y);
-	topRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y + texCoord.w);
-
-	bottomLeft.setColour(colour);
-	bottomLeft.setPosition(position.x, position.y);
-	bottomLeft.setTexCoord(texCoord.x, texCoord.y);
-
-	bottomRight.setColour(colour);
-	bottomRight.setPosition(position.x + dimensions.x, position.y);
-	bottomRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y);
-}
-
-Quad::Quad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture,
-	float depth, const Colour& colour, float angle)
-{
-	this->texture = texture;
-	this->depth = depth;
-
-	glm::vec2 halfDimensions(dimensions.x / 2.0f, dimensions.y / 2.0f);
-
-	//Get points centered at origin
-	glm::vec2 tl(-halfDimensions.x, halfDimensions.y);
-	glm::vec2 bl(-halfDimensions.x, -halfDimensions.y);
-	glm::vec2 br(halfDimensions.x, -halfDimensions.y);
-	glm::vec2 tr(halfDimensions.x, halfDimensions.y);
-
-	//Rotate the points
-	tl = rotatePoint(tl, angle) + halfDimensions;
-	bl = rotatePoint(bl, angle) + halfDimensions;
-	br = rotatePoint(br, angle) + halfDimensions;
-	tr = rotatePoint(tr, angle) + halfDimensions;
-
-	topLeft.setColour(colour);
-	topLeft.setPosition(position.x + tl.x, position.y + tl.y);
-	topLeft.setTexCoord(texCoord.x, texCoord.y + texCoord.w);
-
-	topRight.setColour(colour);
-	topRight.setPosition(position.x + tr.x, position.y + tr.y);
-	topRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y + texCoord.w);
-
-	bottomLeft.setColour(colour);
-	bottomLeft.setPosition(position.x + bl.x, position.y + bl.y);
-	bottomLeft.setTexCoord(texCoord.x, texCoord.y);
-
-	bottomRight.setColour(colour);
-	bottomRight.setPosition(position.x + br.x, position.y + br.y);
-	bottomRight.setTexCoord(texCoord.x + texCoord.z, texCoord.y);
-}
-
-glm::vec2 Quad::rotatePoint(const glm::vec2& pos, float angle) 
-{
-	glm::vec2 newVec2;
-
-	float s = sin(angle);
-	float c = cos(angle);
-
-	newVec2.x = pos.x * c - pos.y * s;
-	newVec2.y = pos.x * s + pos.y * c;
-
-	return newVec2;
-}
-
-SpriteBatch::SpriteBatch() : mBufferObject(0), mArrayObject(0)
+SpriteBatch::SpriteBatch()
 {
 }
 
@@ -87,45 +8,45 @@ SpriteBatch::~SpriteBatch()
 {
 }
 
-void SpriteBatch::begin(QuadSortType sortType ) 
+//Prepare the sprite batch for rendering a new batch
+void SpriteBatch::begin(SpriteSortType sortType) 
 {
 	mSortType = sortType;
 	mRenderBatches.clear();
-	mQuads.clear();
+	mSprites.clear();
 }
 
+//Finish render preparation
+//After this renderBatches() can be called
 void SpriteBatch::end() 
 {
-	mQuadPointers.resize(mQuads.size());
-	for (unsigned int i = 0; i < mQuads.size(); i++)
+	//Setup the sprite batch for sorting
+	mSpritePointers.resize(mSprites.size());
+	for (unsigned int i = 0; i < mSprites.size(); i++)
 	{
-		mQuadPointers[i] = &mQuads[i];
+		mSpritePointers[i] = &mSprites[i];
 	}
 
-	sortQuads();
+	//Sort the sprite batch by the given sort type (default = TEXTURE)
+	sortSprites();
+
 	createRenderBatches();
 }
 
-void SpriteBatch::addQuad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
+void SpriteBatch::addSprite(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour)
 {
-	mQuads.emplace_back(position, dimensions, texCoord, texture, depth, colour);
+	mSprites.emplace_back(position, dimensions, texCoord, texture, depth, colour);
 }
 
-void SpriteBatch::addQuad(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, float angle)
+void SpriteBatch::addSprite(const glm::vec2& position, const glm::vec2& dimensions, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, float angle)
 {
-	mQuads.emplace_back(position, dimensions, texCoord, texture, depth, colour, angle);
+	mSprites.emplace_back(position, dimensions, texCoord, texture, depth, colour, angle);
 }
 
-//void SpriteBatch::addQuad(const glm::vec4& destQuad, const glm::vec4& texCoord, GLuint texture, float depth, const Colour& colour, const glm::vec2& dir) {
-//	const glm::vec2 right(1.0f, 0.0f);
-//	float angle = acos(glm::dot(right, dir));
-//	if (dir.y < 0.0f) angle = -angle;
-//
-//	mQuads.emplace_back(destQuad, texCoord, texture, depth, colour, angle);
-//}
-
+//Render the renderBatches in the sprite batch
 void SpriteBatch::renderBatches() 
 {
+	//Bind the VAO
 	glBindVertexArray(mArrayObject);
 
 	for (unsigned int i = 0; i < mRenderBatches.size(); i++)
@@ -134,19 +55,20 @@ void SpriteBatch::renderBatches()
 		glDrawArrays(GL_TRIANGLES, mRenderBatches[i].offset, mRenderBatches[i].numVertices);
 	}
 
+	//Unbind the VAO
 	glBindVertexArray(0);
 }
 
 void SpriteBatch::createRenderBatches() 
 {
-	//Vertices for the quad
+	//Vertices for the sprite
 	std::vector<Vertex> vertices;
 
 	//Resize the buffer to the exact size we need so we can treat
 	//it like an array
-	vertices.resize(mQuads.size() * QUAD_VERTICES);
+	vertices.resize(mSprites.size() * SPRITE_VERTICES);
 
-	if (mQuads.empty())
+	if (mSprites.empty())
 	{
 		return;
 	}
@@ -155,35 +77,35 @@ void SpriteBatch::createRenderBatches()
 	int currentVertex = 0;
 
 	//Add the first batch
-	mRenderBatches.emplace_back(currentVertex, QUAD_VERTICES, mQuadPointers[0]->texture);
-	vertices[currentVertex++] = mQuadPointers[0]->topLeft;
-	vertices[currentVertex++] = mQuadPointers[0]->bottomLeft;
-	vertices[currentVertex++] = mQuadPointers[0]->bottomRight;
-	vertices[currentVertex++] = mQuadPointers[0]->bottomRight;
-	vertices[currentVertex++] = mQuadPointers[0]->topRight;
-	vertices[currentVertex++] = mQuadPointers[0]->topLeft;
+	mRenderBatches.emplace_back(currentVertex, SPRITE_VERTICES, mSpritePointers[0]->getTexure());
+	vertices[currentVertex++] = mSpritePointers[0]->getTL();
+	vertices[currentVertex++] = mSpritePointers[0]->getBL();
+	vertices[currentVertex++] = mSpritePointers[0]->getBR();
+	vertices[currentVertex++] = mSpritePointers[0]->getBR();
+	vertices[currentVertex++] = mSpritePointers[0]->getTR();
+	vertices[currentVertex++] = mSpritePointers[0]->getTL();
 
-	//Add all the rest of the quads
-	for (unsigned int i = 1; i < mQuadPointers.size(); i++) {
+	//Add all the rest of the sprites
+	for (unsigned int i = 1; i < mSpritePointers.size(); i++) {
 
-		//if this quad can't be part of the current batch (different textures)
-		if (mQuadPointers[i]->texture != mQuadPointers[i - 1]->texture) 
+		//if this sprite can't be part of the current batch (different textures)
+		if (mSpritePointers[i]->getTexure() != mSpritePointers[i - 1]->getTexure())
 		{
 			//Make a new batch
-			mRenderBatches.emplace_back(currentVertex, QUAD_VERTICES, mQuadPointers[i]->texture);
+			mRenderBatches.emplace_back(currentVertex, SPRITE_VERTICES, mSpritePointers[i]->getTexure());
 		}
-		//if this quad can be part of the current batch (same textures)
+		//if this sprite can be part of the current batch (same textures)
 		else 
 		{
-			//Increment numVertices by QUAD_VERTICES (6)
-			mRenderBatches.back().numVertices += QUAD_VERTICES;
+			//Increment numVertices by SPRITE_VERTICES (6)
+			mRenderBatches.back().numVertices += SPRITE_VERTICES;
 		}
-		vertices[currentVertex++] = mQuadPointers[i]->topLeft;
-		vertices[currentVertex++] = mQuadPointers[i]->bottomLeft;
-		vertices[currentVertex++] = mQuadPointers[i]->bottomRight;
-		vertices[currentVertex++] = mQuadPointers[i]->bottomRight;
-		vertices[currentVertex++] = mQuadPointers[i]->topRight;
-		vertices[currentVertex++] = mQuadPointers[i]->topLeft;
+		vertices[currentVertex++] = mSpritePointers[i]->getTL();
+		vertices[currentVertex++] = mSpritePointers[i]->getBL();
+		vertices[currentVertex++] = mSpritePointers[i]->getBR();
+		vertices[currentVertex++] = mSpritePointers[i]->getBR();
+		vertices[currentVertex++] = mSpritePointers[i]->getTR();
+		vertices[currentVertex++] = mSpritePointers[i]->getTL();
 	}
 
 	//Bind the VBO
@@ -201,6 +123,7 @@ void SpriteBatch::createRenderBatches()
 //Generate VBO and VAO to initialise the sprite batch
 void SpriteBatch::bufferData() 
 {
+	//Generate the VAO
 	if (mArrayObject == 0) 
 	{
 		glGenVertexArrays(1, &mArrayObject);
@@ -214,9 +137,12 @@ void SpriteBatch::bufferData()
 		glGenBuffers(1, &mBufferObject);
 	}
 
+	//Bind the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, mBufferObject);
 
+	//Enable the required vertex attribute array
 	glEnableVertexAttribArray(VERTEX_BUFFER);
+	//Define the attribute data - index, size, type, normalised, stride, GLvoid* pointer
 	glVertexAttribPointer(VERTEX_BUFFER, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 
 	glEnableVertexAttribArray(COLOUR_BUFFER);
@@ -225,12 +151,12 @@ void SpriteBatch::bufferData()
 	glEnableVertexAttribArray(TEXTURE_BUFFER);
 	glVertexAttribPointer(TEXTURE_BUFFER, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
 
+	//Unbind the VAO
 	glBindVertexArray(0);
-
 }
 
-//Sort the quads by the chosen sort type
-void SpriteBatch::sortQuads() 
+//Sort the sprites by the chosen sort type
+void SpriteBatch::sortSprites() 
 {
 	switch (mSortType)
 	{
@@ -238,31 +164,31 @@ void SpriteBatch::sortQuads()
 		return;
 
 	case FRONT_TO_BACK:
-		std::stable_sort(mQuadPointers.begin(), mQuadPointers.end(), compareBackToFront);
+		std::stable_sort(mSpritePointers.begin(), mSpritePointers.end(), compareBackToFront);
 
 	case BACK_TO_FRONT:
-		std::stable_sort(mQuadPointers.begin(), mQuadPointers.end(), compareFrontToBack);
+		std::stable_sort(mSpritePointers.begin(), mSpritePointers.end(), compareFrontToBack);
 
 	case TEXTURE:
-		std::stable_sort(mQuadPointers.begin(), mQuadPointers.end(), compareTexture);
+		std::stable_sort(mSpritePointers.begin(), mSpritePointers.end(), compareTexture);
 	}
 }
 
-//True if quad a has a smaller depth than quad b
-bool SpriteBatch::compareFrontToBack(Quad* a, Quad* b)
+//True if sprite a has a smaller depth than sprite b
+bool SpriteBatch::compareFrontToBack(Sprite* a, Sprite* b)
 {
-	return (a->depth < b->depth);
+	return (a->getDepth() < b->getDepth());
 }
 
-//True if quad has a greater depth than quad b 
-bool SpriteBatch::compareBackToFront(Quad* a, Quad* b)
+//True if sprite has a greater depth than sprite b 
+bool SpriteBatch::compareBackToFront(Sprite* a, Sprite* b)
 {
-	return (a->depth > b->depth);
+	return (a->getDepth() > b->getDepth());
 }
 
-//True if quad a has a smaller texture id than quad b
+//True if sprite a has a smaller texture id than sprite b
 //Sorting by texture means that sprites with the same texture will be drawn one after the other
-bool SpriteBatch::compareTexture(Quad* a, Quad* b)
+bool SpriteBatch::compareTexture(Sprite* a, Sprite* b)
 {
-	return (a->texture < b->texture);
+	return (a->getTexure() < b->getTexure());
 }

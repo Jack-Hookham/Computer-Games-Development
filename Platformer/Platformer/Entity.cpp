@@ -44,6 +44,6 @@ void Entity::add(SpriteBatch& spriteBatch, Camera& camera)
 
 	if (camera.isOnCamera(position, mDimensions))
 	{
-		spriteBatch.addQuad(position, mDimensions, mTexCoords, mTexture.id, 0.0f, mColour, mBody->GetAngle());
+		spriteBatch.addSprite(position, mDimensions, mTexCoords, mTexture.id, 0.0f, mColour, mBody->GetAngle());
 	}
 }
