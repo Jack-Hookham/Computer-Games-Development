@@ -81,8 +81,24 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 		//if in air
 		if (mInAir)
 		{
+			if (mAttacking)
+			{
+				tileIndex = 4;
+				animationSpeed = 0.4f;
+
+				//if the state just started reset the animation time
+				if (mState != JUMP_ATTACK)
+				{
+					if (mState != ATTACK)
+					{
+						mAnimationTimer = 0.0f;
+					}
+					mState = JUMP_ATTACK;
+				}
+			}
+
 			//Jumping
-			if (mJumping)
+			else if (mJumping)
 			{
 				tileIndex = 5;
 
@@ -116,10 +132,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mState != ATTACK && mState != JUMP_ATTACK)
+				if (mState != ATTACK)
 				{
+					if (mState != JUMP_ATTACK)
+					{
+						mAnimationTimer = 0.0f;
+					}
 					mState = ATTACK;
-					mAnimationTimer = 0.0f;
 				}
 			}
 
@@ -176,14 +195,17 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			}
 		}
 
-		//Adjust position and dimensions
+		//Adjust position and dimensions based on the current sprite
 		dimensions.x *= mStateMultipliers[mState].x;
 		dimensions.y *= mStateMultipliers[mState].y;
-		if (mDirection == -1)
+		if (mState != IDLE)
 		{
-			position.x -= dimensions.x * 0.5f;
+			if (mDirection == -1)
+			{
+				position.x -= dimensions.x * 0.5f;
+			}
+			position.y -= dimensions.y * (mStateMultipliers[mState].y - mStateMultipliers[IDLE].y) * 0.7f;
 		}
-		position.y -= dimensions.y * (mStateMultipliers[mState].y - 1.0f);
 
 		//Increment animation time
 		mAnimationTimer += animationSpeed;
@@ -220,12 +242,12 @@ void Player::update(InputManager& inputManager)
 	}
 
 	//Left and right movement
-	if (inputManager.isKeyDown(SDLK_a) && !mAttacking)
+	if (inputManager.isKeyDown(SDLK_a) && mState != ATTACK)
 	{
 		mBody->ApplyForceToCenter(b2Vec2(-100.0f, 0.0f), true);
 		mDirection = -1;
 	}
-	else if (inputManager.isKeyDown(SDLK_d) && !mAttacking)
+	else if (inputManager.isKeyDown(SDLK_d) && mState != ATTACK)
 	{
 		mDirection = 1;
 		mBody->ApplyForceToCenter(b2Vec2(100.0f, 0.0f), true);
@@ -247,8 +269,6 @@ void Player::update(InputManager& inputManager)
 			b2WorldManifold worldManifold;
 			c->GetWorldManifold(&worldManifold);
 
-			bool below = false;
-
 			//loop through all manifold points
 			for (unsigned int i = 0; i < b2_maxManifoldPoints; i++)
 			{
@@ -256,13 +276,12 @@ void Player::update(InputManager& inputManager)
 				if (worldManifold.points[i].y <  0.01f + mBody->GetPosition().y - mDimensions.y / 2.0f)
 				{
 					//Player is on the ground
-					below = true;
+					mInAir = false;
 					break;
 				}
 			}
-			if (below)
+			if (!mInAir)
 			{
-				mInAir = false;
 				//Can jump
 				if (inputManager.isKeyPressed(SDLK_w))
 				{

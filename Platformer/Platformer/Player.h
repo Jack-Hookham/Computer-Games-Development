@@ -57,9 +57,9 @@ private:
 	glm::ivec2 mSheetDimensions[NUM_STATES] = { glm::ivec2(4, 3), glm::ivec2(5, 2), glm::ivec2(5, 2), 
 		glm::ivec2(5, 2), glm::ivec2(3, 4), glm::ivec2(4, 3) };
 
-	//Multipliers to adjust the sprite position and dimension based on the state
+	//Multipliers to adjust the sprite position and dimension based on the state (new dimensions/base dimensions)
 	glm::vec2 mStateMultipliers[NUM_STATES] = { glm::vec2(1.0f), glm::vec2(1.56f, 1.04f),  glm::vec2(1.56f, 1.1f),
-		glm::vec2(1.56f, 1.1f), glm::vec2(2.31f, 1.13f), glm::vec2(2.31f, 1.13f) };
+		glm::vec2(1.56f, 1.1f), glm::vec2(2.31f, 1.13f), glm::vec2(2.17f, 1.18f) };
 
 	//Animation timer
 	float mAnimationTimer = 0.0f;
