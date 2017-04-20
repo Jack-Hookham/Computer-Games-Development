@@ -14,8 +14,10 @@ enum playerMoveState
 {
 	IDLE,
 	RUN,
-	IN_AIR,
-	ATTACK
+	JUMP, IN_AIR = 2,
+	ATTACK,
+	JUMP_ATTACK,
+	NUM_STATES
 };
 
 class Player : public Entity
@@ -34,7 +36,7 @@ public:
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
 private:
-	playerMoveState mMoveState = IDLE;
+	playerMoveState mState = IDLE;
 
 	//Player has 3 fixtures - middle square and a circle on the top and bottom
 	//This creates a capsule shape and gives smoother movement
@@ -44,16 +46,22 @@ private:
 	const float MAX_SPEED = 10.0f;
 
 	//Array of sprite sheets for the different states
-	
-	SpriteSheet mSpriteSheets[4];
+
+	SpriteSheet mSpriteSheets[NUM_STATES];
 	//Number of sprites in each sheet
 	int numSprites[4] = { 10, 10, 10, 10 };
 
 	//Animation timer
-	float mAnimationTime = 0.0f;
+	float mAnimationTimer = 0.0f;
+
+	int mDirection = 1;
 
 	//State bool checks
 	bool mInAir = true;
 	bool mAttacking = false;
+	bool mJumping = false;
+
+	float mJumpTimer = 0.0f;
+	float mAttackTimer = 0.0f;
 };
 

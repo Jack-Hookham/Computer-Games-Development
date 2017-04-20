@@ -18,8 +18,9 @@ void Player::init(b2World* world, const glm::vec2& position, const glm::vec2& di
 	mColour = colour;
 	mSpriteSheets[IDLE].init(textures[IDLE], glm::ivec2(4, 3));
 	mSpriteSheets[RUN].init(textures[RUN], glm::ivec2(5, 2));
-	mSpriteSheets[IN_AIR].init(textures[IN_AIR], glm::ivec2(5, 2));
-	mSpriteSheets[ATTACK].init(textures[ATTACK], glm::ivec2(4, 4));
+	mSpriteSheets[JUMP].init(textures[JUMP], glm::ivec2(5, 2));
+	mSpriteSheets[ATTACK].init(textures[ATTACK], glm::ivec2(3, 4));
+	mSpriteSheets[JUMP_ATTACK].init(textures[JUMP_ATTACK], glm::ivec2(4, 3));
 	mTexCoords = texCoords;
 
 	//Box body definition
@@ -72,47 +73,172 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 	//Store the velocity
 	glm::vec2 velocity = glm::vec2(mBody->GetLinearVelocity().x, mBody->GetLinearVelocity().y);
 
+	//if the player is on the screen - should be always true with the current camera setup
 	if (camera.isOnCamera(position, mDimensions))
 	{
-		//Animation
+		//Animation logic
 		//if in air
 		if (mInAir)
 		{
-			//if falling
-			if (velocity.y <= 0.0f)
+			//Jumping
+			if (mJumping)
 			{
 				numTiles = 10;
-				tileIndex = 10;
-				mMoveState = IN_AIR;
+				tileIndex = 5;
+
+				//Adjust position and dimensions
 				dimensions.x *= 1.56f;
 				dimensions.y *= 1.1f;
+				if (mDirection == -1)
+				{
+					position.x -= dimensions.x * 0.5f;
+				}
+
+				//if the state just started reset the animation time
+				if (mState != JUMP)
+				{
+					mState = JUMP;
+					mAnimationTimer = 0.0f;
+				}
 			}
-			//if rising
+			//if falling
 			else
 			{
-				numTiles = 10;
-				tileIndex = 10;
-				mMoveState = IN_AIR;
+				numTiles = 1;
+				tileIndex = 4;
+				mState = IN_AIR;
+
+				//Adjust position and dimensions
 				dimensions.x *= 1.56f;
 				dimensions.y *= 1.1f;
+				if (mDirection == -1)
+				{
+					position.x -= dimensions.x * 0.5f;
+				}
 			}
 		}
 		//if on ground
 		else
 		{
-			numTiles = 10;
-			tileIndex = 4;
-			mMoveState = IDLE;
+			//if attacking on ground
+			if (mAttacking)
+			{
+				numTiles = 10;
+				tileIndex = 3;
+				animationSpeed = 0.4f;
+
+				//Adjust position and dimensions
+				dimensions.x *= 2.31;
+				dimensions.y *= 1.13f;
+				if (mDirection == -1)
+				{
+					position.x -= dimensions.x * 0.5f;
+				}
+				position.y -= dimensions.y * 0.1f;
+
+				//if the state just started reset the animation time
+				if (mState != ATTACK && mState != JUMP_ATTACK)
+				{
+					mState = ATTACK;
+					mAnimationTimer = 0.0f;
+				}
+			}
+
+			//if moving
+			else if (abs(velocity.x) > 1.0f && ((velocity.x > 0 && mDirection > 0 || (velocity.x < 0 && mDirection < 0))))
+			{
+				numTiles = 10;
+				tileIndex = 5;
+				animationSpeed = abs(velocity.x) * 0.025f;
+				
+				//Adjust position and dimensions
+				dimensions.x *= 1.56f;
+				dimensions.y *= 1.04f;
+				if (mDirection == -1)
+				{
+					position.x -= dimensions.x * 0.5f;
+				}
+
+				//if the state just started reset the animation time
+				if (mState != RUN)
+				{
+					mState = RUN;
+					mAnimationTimer = 0.0f;
+				}
+			}
+			//if stood still
+			else
+			{
+				numTiles = 10;
+				tileIndex = 4;
+
+				//if state just started reset the animation time
+				if (mState != IDLE)
+				{
+					mState = IDLE;
+					mAnimationTimer = 0.0f;
+				}
+			}
 		}
 
+		if (mJumping)
+		{
+			if (mJumpTimer < numTiles)
+			{
+				mJumpTimer += animationSpeed;
+			}
+			else
+			{
+				mJumping = false;
+				mJumpTimer = 0.0f;
+			}
+		}
+
+		if (mAttacking)
+		{
+			if (mAttackTimer < numTiles)
+			{
+				mAttackTimer += animationSpeed;
+			}
+			else
+			{
+				mAttacking = false;
+				mAttackTimer = 0.0f;
+			}
+		}
+
+		//if (mAttacking)
+		//{
+		//	if (mJumpTimer < numTiles)
+		//	{
+		//		mJumpTimer += animationSpeed;
+		//	}
+		//	else
+		//	{
+		//		mJumping = false;
+		//		mState = IN_AIR;
+		//		mJumpTimer = 0.0f;
+		//	}
+		//}
+
 		//Increment animation time
-		mAnimationTime += animationSpeed;
+		mAnimationTimer += animationSpeed;
 
 		//Apply animation
-		tileIndex += (int)mAnimationTime % numTiles;
+		tileIndex += (int)mAnimationTimer % numTiles;
+
+		glm::vec4 texCoords = mSpriteSheets[mState].getTexCoords(tileIndex);
+
+		//if moving left
+		if (mDirection == -1)
+		{
+			//flip x texCoords
+			texCoords.x += 1.0f / mSpriteSheets[mState].dimensions.x;
+			texCoords.z *= -1;
+		}
 
 		//std::cout << "index: " << tileIndex << std::endl;
-		spriteBatch.addQuad(position, dimensions, mSpriteSheets[mMoveState].getTexCoords(tileIndex), mSpriteSheets[mMoveState].texture.id, 
+		spriteBatch.addQuad(position, dimensions, texCoords, mSpriteSheets[mState].texture.id, 
 			0.0f, mColour, mBody->GetAngle());
 	}
 }
@@ -130,12 +256,14 @@ void Player::update(InputManager& inputManager)
 	}
 
 	//Left and right movement
-	if (inputManager.isKeyDown(SDLK_a))
+	if (inputManager.isKeyDown(SDLK_a) && !mAttacking)
 	{
 		mBody->ApplyForceToCenter(b2Vec2(-100.0f, 0.0f), true);
+		mDirection = -1;
 	}
-	else if (inputManager.isKeyDown(SDLK_d))
+	else if (inputManager.isKeyDown(SDLK_d) && !mAttacking)
 	{
+		mDirection = 1;
 		mBody->ApplyForceToCenter(b2Vec2(100.0f, 0.0f), true);
 	}
 	else
@@ -176,9 +304,15 @@ void Player::update(InputManager& inputManager)
 				{
 					//Jump
 					mBody->ApplyLinearImpulse(b2Vec2(0.0f, 30.0f), b2Vec2(0.0f, 0.0f), true);
+					mJumping = true;
 					break;
 				}
 			}
 		}
+	}
+
+	if (inputManager.isKeyPressed(SDLK_SPACE))
+	{
+		mAttacking = true;
 	}
 }
