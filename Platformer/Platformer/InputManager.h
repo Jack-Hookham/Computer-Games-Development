@@ -6,6 +6,8 @@
 #include <string>
 #include <glm/glm.hpp>
 
+//Store information on the user input for this frame and the previous frame
+
 class InputManager
 {
 public:

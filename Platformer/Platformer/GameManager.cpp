@@ -78,6 +78,34 @@ int GameManager::init()
 		failedInits++;
 	}
 
+	//Check for joysticks
+	if (SDL_NumJoysticks() < 1)
+	{
+		log("No joysticks connected!\n");
+	}
+	//if there is a joystick connected
+	else
+	{
+		//Open the first available controller
+		for (unsigned int i = 0; i < SDL_NumJoysticks(); i++)
+		{
+			if (SDL_IsGameController(i))
+			{
+				log("Joystick " + std::to_string(i) + " supports the game controller interface");
+				mGameController = SDL_GameControllerOpen(i);
+
+				if (mGameController != NULL)
+				{
+					break;
+				}
+				else
+				{
+					log("Could not open gamecontroller " + std::to_string(i) + ": " + std::string(SDL_GetError()));
+				}
+			}
+		}
+	}
+
 	return failedInits;
 }
 
@@ -115,6 +143,10 @@ int GameManager::gameLoop()
 			SDL_Delay(mScreenTicksPerFrame - (float)frameTicks);
 		}
 	}
+
+	//Close game controller
+	SDL_GameControllerClose(mGameController);
+	mGameController = NULL;
 
 	return 0;
 }
@@ -161,6 +193,60 @@ void GameManager::manageInput()
 		else if (e.type == SDL_MOUSEBUTTONUP)
 		{
 			mInputManager.releaseKey(e.button.button);
+		}
+
+		//Controller left right movement
+		else if (e.type == SDL_JOYAXISMOTION)
+		{
+			//Motion on controller 0
+			if (e.jaxis.which == 0)
+			{
+				//X axis motion
+				if (e.jaxis.axis == 0)
+				{
+					//Left of dead zone
+					if (e.jaxis.value < -JOYSTICK_DEAD_ZONE)
+					{
+						mInputManager.pressKey(SDLK_a);
+					}
+					//Right of dead zone
+					else if (e.jaxis.value > JOYSTICK_DEAD_ZONE)
+					{
+						mInputManager.pressKey(SDLK_d);
+					}
+					//In dead zone
+					else if (e.jaxis.value > -JOYSTICK_DEAD_ZONE && e.jaxis.value < JOYSTICK_DEAD_ZONE)
+					{
+						mInputManager.releaseKey(SDLK_a);
+						mInputManager.releaseKey(SDLK_d);
+					}
+				}
+			}
+		}
+
+		//Controller button press
+		else if (e.type == SDL_CONTROLLERBUTTONDOWN)
+		{
+			if (e.cbutton.button == SDL_CONTROLLER_BUTTON_A)
+			{
+				mInputManager.pressKey(e.cbutton.button);
+			}
+			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_X)
+			{
+				mInputManager.pressKey(e.cbutton.button);
+			}
+		}
+		//Controller button release
+		else if (e.type == SDL_CONTROLLERBUTTONUP)
+		{
+			if (e.cbutton.button == SDL_CONTROLLER_BUTTON_A)
+			{
+				mInputManager.releaseKey(e.cbutton.button);
+			}
+			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_X)
+			{
+				mInputManager.releaseKey(e.cbutton.button);
+			}
 		}
 	}
 

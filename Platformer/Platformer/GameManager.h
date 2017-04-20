@@ -100,5 +100,11 @@ private:
 	Player mPlayer;
 	std::vector<Box> mBoxEntities;
 	std::vector<Ground> mGroundEntities;
+
+	//Analog joystick dead zone
+	const int JOYSTICK_DEAD_ZONE = 8000;
+
+	//Game Controller handler
+	SDL_GameController* mGameController = NULL;
 };
 

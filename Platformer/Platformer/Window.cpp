@@ -6,6 +6,8 @@ Window::Window()
 
 Window::~Window()
 {
+	SDL_DestroyWindow(mSDLwindow);
+	mSDLwindow = NULL;
 }
 
 bool Window::createWindow(std::string name, int screenWidth, int screenHeight, Uint32 flags)

@@ -288,7 +288,7 @@ void Player::update(InputManager& inputManager)
 			if (!mInAir)
 			{
 				//Can jump
-				if (inputManager.isKeyPressed(SDLK_w))
+				if (inputManager.isKeyPressed(SDLK_w) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_A))
 				{
 					//Jump
 					mBody->ApplyLinearImpulse(b2Vec2(0.0f, 30.0f), b2Vec2(0.0f, 0.0f), true);
@@ -300,7 +300,7 @@ void Player::update(InputManager& inputManager)
 		}
 	}
 
-	if (inputManager.isKeyPressed(SDLK_SPACE))
+	if (inputManager.isKeyPressed(SDLK_SPACE) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_X))
 	{
 		mAttackSound.play();
 		mAttacking = true;
