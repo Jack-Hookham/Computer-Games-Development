@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "Box.h"
 #include "Ground.h"
+#include "LevelManager.h"
 
 //Manages the physics updates as well as the box2D world
 

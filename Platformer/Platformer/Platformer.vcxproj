@@ -133,6 +133,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="ImageManager.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Music.cpp" />
     <ClCompile Include="picoPNG.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="ImageManager.h" />

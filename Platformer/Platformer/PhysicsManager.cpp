@@ -30,21 +30,24 @@ bool PhysicsManager::initPhysics(const int desiredFPS, std::unique_ptr<b2World>&
 
 	generateGround(world, groundEntities);
 
+	const std::string levelPath = "../res/levels/test_level.txt";
+	LevelManager::loadLevel(levelPath, world, audioManager, player, boxEntities, groundEntities);
+
 	//Initialise player params
-	glm::vec2 playerPos(0.0f, 5.0f);
-	glm::vec2 playerDims(1.0f, 2.0f);
-	Colour playerColour(255, 255, 255, 255);
-	Texture playerTexture[NUM_STATES];
-	playerTexture[IDLE] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/idle.png");
-	playerTexture[RUN] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/run.png");
-	playerTexture[JUMP] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
-	playerTexture[IN_AIR] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
-	playerTexture[ATTACK] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/attack.png");
-	playerTexture[JUMP_ATTACK] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump_attack.png");
-	glm::vec4 playerTexCoords(0.0f, 0.0f, 1.0f, 1.0f);
+	//glm::vec2 playerPos(0.0f, 5.0f);
+	//glm::vec2 playerDims(1.0f, 2.0f);
+	//Colour playerColour(255, 255, 255, 255);
+	//Texture playerTexture[NUM_STATES];
+	//playerTexture[IDLE] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/idle.png");
+	//playerTexture[RUN] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/run.png");
+	//playerTexture[JUMP] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
+	//playerTexture[IN_AIR] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
+	//playerTexture[ATTACK] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/attack.png");
+	//playerTexture[JUMP_ATTACK] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump_attack.png");
+	//glm::vec4 playerTexCoords(0.0f, 0.0f, 1.0f, 1.0f);
 
 	//Initialise player instance
-	player.init(world.get(), audioManager, playerPos, playerDims, playerColour, playerTexture, playerTexCoords, true);
+	//player.init(world.get(), audioManager, playerPos, playerDims, playerColour, playerTexture, playerTexCoords, true);
 
 	generateBoxes(world, boxEntities);
 

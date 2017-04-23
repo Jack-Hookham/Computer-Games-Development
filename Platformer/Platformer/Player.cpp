@@ -9,20 +9,24 @@ Player::~Player()
 }
 
 //Override entity init to add capsule collision to the player
-void Player::init(b2World* world, AudioManager& audioManager, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, 
-	const Texture textures[], const glm::vec4& texCoords, bool fixedRotation)
+void Player::init(b2World* world, const glm::vec2& position,
+	const glm::vec2& dimensions, const Colour& colour, const Texture textures[],
+	const glm::vec4& texCoords, const SoundEffect sounds[], const bool fixedRotation)
 {
 	//Initialise the player's variables
 	mPosition = position;
 	mDimensions = dimensions;
 	mColour = colour;
 	mTexCoords = texCoords;
-	mJumpSound = audioManager.loadSoundEffect("../res/sound/platformer_jumping/jump_01.wav");
-	mAttackSound = audioManager.loadSoundEffect("../res/sound/melee_sounds/sword_sound.wav");
 
 	for (int i = 0; i < NUM_STATES; i++)
 	{
 		mSpriteSheets[i].init(textures[i], mSheetDimensions[i]);
+	}
+
+	for (int i = 0; i < NUM_SOUNDS; i++)
+	{
+		mSounds[i] = sounds[i];
 	}
 
 	//Box body definition
@@ -294,7 +298,7 @@ void Player::update(InputManager& inputManager)
 					//Jump
 					mBody->ApplyLinearImpulse(b2Vec2(0.0f, 30.0f), b2Vec2(0.0f, 0.0f), true);
 					mJumping = true;
-					mJumpSound.play();
+					mSounds[JUMP_SOUND].play();
 					break;
 				}
 			}
@@ -304,7 +308,7 @@ void Player::update(InputManager& inputManager)
 	//Attack
 	if (inputManager.isKeyPressed(SDLK_SPACE) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_X))
 	{
-		mAttackSound.play();
+		mSounds[ATTACK_SOUND].play();
 		mAttacking = true;
 	}
 }
