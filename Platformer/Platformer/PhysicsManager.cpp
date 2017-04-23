@@ -75,19 +75,24 @@ void PhysicsManager::generateBoxes(std::unique_ptr<b2World>& world, std::vector<
 
 	//Number of boxes to generate
 	const int NUM_BOXES = 50;
+	float density = 1.0f;
+	float friction = 0.3f;
+
+	std::ofstream file("../res/levels/randomGen.txt");
 
 	for (int i = 0; i < NUM_BOXES; i++)
 	{
 		//Setup random box params (position, dimensions, colour, texture)
 		glm::vec2 position = glm::vec2(xGen(randGenerator), yGen(randGenerator));
 		glm::vec2 dimensions = glm::vec2(sizeGen(randGenerator), sizeGen(randGenerator));
-		Colour colour(colourGen(randGenerator), colourGen(randGenerator), colourGen(randGenerator), 255);
+		glm::vec4 colour(colourGen(randGenerator), colourGen(randGenerator), colourGen(randGenerator), 255);
 		std::string textureString = "../res/textures/boxes_and_crates/obj_box" + std::to_string(textureGen(randGenerator)) + ".png";
 		Texture texture = ResourceManager::getTexture(textureString);
 		glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
 
-		//Add the box
-		addBoxToWorld(entities, world, position, dimensions, colour, texture, 1.0f, 0.3f, texCoords);
+		file << position.x << ' ' << position.y << ' ' << dimensions.x << ' ' << dimensions.y << ' '
+			<< colour.x << ' ' << colour.y << ' ' << colour.z << ' ' << colour.w << ' ' 
+			<< density << ' ' << friction << ' ' << textureString << '\n';
 	}
 }
 

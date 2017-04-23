@@ -15,70 +15,116 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 	}
 
 	//Load the player entity
-	log("Loading player");
-
-	//Initialise player params
-	glm::vec2 position;
-	glm::vec2 dimensions;
-
-	Colour colour;
-	float r;
-	float g;
-	float b;
-	float a;
-
-	Texture playerTextures[NUM_STATES];
-	SoundEffect playerSounds[NUM_SOUNDS];
-
-	file >> position.x >> position.y >> dimensions.x >> dimensions.y >> r >> g >>
-		b >> a;
-
-	colour = Colour(r, g, b, a);
-
-	for (int i = 0; i < NUM_STATES; i++)
 	{
-		std::string path;
-		file >> path;
-		playerTextures[i] = ResourceManager::getTexture(path);
-	}
+		log("Loading player");
 
-	for (int i = 0; i < NUM_SOUNDS; i++)
-	{
-		std::string path;
-		file >> path;
-		playerSounds[i] = audioManager.loadSoundEffect(path);
-	}
+		//Initialise player params
+		glm::vec2 position;
+		glm::vec2 dimensions;
+		Colour colour;
+		glm::vec4 colourVec;
 
-	//Initialise player instance
-	player.init(world.get(), position, dimensions, colour, playerTextures, playerSounds, true);
+		std::string test1;
+		std::string test2;
+		std::string test3;
+		std::string test4;
+		std::string test5;
+		std::string test6;
+		std::string test7;
 
+		Texture playerTextures[NUM_STATES];
+		SoundEffect playerSounds[NUM_SOUNDS];
 
-	//Load the ground entities
-	log("Loading ground");
-	//Initialise
-	int groundNum;			//number of ground entities
-	file >> groundNum;
+		file >> position.x >> position.y >> dimensions.x >> dimensions.y >> colourVec.x >> colourVec.y >>
+			colourVec.z >> colourVec.w;
+		colour = Colour(colourVec);
 
-	Texture texture;
-	float density;
-	float friction;
+		for (int i = 0; i < NUM_STATES; i++)
+		{
+			std::string path;
+			file >> path;
+			playerTextures[i] = ResourceManager::getTexture(path);
+		}
 
-	for (int i = 0; i < groundNum; i++)
-	{
-		file >> position.x >> position.y >> dimensions.x >> dimensions.y >> r >> g >> b >> a >>
-			friction >> density;
-		colour = Colour(r, g, b, a);
-		std::string path;
-		file >> path;
-		texture = ResourceManager::getTexture(path);
-		glm::vec4 texCoords = { position.x, position.y, dimensions.x, dimensions.y };
+		for (int i = 0; i < NUM_SOUNDS; i++)
+		{
+			std::string path;
+			file >> path;
+			playerSounds[i] = audioManager.loadSoundEffect(path);
+		}
 
-		Ground ground;
-		ground.init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, true);
-		groundEntities.push_back(ground);
+		//Initialise player instance
+		player.init(world.get(), position, dimensions, colour, playerTextures, playerSounds, true);
 	}
 
 
+	{
+		//Load the ground entities
+		log("Loading ground");
+
+		int n;					//number of ground entities taken from file
+		file >> n;
+
+		glm::vec2 position;
+		glm::vec2 dimensions;
+		Colour colour;
+		glm::vec4 colourVec;
+
+		Texture texture;
+		float density;
+		float friction;
+
+		//Load each ground entity
+		for (int i = 0; i < n; i++)
+		{
+			file >> position.x >> position.y >> dimensions.x >> dimensions.y >> colourVec.x >> colourVec.y >>
+				colourVec.z >> colourVec.w >> friction >> density;
+			colour = Colour(colourVec);
+
+			std::string path;
+			file >> path;
+			texture = ResourceManager::getTexture(path);
+			glm::vec4 texCoords = { position.x, position.y, dimensions.x, dimensions.y };
+
+			Ground ground;
+			ground.init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, true);
+			groundEntities.push_back(ground);
+		}
+	}
+
+	{
+		//Load the box entities
+		log("Loading boxes");
+
+		int n;					//number of box entities taken from file
+		file >> n;
+
+		glm::vec2 position;
+		glm::vec2 dimensions;
+		Colour colour;
+		glm::vec4 colourVec;
+
+		Texture texture;
+		float density;
+		float friction;
+
+		////Load each box entity
+		for (int i = 0; i < n; i++)
+		{
+			file >> position.x >> position.y >> dimensions.x >> dimensions.y >> colourVec.x >> colourVec.y >>
+				colourVec.z >> colourVec.w >> friction >> density;
+			colour = Colour(colourVec);
+
+			std::string path;
+			file >> path;
+			texture = ResourceManager::getTexture(path);
+			glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
+
+			Box box;
+			box.init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, false);
+			boxEntities.push_back(box);
+		}
+	}
 
 	log("Level successfully loaded from: " + filePath);
 

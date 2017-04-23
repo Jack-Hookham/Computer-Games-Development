@@ -29,6 +29,14 @@ struct Colour
 		this->a = a;
 	}
 
+	Colour(glm::vec4 col)
+	{
+		r = (GLubyte)col.x;
+		g = (GLubyte)col.y;
+		b = (GLubyte)col.z;
+		a = (GLubyte)col.w;
+	}
+
 	GLubyte r;
 	GLubyte g;
 	GLubyte b;
