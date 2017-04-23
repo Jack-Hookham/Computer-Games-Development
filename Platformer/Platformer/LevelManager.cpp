@@ -14,30 +14,26 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 		return success = false;
 	}
 
-	//int x;
-	//file >> x;
-
-	//std::cout << x;
+	//Load the player entity
+	log("Loading player");
 
 	//Initialise player params
-	glm::vec2 playerPos;
-	glm::vec2 playerDims;
-	Colour playerColour;
-	Texture playerTextures[NUM_STATES];
-	SoundEffect playerSounds[NUM_SOUNDS];
+	glm::vec2 position;
+	glm::vec2 dimensions;
 
+	Colour colour;
 	float r;
 	float g;
 	float b;
 	float a;
 
-	//file >> playerPos.x >> playerPos.y >> playerDims.x >> playerDims.y >> r >> g >>
-	//	b >> a;
+	Texture playerTextures[NUM_STATES];
+	SoundEffect playerSounds[NUM_SOUNDS];
 
-	file >> playerPos.x >> playerPos.y >> playerDims.x >> playerDims.y >> r >> g >>
+	file >> position.x >> position.y >> dimensions.x >> dimensions.y >> r >> g >>
 		b >> a;
 
-	playerColour = Colour(r, g, b, a);
+	colour = Colour(r, g, b, a);
 
 	for (int i = 0; i < NUM_STATES; i++)
 	{
@@ -53,31 +49,48 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 		playerSounds[i] = audioManager.loadSoundEffect(path);
 	}
 
-	//glm::vec2 playerPos(0.0f, 5.0f);
-	//glm::vec2 playerDims(1.0f, 2.0f);
-	//Colour playerColour(255, 255, 255, 255);
-	//Texture playerTextures[NUM_STATES];
-	//playerTextures[IDLE] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/idle.png");
-	//playerTextures[RUN] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/run.png");
-	//playerTextures[JUMP] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
-	//playerTextures[IN_AIR] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
-	//playerTextures[ATTACK] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/attack.png");
-	//playerTextures[JUMP_ATTACK] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump_attack.png");
-
-	//SoundEffect playerSounds[NUM_SOUNDS];
-	//playerSounds[JUMP_SOUND] = audioManager.loadSoundEffect("../res/sound/platformer_jumping/jump_01.wav");
-	//playerSounds[ATTACK_SOUND] = audioManager.loadSoundEffect("../res/sound/melee_sounds/sword_sound.wav");
-
-
-	//glm::vec2 playerPos;
-	//glm::vec2 playerDims;
-	//glm::vec2 playerColour;
-	//Texture playerTexture[NUM_STATES];
-
 	//Initialise player instance
-	player.init(world.get(), playerPos, playerDims, playerColour, playerTextures, playerSounds, true);
+	player.init(world.get(), position, dimensions, colour, playerTextures, playerSounds, true);
+
+
+	//Load the ground entities
+	log("Loading ground");
+	//Initialise
+	int groundNum;			//number of ground entities
+	file >> groundNum;
+
+	Texture texture;
+	float density;
+	float friction;
+
+	for (int i = 0; i < groundNum; i++)
+	{
+		file >> position.x >> position.y >> dimensions.x >> dimensions.y >> r >> g >> b >> a >>
+			friction >> density;
+		colour = Colour(r, g, b, a);
+		std::string path;
+		file >> path;
+		texture = ResourceManager::getTexture(path);
+		glm::vec4 texCoords = { position.x, position.y, dimensions.x, dimensions.y };
+
+		Ground ground;
+		ground.init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, true);
+		groundEntities.push_back(ground);
+	}
+
+
 
 	log("Level successfully loaded from: " + filePath);
+
+	//float width = 50.0f;
+	//float height = 1.0f;
+	//glm::vec2 position = glm::vec2(0.0f, 0.0f);
+	//glm::vec2 dimensions = glm::vec2(width, height);
+	//Colour colour(255, 255, 255, 255);
+	//Texture texture = ResourceManager::getTexture("../res/textures/platformerArt/png/ground.png");
+	//glm::vec4 texCoords = { 0.0f, 0.0f, width, height };
+
+	//addGroundToWorld(entities, world, position, dimensions, colour, texture, 0.0f, 0.3f, texCoords);
 
 	return success;
 }

@@ -8,3 +8,6 @@
 ../res/sound/platformer_jumping/jump_01.wav
 ../res/sound/melee_sounds/sword_sound.wav
 
+1
+0 0 50 1 255 255 255 255 1 0.3
+../res/textures/platformerArt/png/ground.png
