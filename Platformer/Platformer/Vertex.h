@@ -1,4 +1,5 @@
-//Contains some basic structs to make up a vertex struct
+//Contains Position, Colour and TexCoord structs
+//These structs make up a Vertex struct
 
 #pragma once
 

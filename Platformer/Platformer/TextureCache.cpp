@@ -22,11 +22,11 @@ Texture TextureCache::getTexture(std::string path)
 		//Add texture to map
 		mTextureMap.insert(make_pair(path, newTexture));
 
-		log("Loaded new texture" + path);
+		log("Loaded new texture from: " + path);
 
 		return newTexture;
 	}
-	log("Loaded cached texture" + path);
+	log("Loaded cached texture from: " + path);
 	return mapIterator->second;
 }
 

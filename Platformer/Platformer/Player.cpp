@@ -11,13 +11,12 @@ Player::~Player()
 //Override entity init to add capsule collision to the player
 void Player::init(b2World* world, const glm::vec2& position,
 	const glm::vec2& dimensions, const Colour& colour, const Texture textures[],
-	const glm::vec4& texCoords, const SoundEffect sounds[], const bool fixedRotation)
+	 const SoundEffect sounds[], const bool fixedRotation)
 {
 	//Initialise the player's variables
 	mPosition = position;
 	mDimensions = dimensions;
 	mColour = colour;
-	mTexCoords = texCoords;
 
 	for (int i = 0; i < NUM_STATES; i++)
 	{

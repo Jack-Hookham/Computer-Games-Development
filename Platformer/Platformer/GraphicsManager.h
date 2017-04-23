@@ -81,7 +81,7 @@ private:
 	SpriteBatch mHUDSpriteBatch;
 
 	//HUD font
-	SpriteFont* mSpriteFont;
+	SpriteFont* mHUDFont;
 
 	//Shader for the engine
 	Shader mTextureShader;

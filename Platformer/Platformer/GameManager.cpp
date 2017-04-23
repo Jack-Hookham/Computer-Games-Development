@@ -56,8 +56,6 @@ int GameManager::init()
 
 		//Load the background music file
 		mMusic = mAudioManager.loadMusic("../res/sound/8_bit_pack/bgm_action_3.mp3");
-		//Play the background music file
-		mMusic.play(-1);
 
 		//Load sound effect
 		mPlaceBoxSound = mAudioManager.loadSoundEffect("../res/sound/Menu_FX/Item1A.wav");
@@ -81,6 +79,7 @@ int GameManager::init()
 	}
 
 	//Check for joysticks
+	log("Searching for joysticks");
 	if (SDL_NumJoysticks() < 1)
 	{
 		log("No joysticks connected!\n");
@@ -98,6 +97,7 @@ int GameManager::init()
 
 				if (mGameController != NULL)
 				{
+					log("Controller " + std::to_string(i) + " successfully initialised");
 					break;
 				}
 				else
@@ -113,6 +113,9 @@ int GameManager::init()
 
 int GameManager::gameLoop()
 {
+	//Play the background music file
+	mMusic.play(-1);
+
 	//Count the number of frames to calculate fps
 	int countedFrames = 0;
 

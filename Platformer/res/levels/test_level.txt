@@ -1,1 +1,10 @@
-0.0f
+0 5 1 2 255 255 255 255 
+../res/textures/ninja_adventure/spritesheet/idle.png
+../res/textures/ninja_adventure/spritesheet/run.png
+../res/textures/ninja_adventure/spritesheet/jump.png
+../res/textures/ninja_adventure/spritesheet/jump.png
+../res/textures/ninja_adventure/spritesheet/attack.png
+../res/textures/ninja_adventure/spritesheet/jump_attack.png
+../res/sound/platformer_jumping/jump_01.wav
+../res/sound/melee_sounds/sword_sound.wav
+

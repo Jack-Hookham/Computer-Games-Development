@@ -6,7 +6,7 @@ GraphicsManager::GraphicsManager()
 
 GraphicsManager::~GraphicsManager()
 {
-	delete mSpriteFont;
+	delete mHUDFont;
 
 	//Quit SDL subsystems
 	TTF_Quit();
@@ -61,7 +61,8 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 	mEntitySpriteBatch.bufferData();
 	mHUDSpriteBatch.bufferData();
 
-	loadMedia();
+	//Load the HUD front
+	mHUDFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 32);
 
 	if (success)
 	{
@@ -69,35 +70,6 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 	}
 
 	return success;
-}
-
-void GraphicsManager::loadMedia()
-{
-	log("Loading media");
-
-	//Initialise sprite font
-	mSpriteFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 32);
-
-	//Initialise textures (cache them so that they load quickly when needed)
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box1.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box2.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box3.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box4.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box5.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box6.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box7.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box8.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box9.png");
-	ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box10.png");
-
-	//Spritesheets
-	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/run.png");
-	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/idle.png");
-	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
-	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/attack.png");
-	ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump_attack.png");
-
-	log("Media successfully loaded");
 }
 
 void GraphicsManager::log(const std::string text)
@@ -133,7 +105,7 @@ void GraphicsManager::drawHUD(float avgFPS)
 
 	sprintf_s(buffer, "FPS: %.2f", avgFPS);
 
-	mSpriteFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10, mScreenHeight - 40), 
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10, mScreenHeight - 40), 
 		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
 
 	mHUDSpriteBatch.end();

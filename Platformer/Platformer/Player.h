@@ -39,7 +39,7 @@ public:
 	//Override entity init to add capsule collision to the player
 	virtual void init(b2World* world, const glm::vec2& position, 
 		const glm::vec2& dimensions, const Colour& colour, const Texture textures[], 
-		const glm::vec4& texCoords, const SoundEffect sounds[], const bool fixedRotation = true);
+		const SoundEffect sounds[], const bool fixedRotation = true);
 
 	void update(InputManager& inputManager);
 
