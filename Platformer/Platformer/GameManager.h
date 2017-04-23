@@ -18,6 +18,7 @@
 #include "PhysicsManager.h"
 #include "GraphicsManager.h"
 #include "InputManager.h"
+#include "WorldManager.h"
 #include "AudioManager.h"
 #include "Player.h"
 #include "Timer.h"
@@ -81,6 +82,9 @@ private:
 	PhysicsManager mPhysicsManager;
 	GraphicsManager mGraphicsManager;
 	InputManager mInputManager;
+	WorldManager mWorldManager;
+
+	const std::string mFirstLevel = "../res/levels/test_level.txt";
 
 	//Audio stuff
 	AudioManager mAudioManager;

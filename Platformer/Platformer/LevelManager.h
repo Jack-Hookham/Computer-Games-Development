@@ -9,8 +9,9 @@
 class LevelManager
 {
 public:
-	static bool loadLevel(const std::string& filePath, std::unique_ptr<b2World>& world, AudioManager& audioManager, 
-		Player& player, std::vector<Box>& boxEntities, std::vector<Ground>& groundEntities);
+	static bool loadLevel(const std::string& filePath, std::unique_ptr<b2World>& world, 
+		AudioManager& audioManager, Player& player, std::vector<Ground>& groundEntities,
+		std::vector<Box>& boxEntities);
 
 private:
 	static void log(const std::string text);

@@ -1,7 +1,8 @@
 #include "LevelManager.h"
 
-bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2World>& world, AudioManager& audioManager,
-	Player& player, std::vector<Box>& boxEntities, std::vector<Ground>& groundEntities)
+bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2World>& world, 
+	AudioManager& audioManager, Player& player, std::vector<Ground>& groundEntities,
+	std::vector<Box>& boxEntities)
 {
 	bool success = true;
 
@@ -55,6 +56,8 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 
 		//Initialise player instance
 		player.init(world.get(), position, dimensions, colour, playerTextures, playerSounds, true);
+
+		log("Player loaded");
 	}
 
 
@@ -90,6 +93,8 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 			ground.init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, true);
 			groundEntities.push_back(ground);
 		}
+
+		log("Ground loaded");
 	}
 
 	{
@@ -108,7 +113,7 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 		float density;
 		float friction;
 
-		////Load each box entity
+		//Load each box entity
 		for (int i = 0; i < n; i++)
 		{
 			file >> position.x >> position.y >> dimensions.x >> dimensions.y >> colourVec.x >> colourVec.y >>
@@ -124,19 +129,11 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 			box.init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, false);
 			boxEntities.push_back(box);
 		}
+
+		log("Boxes loaded");
 	}
 
 	log("Level successfully loaded from: " + filePath);
-
-	//float width = 50.0f;
-	//float height = 1.0f;
-	//glm::vec2 position = glm::vec2(0.0f, 0.0f);
-	//glm::vec2 dimensions = glm::vec2(width, height);
-	//Colour colour(255, 255, 255, 255);
-	//Texture texture = ResourceManager::getTexture("../res/textures/platformerArt/png/ground.png");
-	//glm::vec4 texCoords = { 0.0f, 0.0f, width, height };
-
-	//addGroundToWorld(entities, world, position, dimensions, colour, texture, 0.0f, 0.3f, texCoords);
 
 	return success;
 }

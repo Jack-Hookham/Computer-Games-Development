@@ -67,8 +67,11 @@ int GameManager::init()
 		failedInits++;
 	}
 
+	//Initialise the box2D world
+	mWorld = mWorldManager.generateWorld(mFirstLevel, mAudioManager, mPlayer, mGroundEntities, mBoxEntities);
+
 	//Initialise physics
-	if (mPhysicsManager.initPhysics(mDesiredFPS, mWorld, mAudioManager, mPlayer,  mBoxEntities, mGroundEntities))
+	if (mPhysicsManager.initPhysics(mDesiredFPS))
 	{
 		log("Physics successfully initialised");
 	}
@@ -270,7 +273,7 @@ void GameManager::manageInput()
 		Colour colour(255, 255, 255, 255);
 		Texture boxTexture = ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box2.png");
 
-		mPhysicsManager.addBoxToWorld(mBoxEntities, mWorld, worldCoords, dimensions, colour, boxTexture);
+		mWorldManager.addBoxToWorld(mBoxEntities, mWorld, worldCoords, dimensions, colour, boxTexture);
 
 		mPlaceBoxSound.play();
 	}
@@ -284,7 +287,7 @@ void GameManager::manageInput()
 		Colour colour(255, 255, 255, 255);
 		Texture groundTexture = ResourceManager::getTexture("../res/textures/platformerArt/png/ground.png");
 
-		mPhysicsManager.addGroundToWorld(mGroundEntities, mWorld, worldCoords, dimensions, colour, groundTexture);
+		mWorldManager.addGroundToWorld(mGroundEntities, mWorld, worldCoords, dimensions, colour, groundTexture);
 
 		mPlaceGroundSound.play();
 	}
