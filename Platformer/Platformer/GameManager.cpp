@@ -8,6 +8,7 @@ GameManager::~GameManager()
 {
 }
 
+//Run the game - initalises subsystems then runs the game loop
 int GameManager::run()
 {
 	int failedInits = init();
@@ -24,6 +25,7 @@ int GameManager::run()
 	return gameLoop();
 }
 
+//Initialise subsystems
 int GameManager::init()
 {
 	//Track the number of failed inits
@@ -87,7 +89,7 @@ int GameManager::init()
 	else
 	{
 		//Open the first available controller
-		for (unsigned int i = 0; i < SDL_NumJoysticks(); i++)
+		for (int i = 0; i < SDL_NumJoysticks(); i++)
 		{
 			if (SDL_IsGameController(i))
 			{
@@ -111,12 +113,10 @@ int GameManager::init()
 
 int GameManager::gameLoop()
 {
-	//Number of frames
+	//Count the number of frames to calculate fps
 	int countedFrames = 0;
 
 	mFPSTimer.start();
-
-	Uint32 previousTicks = SDL_GetTicks();
 
 	while (mGameState != QUIT)
 	{

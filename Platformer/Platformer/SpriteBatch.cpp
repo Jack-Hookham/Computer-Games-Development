@@ -22,7 +22,7 @@ void SpriteBatch::end()
 {
 	//Setup the sprite batch for sorting
 	mSpritePointers.resize(mSprites.size());
-	for (unsigned int i = 0; i < mSprites.size(); i++)
+	for (int i = 0; i < mSprites.size(); i++)
 	{
 		mSpritePointers[i] = &mSprites[i];
 	}
@@ -53,7 +53,7 @@ void SpriteBatch::renderBatches()
 	//Bind the VAO
 	glBindVertexArray(mArrayObject);
 
-	for (unsigned int i = 0; i < mRenderBatches.size(); i++)
+	for (int i = 0; i < mRenderBatches.size(); i++)
 	{
 		//Bind the texture to the target GL_TEXTURE_2D
 		glBindTexture(GL_TEXTURE_2D, mRenderBatches[i].texture);
@@ -92,7 +92,7 @@ void SpriteBatch::createRenderBatches()
 	vertices[currentVertex++] = mSpritePointers[0]->getTL();
 
 	//Add all the rest of the sprites
-	for (unsigned int i = 1; i < mSpritePointers.size(); i++) {
+	for (int i = 1; i < mSpritePointers.size(); i++) {
 
 		//if this sprite can't be part of the current batch (different textures)
 		if (mSpritePointers[i]->getTexure() != mSpritePointers[i - 1]->getTexure())

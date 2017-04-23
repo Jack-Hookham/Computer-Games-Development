@@ -171,15 +171,15 @@ void GraphicsManager::updateGraphics(float avgFPS, Player& player, std::vector<B
 	player.add(mEntitySpriteBatch, mWorldCamera);
 
 	//Add the boxes to the entity sprite batch
-	for (Box e : boxEntities)
+	for each (Box b in boxEntities)
 	{
-		e.add(mEntitySpriteBatch, mWorldCamera);
+		b.add(mEntitySpriteBatch, mWorldCamera);
 	}
 
 	//Add the ground to the entity sprite batch
-	for (Ground e : groundEntities)
+	for each (Ground g in groundEntities)
 	{
-		e.add(mEntitySpriteBatch, mWorldCamera);
+		g.add(mEntitySpriteBatch, mWorldCamera);
 	}
 
 	//End the SpriteBatch

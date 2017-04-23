@@ -89,7 +89,7 @@ void PhysicsManager::generateBoxes(std::unique_ptr<b2World>& world, std::vector<
 	//Number of boxes to generate
 	const int NUM_BOXES = 50;
 
-	for (unsigned int i = 0; i < NUM_BOXES; i++)
+	for (int i = 0; i < NUM_BOXES; i++)
 	{
 		//Setup random box params (position, dimensions, colour, texture)
 		glm::vec2 position = glm::vec2(xGen(randGenerator), yGen(randGenerator));

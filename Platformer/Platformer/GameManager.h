@@ -24,11 +24,12 @@
 #include "Box.h"
 
 //Manager for the whole engine
-//Clicking on the screen will create a box at the mouse position
+//Left clicking on the screen will create a box at the mouse position
+//Right clicking on the screen will create ground at the mouse position
+//Q and E control zoom
 
 enum GameState
 {
-	MENU,
 	PLAY,
 	QUIT
 };

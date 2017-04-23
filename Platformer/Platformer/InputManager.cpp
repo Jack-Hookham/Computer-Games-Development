@@ -67,7 +67,7 @@ glm::vec2 InputManager::getMouseCoords()
 //Copy current keymap to previous keymap
 void InputManager::update()
 {
-	for (std::pair<unsigned int, bool> i : mKeyMap)
+	for each (std::pair<unsigned int, bool> i in mKeyMap)
 	{
 		mPrevKeyMap[i.first] = i.second;
 	}

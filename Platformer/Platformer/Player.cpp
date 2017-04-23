@@ -20,7 +20,7 @@ void Player::init(b2World* world, AudioManager& audioManager, const glm::vec2& p
 	mJumpSound = audioManager.loadSoundEffect("../res/sound/platformer_jumping/jump_01.wav");
 	mAttackSound = audioManager.loadSoundEffect("../res/sound/melee_sounds/sword_sound.wav");
 
-	for (unsigned int i = 0; i < NUM_STATES; i++)
+	for (int i = 0; i < NUM_STATES; i++)
 	{
 		mSpriteSheets[i].init(textures[i], mSheetDimensions[i]);
 	}
@@ -75,13 +75,14 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 	//Store the velocity
 	glm::vec2 velocity = glm::vec2(mBody->GetLinearVelocity().x, mBody->GetLinearVelocity().y);
 
-	//if the player is on the screen - should be always true with the current camera setup
+	//if the player is on the screen (should be always true with the current camera setup)
 	if (camera.isOnCamera(position, mDimensions))
 	{
 		//Animation logic
 		//if in air
 		if (mInAir)
 		{
+			//if attacking
 			if (mAttacking)
 			{
 				tileIndex = 4;
@@ -147,6 +148,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			else if (abs(velocity.x) > 1.0f && ((velocity.x > 0 && mDirection > 0 || (velocity.x < 0 && mDirection < 0))))
 			{
 				tileIndex = 5;
+				//scale up the animation speed depending on the player's speed
 				animationSpeed = abs(velocity.x) * 0.025f;
 
 				//if the state just started reset the animation time
@@ -226,7 +228,6 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			texCoords.z *= -1;
 		}
 
-		//std::cout << "index: " << tileIndex << std::endl;
 		spriteBatch.addSprite(position, dimensions, texCoords, mSpriteSheets[mState].getTexture().id, 
 			0.0f, mColour, mBody->GetAngle());
 	}
@@ -273,7 +274,7 @@ void Player::update(InputManager& inputManager)
 			c->GetWorldManifold(&worldManifold);
 
 			//loop through all manifold points
-			for (unsigned int i = 0; i < b2_maxManifoldPoints; i++)
+			for (int i = 0; i < b2_maxManifoldPoints; i++)
 			{
 				//if edges are below the player 
 				//add small value 0.01f to account for any error
@@ -300,6 +301,7 @@ void Player::update(InputManager& inputManager)
 		}
 	}
 
+	//Attack
 	if (inputManager.isKeyPressed(SDLK_SPACE) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_X))
 	{
 		mAttackSound.play();

@@ -11,15 +11,15 @@ AudioManager::~AudioManager()
 		mIsInitialised = false;
 
 		//Free all chunks
-		for (std::pair<const std::string, Mix_Chunk*>& mapIterator : mSoundEffectMap)
+		for each (std::pair<const std::string, Mix_Chunk*> i in mSoundEffectMap)
 		{
-			Mix_FreeChunk(mapIterator.second);
+			Mix_FreeChunk(i.second);
 		}
 
 		//Free all music
-		for (std::pair<const std::string, Mix_Music*>& mapIterator : mMusicMap)
+		for each (std::pair<const std::string, Mix_Music*> i in mMusicMap)
 		{
-			Mix_FreeMusic(mapIterator.second);
+			Mix_FreeMusic(i.second);
 		}
 
 		//Clear the maps
@@ -75,14 +75,15 @@ bool AudioManager::initAudio()
 SoundEffect AudioManager::loadSoundEffect(const std::string& path)
 {
 	//Iterator for the sound effect map
-	std::map<std::string, Mix_Chunk*>::iterator mapIterator = mSoundEffectMap.find(path);
+	std::map<std::string, Mix_Chunk*>::iterator i = mSoundEffectMap.find(path);
 
 	SoundEffect soundEffect;
 
 	//Search for the sound effect in the cache
-	if (mapIterator == mSoundEffectMap.end())
+	//if not found
+	if (i == mSoundEffectMap.end())
 	{
-		//Failed to find add it
+		//Attempt to add it to the cache
 		Mix_Chunk* chunk = Mix_LoadWAV(path.c_str());
 
 		//If Mix_LoadWAV fails
@@ -97,10 +98,11 @@ SoundEffect AudioManager::loadSoundEffect(const std::string& path)
 			mSoundEffectMap[path] = chunk;
 		}
 	}
+	//if found
 	else
 	{
 		//Already cached
-		soundEffect.mChunk = mapIterator->second;
+		soundEffect.mChunk = i->second;
 	}
 
 	return soundEffect;
@@ -110,17 +112,18 @@ SoundEffect AudioManager::loadSoundEffect(const std::string& path)
 Music AudioManager::loadMusic(const std::string& path)
 {
 	//Iterator for the music map
-	std::map<std::string, Mix_Music*>::iterator mapIterator = mMusicMap.find(path);
+	std::map<std::string, Mix_Music*>::iterator i = mMusicMap.find(path);
 
 	Music music;
 
-	//Search for the sound effect in the cache
-	if (mapIterator == mMusicMap.end())
+	//Search for the music in the cache
+	//if not found
+	if (i == mMusicMap.end())
 	{
-		//Failed to find add it
+		//Attempt to add it to the cache
 		Mix_Music* mixMusic = Mix_LoadMUS(path.c_str());
 
-		//If Mix_LoadWAV fails
+		//if Mix_LoadMUS fails
 		if (mixMusic == NULL)
 		{
 			log("Mix_LoadMUS failed: " + std::string(Mix_GetError()));
@@ -132,16 +135,17 @@ Music AudioManager::loadMusic(const std::string& path)
 			mMusicMap[path] = mixMusic;
 		}
 	}
+	//if found
 	else
 	{
 		//Already cached
-		music.mMusic = mapIterator->second;
+		music.mMusic = i->second;
 	}
 
 	return music;
 }
 
-//Set the audio volume (0 to 128)
+//Set the audio volume (0 - 128)
 void AudioManager::setVolume(int volume)
 {
 	Mix_Volume(-1, volume);

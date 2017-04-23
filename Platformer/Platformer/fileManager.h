@@ -6,11 +6,7 @@
 #include <iostream>
 #include <vector>
 
-struct DirEntry 
-{
-	std::string path;
-	bool isDirectory;
-};
+//Manages file IO
 
 class FileManager
 {

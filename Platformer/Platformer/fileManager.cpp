@@ -13,7 +13,7 @@ bool FileManager::readFile(std::string filePath, std::vector<unsigned char>& buf
 	}
 	else
 	{
-		//seek to the end
+		//Seek to the end
 		file.seekg(0, std::ios::end);
 
 		//Get the file size

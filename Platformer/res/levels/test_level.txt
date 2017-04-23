@@ -1,0 +1,8 @@
+	playerTexture[IDLE] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/idle.png");
+	playerTexture[RUN] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/run.png");
+	playerTexture[JUMP] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
+	playerTexture[IN_AIR] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump.png");
+	playerTexture[ATTACK] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/attack.png");
+	playerTexture[JUMP_ATTACK] = ResourceManager::getTexture("../res/textures/ninja_adventure/spritesheet/jump_attack.png");
+
+../res/textures/platformerArt/png/ground.png
