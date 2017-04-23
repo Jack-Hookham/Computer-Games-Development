@@ -33,21 +33,17 @@ public:
 	GraphicsManager();
 	~GraphicsManager();
 
-	//initialise SDL and create window
+	//Initialise SDL and create the game window
 	bool initGraphics(const int screenWidth, const int screenHeight);
 
-	//Loads media needed for the game
-	void loadMedia();
+	//Update the graphics for the current frame
+	void updateGraphics(const float fps, Player& player, std::vector<Box>& boxEntities, 
+		std::vector<Ground>& groundEntities);
 
-	//Loads individual image as texture
-	//SDL_Texture* loadTexture(std::string path);
+	void translateCamera(const glm::vec2 translation);
+	void setCameraScale(const float scale);
 
-	void updateGraphics(float avgFPS, Player& player, std::vector<Box>& boxEntities, std::vector<Ground>& groundEntities);
-
-	void translateCamera(glm::vec2 translation);
-	void setCameraScale(float scale);
-
-	Camera getCamera();
+	Camera getCamera() const { return mWorldCamera; }
 
 private:
 	//Log for GraphicsManager
@@ -57,7 +53,7 @@ private:
 	void initShaders();
 
 	//Draw the HUD
-	void drawHUD(float avgFPS);
+	void drawHUD(const float fps);
 
 	//Screen dimensions
 	int mScreenWidth;

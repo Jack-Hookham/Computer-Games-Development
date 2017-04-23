@@ -6,6 +6,22 @@
 #include "Box.h"
 #include "Ground.h"
 
+/*
+Static class for loading level files
+Level files are located in res/levels/
+Level file format:
+
+Number of ground objects
+Ground params: x position, y position, width, height, colour.r, colour.g, colour.b, colour.a, friction, texture
+
+Number of box objects
+Ground params: x position, y position, width, height, colour.r, colour.g, colour.b, colour.a, density, friction, texture
+
+Player params: x position, y position, width, height, colour.r, colour.g, colour.b, colour.a
+Player textures/sprites
+Player sounds
+*/
+
 class LevelManager
 {
 public:

@@ -5,12 +5,21 @@
 #include "SpriteSheet.h"
 #include "AudioManager.h"
 
-//Player class
-//***Controls***
-//A - move left
-//D - move right
-//W - jump
-//Space - attack
+/*
+* Player class
+* ***Controls***
+* ***Keyboard***
+* A - move left
+* D - move right
+* W - jump
+* Space - attack
+* 
+* ***Controller***
+* A - move left
+* D - move right
+* W - jump
+* Space - attack
+*/
 
 enum playerMoveState
 {

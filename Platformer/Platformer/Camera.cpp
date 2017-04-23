@@ -9,7 +9,7 @@ Camera::~Camera()
 }
 
 //Setup the camera
-void Camera::initCamera(int width, int height)
+void Camera::initCamera(const int width, const int height)
 {
 	mScreenWidth = width;
 	mScreenHeight = height;
@@ -32,18 +32,13 @@ void Camera::updateCamera()
 		glm::vec3 scale(mScale, mScale, 0.0f);
 		mCameraMatrix = glm::scale(glm::mat4(1.0f), scale) * mCameraMatrix;
 
+		//No longer need to update the camera matrix
 		mUpdateMatrix = false;
 	}
 }
 
-//Get the camera's position (2d vector)
-glm::vec2 Camera::getPosition()
-{
-	return mPosition;
-}
-
-//Set the camera's position (2d vector)
-void Camera::setPosition(glm::vec2& position)
+//Set the camera's position
+void Camera::setPosition(const glm::vec2& position)
 {
 	mPosition = position;
 
@@ -51,20 +46,8 @@ void Camera::setPosition(glm::vec2& position)
 	mUpdateMatrix = true;
 }
 
-//Get the camera matrix
-glm::mat4 Camera::getCamerMatrix()
-{
-	return mCameraMatrix;
-}
-
-//Get the camera scale
-float Camera::getScale()
-{
-	return mScale;
-}
-
 //Set the camera scale
-void Camera::setScale(float scale)
+void Camera::setScale(const float scale)
 {
 	mScale = scale;
 
@@ -73,21 +56,23 @@ void Camera::setScale(float scale)
 }
 
 //Convert screen coords to world coords
-glm::vec2 Camera::screenToWorld(glm::vec2 screenCoords)
+glm::vec2 Camera::screenToWorld(const glm::vec2 screenCoords)
 {
-	//invert y
-	screenCoords.y = mScreenHeight - screenCoords.y;
+	glm::vec2 worldCoords = screenCoords;
 
-	//Centre screen to 0
-	screenCoords -= glm::vec2(mScreenWidth / 2, mScreenHeight / 2);
+	//invert y
+	worldCoords.y = mScreenHeight - screenCoords.y;
+
+	//Centre screen to 0, 0
+	worldCoords -= glm::vec2(mScreenWidth / 2, mScreenHeight / 2);
 
 	//Scale coords
-	screenCoords /= mScale;
+	worldCoords /= mScale;
 
 	//Translate using camera position
-	screenCoords += mPosition;
+	worldCoords += mPosition;
 
-	return screenCoords;
+	return worldCoords;
 }
 
 //True if the entity is off the camera

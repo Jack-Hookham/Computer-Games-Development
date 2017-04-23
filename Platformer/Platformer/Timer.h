@@ -1,6 +1,8 @@
 #pragma once
 #include <SDL/SDL.h>
 
+//Based on the SDL tutorial found here: http://lazyfoo.net/tutorials/SDL/23_advanced_timers/index.php
+
 class Timer
 {
 public:

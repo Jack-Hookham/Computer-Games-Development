@@ -28,6 +28,7 @@ int GameManager::run()
 //Initialise subsystems
 int GameManager::init()
 {
+	log("Initialising subsystems");
 	//Track the number of failed inits
 	int failedInits = 0;
 
@@ -120,9 +121,10 @@ int GameManager::gameLoop()
 	mMusic.play(-1);
 
 	//Count the number of frames to calculate fps
-	int countedFrames = 0;
-
+	int frameCount = 0;
 	mFPSTimer.start();
+
+	float fps = 0.0f;
 
 	while (mGameState != QUIT)
 	{
@@ -136,10 +138,19 @@ int GameManager::gameLoop()
 		mPhysicsManager.updatePhysics(mWorld);
 
 		//Calculate fps
-		float avgFPS = countedFrames / (mFPSTimer.getTicks() / MS_PER_SECOND);
+		int tickCount = mFPSTimer.getTicks();
+		//if over 1 second has passed
+		if (tickCount > MS_PER_SECOND)
+		{
+			fps = frameCount * MS_PER_SECOND / tickCount;
+			mFPSTimer.start();
+			frameCount = 0;
+		}
+		//Increment the frame counter
+		frameCount++;
 
-		mGraphicsManager.updateGraphics(avgFPS, mPlayer, mBoxEntities, mGroundEntities);
-		++countedFrames;
+		//Update all graphics
+		mGraphicsManager.updateGraphics(fps, mPlayer, mBoxEntities, mGroundEntities);
 
 		//If frame finished early cap the frame rate
 		int frameTicks = mFrameTimer.getTicks();
@@ -213,18 +224,17 @@ void GameManager::manageInput()
 					//Left of dead zone
 					if (e.jaxis.value < -JOYSTICK_DEAD_ZONE)
 					{
-						mInputManager.pressKey(SDLK_a);
+						mInputManager.setLeftStickDirection(-1);
 					}
 					//Right of dead zone
 					else if (e.jaxis.value > JOYSTICK_DEAD_ZONE)
 					{
-						mInputManager.pressKey(SDLK_d);
+						mInputManager.setLeftStickDirection(1);
 					}
 					//In dead zone
 					else if (e.jaxis.value > -JOYSTICK_DEAD_ZONE && e.jaxis.value < JOYSTICK_DEAD_ZONE)
 					{
-						mInputManager.releaseKey(SDLK_a);
-						mInputManager.releaseKey(SDLK_d);
+						mInputManager.setLeftStickDirection(0);
 					}
 				}
 			}
@@ -241,6 +251,14 @@ void GameManager::manageInput()
 			{
 				mInputManager.pressKey(e.cbutton.button);
 			}
+			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
+			{
+				mInputManager.pressKey(e.cbutton.button);
+			}
+			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)
+			{
+				mInputManager.pressKey(e.cbutton.button);
+			}
 		}
 		//Controller button release
 		else if (e.type == SDL_CONTROLLERBUTTONUP)
@@ -250,6 +268,14 @@ void GameManager::manageInput()
 				mInputManager.releaseKey(e.cbutton.button);
 			}
 			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_X)
+			{
+				mInputManager.releaseKey(e.cbutton.button);
+			}
+			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
+			{
+				mInputManager.releaseKey(e.cbutton.button);
+			}
+			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)
 			{
 				mInputManager.releaseKey(e.cbutton.button);
 			}
@@ -292,17 +318,17 @@ void GameManager::manageInput()
 		mPlaceGroundSound.play();
 	}
 
-	//Manage input for the player, check the player state and update the state if needed
+	//Manage input for the player
 	mPlayer.update(mInputManager);
 
-	if (mInputManager.isKeyDown(SDLK_q))
+	if (mInputManager.isKeyDown(SDLK_q) || mInputManager.isKeyDown(SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
 	{
-		//zoom in
+		//Zoom in
 		mGraphicsManager.setCameraScale(SCALE_SPEED);
 	}
-	if (mInputManager.isKeyDown(SDLK_e))
+	if (mInputManager.isKeyDown(SDLK_e) || mInputManager.isKeyDown(SDL_CONTROLLER_BUTTON_RIGHTSHOULDER))
 	{
-		//zoom out
+		//Zoom out
 		mGraphicsManager.setCameraScale(-SCALE_SPEED);
 	}
 

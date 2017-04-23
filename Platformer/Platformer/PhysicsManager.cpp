@@ -10,7 +10,7 @@ PhysicsManager::~PhysicsManager()
 
 bool PhysicsManager::initPhysics(const int desiredFPS)
 {
-	log("Initialising");
+	log("Initialising physics");
 
 	//Initialisation flag
 	bool success = true;
@@ -20,7 +20,11 @@ bool PhysicsManager::initPhysics(const int desiredFPS)
 
 	if (success)
 	{
-		log("Initialised");
+		log("Physics successfully initialised");
+	}
+	else
+	{
+		log("Failed to initialise physics");
 	}
 
 	return success;

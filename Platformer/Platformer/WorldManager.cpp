@@ -27,11 +27,13 @@ std::unique_ptr<b2World> WorldManager::generateWorld(const std::string levelPath
 	return world;
 }
 
-void WorldManager::addGroundToWorld(std::vector<Ground>& groundEntities, std::unique_ptr<b2World>& world, const glm::vec2 & position, const glm::vec2 & dimensions, const Colour & colour, const Texture & texture, const float density, const float friction, const glm::vec4 & texCoords, const bool fixedRotation)
+void WorldManager::addGroundToWorld(std::vector<Ground>& groundEntities, std::unique_ptr<b2World>& world, const glm::vec2 & position, const glm::vec2 & dimensions, const Colour & colour, const Texture & texture, const float friction, const glm::vec4 & texCoords, const bool fixedRotation)
 {
 	Ground ground;
-	ground.init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, fixedRotation);
+	ground.init(world.get(), position, dimensions, colour, texture, friction, texCoords, fixedRotation);
 	groundEntities.push_back(ground);
+
+	log("Created ground at " + std::to_string(position.x) + " " + std::to_string(position.y));
 }
 
 void WorldManager::addBoxToWorld(std::vector<Box>& boxEntities, std::unique_ptr<b2World>& world, const glm::vec2 & position, const glm::vec2 & dimensions, const Colour & colour, const Texture & texture, const float density, const float friction, const glm::vec4 & texCoords, const bool fixedRotation)
@@ -39,10 +41,13 @@ void WorldManager::addBoxToWorld(std::vector<Box>& boxEntities, std::unique_ptr<
 	Box newBox;
 	newBox.init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, fixedRotation);
 	boxEntities.push_back(newBox);
+
+	log("Created a box at " + std::to_string(position.x) + " " + std::to_string(position.y));
 }
 
 //Quickly generates random box data and writes it to a file
-void WorldManager::generateBoxeData()
+//Used for generating random boxes for the level, not actually used in the engine
+void WorldManager::generateBoxeData(int n)
 {
 	//Random box gen
 	std::mt19937 randGenerator;
@@ -53,14 +58,13 @@ void WorldManager::generateBoxeData()
 	std::uniform_int_distribution<int> textureGen(1, 10);
 
 	//Number of boxes to generate
-	const int NUM_BOXES = 50;
 	float density = 1.0f;
 	float friction = 0.3f;
 
 	//File to write to
 	std::ofstream file("../res/randomGen/randomBoxes.txt");
 
-	for (int i = 0; i < NUM_BOXES; i++)
+	for (int i = 0; i < n; i++)
 	{
 		//Setup random box params (position, dimensions, colour, texture)
 		glm::vec2 position = glm::vec2(xGen(randGenerator), yGen(randGenerator));

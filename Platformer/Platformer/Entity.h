@@ -8,6 +8,9 @@
 #include "ResourceManager.h"
 #include "Camera.h"
 
+//The base entity class for the engine
+//All entities inherit from this class
+
 class Box;
 class Ground;
 class Player;
@@ -34,9 +37,11 @@ public:
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
 protected:
+	//box2D stuff
 	b2Body* mBody = NULL;
 	b2Fixture* mFixture = NULL;
 
+	//Params
 	glm::vec2 mPosition;
 	glm::vec2 mDimensions;
 	Colour mColour;

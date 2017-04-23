@@ -249,12 +249,12 @@ void Player::update(InputManager& inputManager)
 	}
 
 	//Left and right movement
-	if (inputManager.isKeyDown(SDLK_a) && mState != ATTACK)
+	if ((inputManager.isKeyDown(SDLK_a) || inputManager.getLeftStickDirection() < 0) && mState != ATTACK)
 	{
 		mBody->ApplyForceToCenter(b2Vec2(-100.0f, 0.0f), true);
 		mDirection = -1;
 	}
-	else if (inputManager.isKeyDown(SDLK_d) && mState != ATTACK)
+	else if ((inputManager.isKeyDown(SDLK_d) || inputManager.getLeftStickDirection() > 0) && mState != ATTACK)
 	{
 		mDirection = 1;
 		mBody->ApplyForceToCenter(b2Vec2(100.0f, 0.0f), true);

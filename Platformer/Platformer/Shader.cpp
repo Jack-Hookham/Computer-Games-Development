@@ -11,89 +11,89 @@ Shader::~Shader()
 }
 
 //Compile the shaders
-void Shader::compileShaders(const std::string& vertPath, const std::string& fragPath, 
+void Shader::initShaders(const std::string& vertPath, const std::string& fragPath,
 	const std::string& geomPath, const std::string& tcsPath, const std::string& tesPath)
-{	
-	std::string vertSource;
-	std::string fragSource;
-
-	FileManager::readFile(vertPath, vertSource);
-	FileManager::readFile(fragPath, fragSource);
-
-	compileShadersFromSource(vertSource.c_str(), fragSource.c_str());
-}
-
-void Shader::compileShadersFromSource(const char* vertPath, const char* fragPath) 
 {
-	//Create the program
-	mProgramID = glCreateProgram();
 
-	//Create the vertex shader object and store its ID
-	mVertShaderID = glCreateShader(GL_VERTEX_SHADER);
-	if (mVertShaderID == 0) 
+	//Create the shader program
+	mProgram = glCreateProgram();
+
+	//Create the vertex shader object
+	mVertShader = glCreateShader(GL_VERTEX_SHADER);
+	if (mVertShader == 0)
 	{
 		log("Vertex shader failed to be created!");
 	}
 
-	//Create the fragment shader object and store its ID
-	mFragShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-	if (mFragShaderID == 0) 
+	//Create the fragment shader object
+	mFragShader = glCreateShader(GL_FRAGMENT_SHADER);
+	if (mFragShader == 0)
 	{
 		log("Fragment shader failed to be created!");
 	}
 
-	//Compile each shader
-	compileShader(vertPath, "Vertex Shader", mVertShaderID);
-	compileShader(fragPath, "Fragment Shader", mFragShaderID);
+	//Shader source code buffer strings
+	std::string vertSource;
+	std::string fragSource;
+
+	//Read the shader files into strings
+	FileManager::readFile(vertPath, vertSource);
+	FileManager::readFile(fragPath, fragSource);
+
+	//Convert source to char* and compile each shader
+	compileShader(vertSource, "Vertex Shader", mVertShader);
+	compileShader(fragSource, "Fragment Shader", mFragShader);
+
+	//Attach the shaders to the program
+	glAttachShader(mProgram, mVertShader);
+	glAttachShader(mProgram, mFragShader);
 }
 
+//Link the shaders together into a program
 void Shader::linkShaders()
 {
-	//Attach the shaders to the program
-	glAttachShader(mProgramID, mVertShaderID);
-	glAttachShader(mProgramID, mFragShaderID);
-
 	//Link the program
-	glLinkProgram(mProgramID);
+	glLinkProgram(mProgram);
 
 	GLint isLinked = 0;
-	glGetProgramiv(mProgramID, GL_LINK_STATUS, (int*)&isLinked);
+	glGetProgramiv(mProgram, GL_LINK_STATUS, (int*)&isLinked);
 	if (isLinked == GL_FALSE)
 	{
 		GLint maxLength = 0;
-		glGetProgramiv(mProgramID, GL_INFO_LOG_LENGTH, &maxLength);
+		glGetProgramiv(mProgram, GL_INFO_LOG_LENGTH, &maxLength);
 
+		//Max length includes the NULL character
 		std::vector<char> errorLog(maxLength);
-		glGetProgramInfoLog(mProgramID, maxLength, &maxLength, &errorLog[0]);
+		glGetProgramInfoLog(mProgram, maxLength, &maxLength, &errorLog[0]);
 
-		//Delete the program
-		glDeleteProgram(mProgramID);
+		//Delete the program as it's no longer needed
+		glDeleteProgram(mProgram);
 
-		//Delete the shaders
-		glDeleteShader(mVertShaderID);
-		glDeleteShader(mFragShaderID);
+		//Don't leak the shaders
+		glDeleteShader(mVertShader);
+		glDeleteShader(mFragShader);
 
 		//Print the error log
 		const std::string text = "Shaders failed to link: " + std::string(&(errorLog[0]));
 		log(text);
 	}
 
-	//Detach shaders after a successful link
-	glDetachShader(mProgramID, mVertShaderID);
-	glDetachShader(mProgramID, mFragShaderID);
-	glDeleteShader(mVertShaderID);
-	glDeleteShader(mFragShaderID);
+	//Detach and delete shaders after linking, whether it fails or not
+	glDetachShader(mProgram, mVertShader);
+	glDetachShader(mProgram, mFragShader);
+	glDeleteShader(mVertShader);
+	glDeleteShader(mFragShader);
 }
 
 //Adds an attribute to the shader
 void Shader::addAttribute(const std::string& attributeName)
 {
-	glBindAttribLocation(mProgramID, mNumAttributes++, attributeName.c_str());
+	glBindAttribLocation(mProgram, mNumAttributes++, attributeName.c_str());
 }
 
 GLint Shader::getUniformLocation(const std::string& uniformName) 
 {
-	GLint location = glGetUniformLocation(mProgramID, uniformName.c_str());
+	GLint location = glGetUniformLocation(mProgram, uniformName.c_str());
 	if (location == GL_INVALID_INDEX) 
 	{
 		log("Uniform " + uniformName + " not found in shader!");
@@ -101,21 +101,22 @@ GLint Shader::getUniformLocation(const std::string& uniformName)
 	return location;
 }
 
-//Enable the shader its attributes
-void Shader::use() 
+//Enable the shader attributes
+void Shader::enableAttributes() 
 {
-	glUseProgram(mProgramID);
-	//Enable all the attributes we added with addAttribute
+	glUseProgram(mProgram);
+	//Enable all of the attributes that were added with addAttribute()
 	for (int i = 0; i < mNumAttributes; i++) 
 	{
 		glEnableVertexAttribArray(i);
 	}
 }
 
-//disable the shader
-void Shader::unuse() 
+//Disable the shader attributes
+void Shader::disableAttributes()
 {
 	glUseProgram(0);
+	//Disable all the attributes that were added with addAttribute()
 	for (int i = 0; i < mNumAttributes; i++) 
 	{
 		glDisableVertexAttribArray(i);
@@ -124,36 +125,43 @@ void Shader::unuse()
 
 void Shader::dispose() 
 {
-	if (mProgramID) glDeleteProgram(mProgramID);
+	if (mProgram)
+	{
+		//Delete the shader program if it exists
+		glDeleteProgram(mProgram);
+	}
 }
 
 //Compiles a single shader file
-void Shader::compileShader(const char* source, const std::string& name, GLuint id) 
+void Shader::compileShader(const std::string sourceString, const std::string& name, GLuint& shader)
 {
-	//tell opengl that we want to use fileContents as the contents of the shader file
-	glShaderSource(id, 1, &source, NULL);
+	//Pass the shader source code to GL
+	//1 = the number of individual strings being used
+	const GLchar* source = (const GLchar*)sourceString.c_str();
+	glShaderSource(shader, 1, &source, 0);
 
-	//compile the shader
-	glCompileShader(id);
+	//Compile the shader
+	glCompileShader(shader);
 
-	//check for errors
-	GLint success = 0;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
+	//Error check
+	GLint isCompiled = 0;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
 
-	if (success == GL_FALSE)
+	//if success is GL_FALSE then the most recent compilation failed, otherwise it succeeded
+	if (isCompiled == GL_FALSE)
 	{
 		GLint maxLength = 0;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
+		//Max length includes the NULL character
 		std::vector<char> errorLog(maxLength);
-		glGetShaderInfoLog(id, maxLength, &maxLength, &errorLog[0]);
+		glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
 
-		glDeleteShader(id); //Don't leak the shader.
+		//Print the error
+		log("Shader " + name + " failed to compile with error: " + &(errorLog[0]));
 
-		//Print error log and quit
-		const std::string error = &(errorLog[0]);
-		log("Shader " + name + " failed to compile");
-		log(error);
+		//Don't leak the shader
+		glDeleteShader(shader);
 	}
 }
 

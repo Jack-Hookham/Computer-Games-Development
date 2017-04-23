@@ -12,6 +12,8 @@ Window::~Window()
 
 bool Window::createWindow(std::string name, int screenWidth, int screenHeight, Uint32 flags)
 {
+	log("Creating window");
+
 	//Initialisation flag
 	bool success = true;
 
@@ -71,6 +73,15 @@ bool Window::createWindow(std::string name, int screenWidth, int screenHeight, U
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		}
+	}
+	
+	if (success)
+	{
+		log("Window successfully created");
+	}
+	else
+	{
+		log("Failed to create window");
 	}
 
 	return success;

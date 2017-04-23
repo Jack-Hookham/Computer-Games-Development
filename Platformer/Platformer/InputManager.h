@@ -29,6 +29,9 @@ public:
 
 	void update();
 
+	const int getLeftStickDirection() const { return mLeftStickDirection; }
+	void setLeftStickDirection(const int direction) { mLeftStickDirection = direction; }
+
 private:
 	//Was key down last frame
 	bool wasKeyDown(unsigned int keyID);
@@ -43,5 +46,12 @@ private:
 	std::unordered_map<unsigned int, bool> mPrevKeyMap;
 
 	glm::vec2 mMouseCoords;
+
+	//Controller left stick direction
+	//left = -1
+	//middle = 0
+	//right = 1
+	int mLeftStickDirection = 0;
+
 };
 

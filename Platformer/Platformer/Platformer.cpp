@@ -2,12 +2,9 @@
 
 int main(int argc, char* args[])
 {
-	GameManager gm;
+	GameManager gameManager;
 
-	gm.run();
-	//gm.init();
-	//gm.loadMedia();
-	//gm.gameLoop();
+	gameManager.run();
 
 	return 0;
 }

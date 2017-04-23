@@ -34,7 +34,7 @@ AudioManager::~AudioManager()
 
 bool AudioManager::initAudio()
 {
-	log("Initialising");
+	log("Initialising audio");
 
 	//Initilisation flag
 	bool success = true;
@@ -66,7 +66,11 @@ bool AudioManager::initAudio()
 
 	if (success)
 	{
-		log("Initialised");
+		log("Audio successfully initialised");
+	}
+	else
+	{
+		log("Failed to initialise audio");
 	}
 
 	return success;
@@ -146,7 +150,7 @@ Music AudioManager::loadMusic(const std::string& path)
 }
 
 //Set the audio volume (0 - 128)
-void AudioManager::setVolume(int volume)
+void AudioManager::setVolume(const int volume)
 {
 	Mix_Volume(-1, volume);
 	Mix_VolumeMusic(volume);

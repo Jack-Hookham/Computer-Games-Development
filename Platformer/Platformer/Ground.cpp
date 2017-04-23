@@ -10,7 +10,7 @@ Ground::~Ground()
 }
 
 void Ground::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
-	const Texture& texture, const float density, const float friction, const glm::vec4& texCoords, const bool fixedRotation)
+	const Texture& texture, const float friction, const glm::vec4& texCoords, const bool fixedRotation)
 {
 	//Initialise the entity's variables
 	mPosition = position;
@@ -27,6 +27,7 @@ void Ground::init(b2World* world, const glm::vec2& position, const glm::vec2& di
 	//Ground fixture definition
 	b2PolygonShape groundBox;
 	groundBox.SetAsBox(dimensions.x, dimensions.y);
+	//The ground is static so its density is always 0
 	mBody->CreateFixture(&groundBox, 0.0f);
 }
 
