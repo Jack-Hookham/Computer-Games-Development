@@ -15,7 +15,6 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 		return success = false;
 	}
 
-
 	{
 		//Load the ground entities
 		log("Loading ground");
@@ -127,6 +126,8 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 	}
 
 	log("Level successfully loaded from: " + filePath);
+
+	file.close();
 
 	return success;
 }

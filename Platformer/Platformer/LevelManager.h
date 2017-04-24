@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Box2D/Box2D.h>
+#include <fstream>
+#include <iostream>
 
 #include "Player.h"
 #include "Box.h"

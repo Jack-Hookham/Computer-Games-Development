@@ -270,7 +270,7 @@ void Player::update(InputManager& inputManager)
 	for (b2ContactEdge* ce = mBody->GetContactList(); ce; ce = ce->next)
 	{
 		b2Contact* c = ce->contact;
-		//if touching and entity
+		//if touching an entity
 		if (c->IsTouching())
 		{
 			b2WorldManifold worldManifold;

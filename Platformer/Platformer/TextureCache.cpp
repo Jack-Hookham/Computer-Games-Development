@@ -12,10 +12,10 @@ TextureCache::~TextureCache()
 //If the texture doesn't already exist add it to the map
 Texture TextureCache::getTexture(std::string path)
 {
-	std::map<std::string, Texture>::iterator mapIterator = mTextureMap.find(path);
+	std::map<std::string, Texture>::iterator i = mTextureMap.find(path);
 
 	//if texture isn't in the map
-	if (mapIterator == mTextureMap.end())
+	if (i == mTextureMap.end())
 	{
 		//Load texture
 		Texture newTexture = ImageManager::loadTexture(path);
@@ -27,7 +27,7 @@ Texture TextureCache::getTexture(std::string path)
 		return newTexture;
 	}
 	log("Loaded cached texture from: " + path);
-	return mapIterator->second;
+	return i->second;
 }
 
 void TextureCache::log(const std::string text)

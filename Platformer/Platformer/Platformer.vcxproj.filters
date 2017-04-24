@@ -105,14 +105,14 @@
     <ClCompile Include="Sprite.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteSheet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LevelManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WorldManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteSheet.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
