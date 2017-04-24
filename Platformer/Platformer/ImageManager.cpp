@@ -54,7 +54,6 @@ Texture ImageManager::loadTexture(std::string filePath)
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	//Set texture params
-	texture.filePath = filePath;
 	texture.width = width;
 	texture.height = height;
 

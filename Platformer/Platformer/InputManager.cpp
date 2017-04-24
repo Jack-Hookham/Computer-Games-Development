@@ -51,19 +51,6 @@ bool InputManager::isKeyReleased(unsigned int keyID)
 	return false;
 }
 
-void InputManager::setMouseCoords(float x, float y)
-{
-	mMouseCoords.x = x;
-	mMouseCoords.y = y;
-
-	//cout << mMouseCoords << endl;
-}
-
-glm::vec2 InputManager::getMouseCoords()
-{
-	return mMouseCoords;
-}
-
 //Copy current keymap to previous keymap
 void InputManager::update()
 {
@@ -73,6 +60,7 @@ void InputManager::update()
 	}
 }
 
+//Was the key down last frame?
 bool InputManager::wasKeyDown(unsigned int keyID)
 {
 	auto key = mPrevKeyMap.find(keyID);

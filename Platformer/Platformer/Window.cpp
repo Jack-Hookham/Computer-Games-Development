@@ -87,30 +87,10 @@ bool Window::createWindow(std::string name, int screenWidth, int screenHeight, U
 	return success;
 }
 
+//Update the window and draw
 void Window::swapWindow()
 {
-	//Swap buffer and draw everything
 	SDL_GL_SwapWindow(mSDLwindow);
-}
-
-int Window::getWidth()
-{
-	return mWindowWidth;
-}
-
-int Window::getHeight()
-{
-	return mWindowHeight;
-}
-
-void Window::setWidth(int width)
-{
-	mWindowWidth = width;
-}
-
-void Window::setHeight(int height)
-{
-	mWindowHeight = height;
 }
 
 void Window::log(const std::string text)

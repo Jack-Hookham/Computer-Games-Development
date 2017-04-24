@@ -97,14 +97,6 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 		Colour colour;
 		glm::vec4 colourVec;
 
-		std::string test1;
-		std::string test2;
-		std::string test3;
-		std::string test4;
-		std::string test5;
-		std::string test6;
-		std::string test7;
-
 		Texture playerTextures[NUM_STATES];
 		SoundEffect playerSounds[NUM_SOUNDS];
 
@@ -112,6 +104,7 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 			colourVec.z >> colourVec.w;
 		colour = Colour(colourVec);
 
+		//Populate the texture array
 		for (int i = 0; i < NUM_STATES; i++)
 		{
 			std::string path;
@@ -119,6 +112,7 @@ bool LevelManager::loadLevel(const std::string& filePath, std::unique_ptr<b2Worl
 			playerTextures[i] = ResourceManager::getTexture(path);
 		}
 
+		//Populate the sound array
 		for (int i = 0; i < NUM_SOUNDS; i++)
 		{
 			std::string path;

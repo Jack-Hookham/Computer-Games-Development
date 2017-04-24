@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 
 //Store information on the user input for this frame and the previous frame
+//Currently takes keyboard, mouse and controller input
 
 class InputManager
 {
@@ -24,13 +25,19 @@ public:
 	bool isKeyReleased(unsigned int keyID);
 
 	//Mouse
-	void setMouseCoords(float x, float y);
-	glm::vec2 getMouseCoords();
+	inline void setMouseCoords(const float x, const float y)
+	{ 
+		mMouseCoords.x = x;
+		mMouseCoords.y = y;
+	}
+
+	inline const glm::vec2 InputManager::getMouseCoords() const { return mMouseCoords; }
 
 	void update();
 
-	const int getLeftStickDirection() const { return mLeftStickDirection; }
-	void setLeftStickDirection(const int direction) { mLeftStickDirection = direction; }
+	//Controller stick
+	inline const int getLeftStickDirection() const { return mLeftStickDirection; }
+	inline void setLeftStickDirection(const int direction) { mLeftStickDirection = direction; }
 
 private:
 	//Was key down last frame

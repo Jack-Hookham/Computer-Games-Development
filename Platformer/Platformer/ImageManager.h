@@ -7,6 +7,8 @@
 #include "picoPNG.h"
 #include "FileManager.h"
 
+//Used picoPNG to load textures from image files
+
 class ImageManager
 {
 public:

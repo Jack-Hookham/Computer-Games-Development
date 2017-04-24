@@ -27,6 +27,7 @@ std::unique_ptr<b2World> WorldManager::generateWorld(const std::string levelPath
 	return world;
 }
 
+//Add a ground entity to the world
 void WorldManager::addGroundToWorld(std::vector<Ground>& groundEntities, std::unique_ptr<b2World>& world, const glm::vec2 & position, const glm::vec2 & dimensions, const Colour & colour, const Texture & texture, const float friction, const glm::vec4 & texCoords, const bool fixedRotation)
 {
 	Ground ground;
@@ -36,6 +37,7 @@ void WorldManager::addGroundToWorld(std::vector<Ground>& groundEntities, std::un
 	log("Created ground at " + std::to_string(position.x) + " " + std::to_string(position.y));
 }
 
+//Add a box entity to the world
 void WorldManager::addBoxToWorld(std::vector<Box>& boxEntities, std::unique_ptr<b2World>& world, const glm::vec2 & position, const glm::vec2 & dimensions, const Colour & colour, const Texture & texture, const float density, const float friction, const glm::vec4 & texCoords, const bool fixedRotation)
 {
 	Box newBox;
