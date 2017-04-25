@@ -4,7 +4,8 @@ STARTGROUND
 -10 5 4 1 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
 5 0 49 1 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
 -30 -50 99 1 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
--100 0 1 99 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
+-129 50 1 99 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
+68 50 1 99 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
 ENDGROUND
 
 STARTBOX
@@ -57,7 +58,7 @@ STARTBOX
 ENDBOX
 
 STARTPLAYER
-0 -45 1 2 255 255 255 255
+0 5 1 2 255 255 255 255
 ../res/textures/ninja_adventure/spritesheet/idle.png
 ../res/textures/ninja_adventure/spritesheet/run.png
 ../res/textures/ninja_adventure/spritesheet/jump.png
