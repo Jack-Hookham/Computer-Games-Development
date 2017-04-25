@@ -1,8 +1,11 @@
-2
+JackH Level
+
+STARTGROUND
 -10 5 4 1 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
 5 0 50 1 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
+ENDGROUND
 
-50
+STARTBOX
 12.7095 17.2209 2.17002 2.31158 237 255 244 255 1 0.3 ../res/textures/boxes_and_crates/obj_box6.png
 16.1633 14.4854 1.59444 0.695081 255 242 204 255 1 0.3 ../res/textures/boxes_and_crates/obj_box1.png
 29.9292 19.3626 2.43539 2.42978 251 217 201 255 1 0.3 ../res/textures/boxes_and_crates/obj_box10.png
@@ -53,7 +56,9 @@
 23.3857 16.7034 1.25884 0.662252 200 200 255 255 1 0.3 ../res/textures/boxes_and_crates/obj_box8.png
 28.2113 12.3019 1.47724 1.37172 238 223 200 255 1 0.3 ../res/textures/boxes_and_crates/obj_box4.png
 17.8718 12.6276 2.24037 1.52154 223 210 246 255 1 0.3 ../res/textures/boxes_and_crates/obj_box5.png
+ENDBOX
 
+STARTPLAYER
 0 5 1 2 255 255 255 255
 ../res/textures/ninja_adventure/spritesheet/idle.png
 ../res/textures/ninja_adventure/spritesheet/run.png
@@ -63,3 +68,4 @@
 ../res/textures/ninja_adventure/spritesheet/jump_attack.png
 ../res/sound/platformer_jumping/jump_01.wav
 ../res/sound/melee_sounds/sword_sound.wav
+ENDPLAYER

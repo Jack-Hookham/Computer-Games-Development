@@ -1,6 +1,5 @@
 #pragma once
 
-#include <random>
 #include <iostream>
 
 #include "Player.h"
@@ -29,9 +28,6 @@ public:
 	void addBoxToWorld(std::vector<Box>& boxEntities, std::unique_ptr<b2World>& world, const glm::vec2& position,
 		const glm::vec2& dimensions, const Colour& colour, const Texture& texture, const float density = 1.0f,
 		const float friction = 0.3f, const glm::vec4& texCoords = { 0.0f, 0.0f, 1.0f, 1.0f }, const bool fixedRotation = false);
-
-	//Used to generate random data for box entities which can then be put in a level file
-	void generateBoxeData(int n);
 
 private:
 	void log(const std::string text);

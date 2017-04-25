@@ -296,10 +296,18 @@ void GameManager::manageInput()
 		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
 		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
 		glm::vec2 dimensions = glm::vec2(2.0f);
-		Colour colour(255, 255, 255, 255);
-		Texture boxTexture = ResourceManager::getTexture("../res/textures/boxes_and_crates/obj_box2.png");
 
-		mWorldManager.addBoxToWorld(mBoxEntities, mWorld, worldCoords, dimensions, colour, boxTexture);
+		//Random colours and texture
+		std::mt19937 randGenerator(time(0));
+
+		std::uniform_int_distribution<int> colourGen(200, 255);
+		std::uniform_int_distribution<int> textureGen(1, 10);
+
+		glm::vec4 colour(colourGen(randGenerator), colourGen(randGenerator), colourGen(randGenerator), 255);
+		std::string textureString = "../res/textures/boxes_and_crates/obj_box" + std::to_string(textureGen(randGenerator)) + ".png";
+		Texture texture = ResourceManager::getTexture(textureString);
+
+		mWorldManager.addBoxToWorld(mBoxEntities, mWorld, worldCoords, dimensions, colour, texture);
 
 		mPlaceBoxSound.play();
 	}
@@ -311,9 +319,9 @@ void GameManager::manageInput()
 		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
 		glm::vec2 dimensions = glm::vec2(1.0f);
 		Colour colour(255, 255, 255, 255);
-		Texture groundTexture = ResourceManager::getTexture("../res/textures/platformerArt/png/ground.png");
+		Texture texture = ResourceManager::getTexture("../res/textures/platformerArt/png/ground.png");
 
-		mWorldManager.addGroundToWorld(mGroundEntities, mWorld, worldCoords, dimensions, colour, groundTexture);
+		mWorldManager.addGroundToWorld(mGroundEntities, mWorld, worldCoords, dimensions, colour, texture);
 
 		mPlaceGroundSound.play();
 	}
