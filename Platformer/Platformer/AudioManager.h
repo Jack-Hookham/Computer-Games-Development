@@ -9,7 +9,7 @@
 #include "Music.h"
 
 //Uses SDL_mixer to play audio files
-//Similar to ResourceManager and TextureCache, only AudioManager has a map for both music files and sound effects
+//Similar to ResourceManager, only AudioManager has a map for both music files and sound effects
 //Stores previously loaded sound effects and music files in two different maps
 //When trying to load a sound file it checks the map to see if the file has already been used
 //if it hasn't it adds it to the map

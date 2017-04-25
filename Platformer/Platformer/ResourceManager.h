@@ -1,11 +1,14 @@
 #pragma once
 
+#include <GL/glew.h>
 #include <string>
+#include <map>
 
-#include "TextureCache.h"
+#include "ImageManager.h"
+#include "Texture.h"
 
 //Static class to manage texture loading
-//The texture cache stores all of the textures that are used in a map
+//The map mTextureMap stores all of the textures that are used
 //So if the engine tries to load an already used texture the getTexture function simply retrieves it from the map
 //If the texture hasn't been loaded before then it gets added to the map
 //This is similar to how the AudioManager works
@@ -13,8 +16,14 @@
 class ResourceManager
 {
 public:
-	static Texture getTexture(std::string path);
+	//Get a texture
+	//If the texture doesn't already exist add it to the map
+	static Texture getTexture(const std::string path);
 
 private:
-	static TextureCache mTextureCache;
+	//Log for ResourceManager
+	static void log(const std::string text);
+
+	//Map of cached textures
+	static std::map<std::string, Texture> mTextureMap;
 };

@@ -3,8 +3,7 @@
 //Uses picoPNG to load an image file
 Texture ImageManager::loadTexture(std::string filePath)
 {
-	//Initialise texure values to 0;
-	Texture texture = {};
+	Texture texture;
 
 	//Input for picoPNG decodePNG()
 	std::vector<unsigned char> input;

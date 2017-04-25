@@ -5,7 +5,6 @@
 #include <vector>
 #include <algorithm>
 
-#include "TextureCache.h"
 #include "Sprite.h"
 
 //SpriteBatch class used for managing and drawing the different sprites used in the engine

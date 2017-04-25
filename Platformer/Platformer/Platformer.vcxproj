@@ -148,7 +148,6 @@
     <ClCompile Include="SpriteBatch.cpp" />
     <ClCompile Include="SpriteFont.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
-    <ClCompile Include="TextureCache.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WorldManager.cpp" />
@@ -172,7 +171,6 @@
     <ClInclude Include="SpriteBatch.h" />
     <ClInclude Include="SpriteFont.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="TextureCache.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="GraphicsManager.h" />

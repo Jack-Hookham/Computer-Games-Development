@@ -12,6 +12,7 @@ LMB - Create box
 RMB - Create ground
 Q - Zoom in
 E - Zoom out
+R - reset
 
 Controller controls
 A - jump
