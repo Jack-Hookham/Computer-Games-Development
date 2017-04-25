@@ -243,43 +243,13 @@ void GameManager::manageInput()
 		//Controller button press
 		else if (e.type == SDL_CONTROLLERBUTTONDOWN)
 		{
-			if (e.cbutton.button == SDL_CONTROLLER_BUTTON_A)
-			{
-				mInputManager.pressKey(e.cbutton.button);
-			}
-			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_X)
-			{
-				mInputManager.pressKey(e.cbutton.button);
-			}
-			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
-			{
-				mInputManager.pressKey(e.cbutton.button);
-			}
-			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)
-			{
-				mInputManager.pressKey(e.cbutton.button);
-			}
+			mInputManager.pressKey(e.cbutton.button);
 		}
 		//Controller button release
 		else if (e.type == SDL_CONTROLLERBUTTONUP)
 		{
-			if (e.cbutton.button == SDL_CONTROLLER_BUTTON_A)
-			{
-				mInputManager.releaseKey(e.cbutton.button);
-			}
-			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_X)
-			{
-				mInputManager.releaseKey(e.cbutton.button);
-			}
-			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER)
-			{
-				mInputManager.releaseKey(e.cbutton.button);
-			}
-			else if (e.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)
-			{
-				mInputManager.releaseKey(e.cbutton.button);
-			}
-		}
+			mInputManager.releaseKey(e.cbutton.button);
+		}	
 	}
 
 	//***Process input***
@@ -287,6 +257,12 @@ void GameManager::manageInput()
 	if (mInputManager.isKeyPressed(SDLK_ESCAPE))
 	{
 		mGameState = QUIT;
+	}
+
+	//Reload level if r pressed
+	if (mInputManager.isKeyPressed(SDLK_r))
+	{
+		mWorld = mWorldManager.generateWorld(mFirstLevel, mAudioManager, mPlayer, mGroundEntities, mBoxEntities);
 	}
 
 	//Mouse buttons
@@ -340,7 +316,7 @@ void GameManager::manageInput()
 		mGraphicsManager.setCameraScale(-SCALE_SPEED);
 	}
 
-	//Update the input manager - copys current input map to previous input map
+	//Update the input manager - copies current input map to previous input map
 	mInputManager.update();
 }
 

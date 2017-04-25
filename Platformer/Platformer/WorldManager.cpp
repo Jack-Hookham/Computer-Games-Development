@@ -13,6 +13,9 @@ std::unique_ptr<b2World> WorldManager::generateWorld(const std::string levelPath
 {
 	log("Generating world");
 
+	groundEntities.clear();
+	boxEntities.clear();
+
 	//The box2D world
 	std::unique_ptr<b2World> world;
 

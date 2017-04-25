@@ -2,7 +2,9 @@ JackH Level
 
 STARTGROUND
 -10 5 4 1 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
-5 0 50 1 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
+5 0 49 1 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
+-30 -50 99 1 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
+-100 0 1 99 255 255 255 255 0.3 ../res/textures/platformerArt/png/ground.png
 ENDGROUND
 
 STARTBOX
@@ -39,27 +41,23 @@ STARTBOX
 19.9709 6.59979 2.45985 2.4238 231 218 248 255 1 0.3 ../res/textures/boxes_and_crates/obj_box7.png
 17.2637 17.2595 1.85904 2.23739 235 228 246 255 1 0.3 ../res/textures/boxes_and_crates/obj_box1.png
 10.9012 8.89806 1.82024 2.10014 224 217 240 255 1 0.3 ../res/textures/boxes_and_crates/obj_box5.png
-29.6472 7.72771 0.69071 1.02761 233 243 220 255 1 0.3 ../res/textures/boxes_and_crates/obj_box9.png
-11.5511 18.0394 1.75477 1.65941 238 222 244 255 1 0.3 ../res/textures/boxes_and_crates/obj_box3.png
-20.6787 17.7955 1.37733 1.74411 211 204 235 255 1 0.3 ../res/textures/boxes_and_crates/obj_box3.png
-17.6467 11.0271 2.02484 0.651933 244 204 209 255 1 0.3 ../res/textures/boxes_and_crates/obj_box7.png
-20.0954 7.75862 2.14521 0.979905 203 200 206 255 1 0.3 ../res/textures/boxes_and_crates/obj_box6.png
-16.0365 18.5407 0.595889 2.38957 216 211 217 255 1 0.3 ../res/textures/boxes_and_crates/obj_box5.png
-27.7545 10.0658 1.18768 2.30011 208 252 244 255 1 0.3 ../res/textures/boxes_and_crates/obj_box5.png
-27.5473 16.7038 0.920604 1.27948 248 228 212 255 1 0.3 ../res/textures/boxes_and_crates/obj_box7.png
-14.4684 6.44682 1.4806 0.763947 251 233 209 255 1 0.3 ../res/textures/boxes_and_crates/obj_box4.png
-25.1501 13.6281 1.37049 0.619559 218 212 227 255 1 0.3 ../res/textures/boxes_and_crates/obj_box2.png
-16.4502 17.3179 1.30996 0.530807 249 218 232 255 1 0.3 ../res/textures/boxes_and_crates/obj_box8.png
-15.1659 14.7367 0.759693 1.96344 237 225 235 255 1 0.3 ../res/textures/boxes_and_crates/obj_box4.png
-24.3694 13.2051 1.07561 1.09264 212 206 236 255 1 0.3 ../res/textures/boxes_and_crates/obj_box7.png
-16.2502 15.3016 1.27142 0.867022 237 243 213 255 1 0.3 ../res/textures/boxes_and_crates/obj_box4.png
-23.3857 16.7034 1.25884 0.662252 200 200 255 255 1 0.3 ../res/textures/boxes_and_crates/obj_box8.png
-28.2113 12.3019 1.47724 1.37172 238 223 200 255 1 0.3 ../res/textures/boxes_and_crates/obj_box4.png
-17.8718 12.6276 2.24037 1.52154 223 210 246 255 1 0.3 ../res/textures/boxes_and_crates/obj_box5.png
+-10 6 1 1 243 228 246 255 1 0.3 ../res/textures/boxes_and_crates/obj_box5.png
+-10 7 1 1 223 210 202 255 1 0.3 ../res/textures/boxes_and_crates/obj_box1.png
+-10 8 1 1 217 210 228 255 1 0.3 ../res/textures/boxes_and_crates/obj_box9.png
+-10 9 1 1 223 236 246 255 1 0.3 ../res/textures/boxes_and_crates/obj_box8.png
+-10 10 1 1 219 243 224 255 1 0.3 ../res/textures/boxes_and_crates/obj_box7.png
+-10 11 1 1 223 210 246 255 1 0.3 ../res/textures/boxes_and_crates/obj_box5.png
+-10 12 1 1 223 236 246 211 1 0.3 ../res/textures/boxes_and_crates/obj_box3.png
+-10 13 1 1 217 210 246 255 1 0.3 ../res/textures/boxes_and_crates/obj_box6.png
+-10 14 1 1 223 249 202 255 1 0.3 ../res/textures/boxes_and_crates/obj_box5.png
+-10 15 1 1 249 243 246 255 1 0.3 ../res/textures/boxes_and_crates/obj_box1.png
+-10 16 1 1 223 210 243 255 1 0.3 ../res/textures/boxes_and_crates/obj_box5.png
+-10 17 1 1 219 202 228 255 1 0.3 ../res/textures/boxes_and_crates/obj_box4.png
+-10 18 1 1 223 210 224 255 1 0.3 ../res/textures/boxes_and_crates/obj_box4.png
 ENDBOX
 
 STARTPLAYER
-0 5 1 2 255 255 255 255
+0 -45 1 2 255 255 255 255
 ../res/textures/ninja_adventure/spritesheet/idle.png
 ../res/textures/ninja_adventure/spritesheet/run.png
 ../res/textures/ninja_adventure/spritesheet/jump.png
