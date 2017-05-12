@@ -18,16 +18,6 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 	mDimensions = dimensions;
 	mColour = colour;
 
-	mAnimationTimer = 0.0f;
-	mDirection = 1;
-
-	mInAir = false;
-	mAttacking = false;
-	mJumping = false;
-
-	mJumpTimer = 0.0f;
-	mAttackTimer = 0.0f;
-
 	for (int i = 0; i < ENEMY_NUM_STATES; i++)
 	{
 		mSpriteSheets[i].init(textures[i], mSheetDimensions[i]);
@@ -105,6 +95,16 @@ void Enemy::update()
 				}
 			}
 		}
+	}
+
+	//Direction
+	if (mBody->GetLinearVelocity().x > 0.0f)
+	{
+		mDirection = 1;
+	}
+	else
+	{
+		mDirection = -1;
 	}
 }
 

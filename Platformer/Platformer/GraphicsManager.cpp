@@ -125,11 +125,11 @@ void GraphicsManager::drawHUD(const float fps)
 	mHUDSpriteBatch.renderBatches();
 }
 
-void GraphicsManager::updateGraphics(const float fps, Player& player, std::vector<Box>& boxEntities,
-	std::vector<Ground>& groundEntities, std::vector<Enemy*>& enemyEntities)
+void GraphicsManager::updateGraphics(const float fps, Player* player, std::vector<Box*>& boxEntities,
+	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities)
 {
 	//Update cameras
-	const glm::vec2 worldCameraPos = glm::vec2(player.getBody()->GetPosition().x, player.getBody()->GetPosition().y);
+	const glm::vec2 worldCameraPos = glm::vec2(player->getBody()->GetPosition().x, player->getBody()->GetPosition().y);
 	mWorldCamera.setPosition(worldCameraPos);
 	mWorldCamera.updateCamera();
 
@@ -155,15 +155,15 @@ void GraphicsManager::updateGraphics(const float fps, Player& player, std::vecto
 	mEntitySpriteBatch.begin(FRONT_TO_BACK);
 
 	//Add the boxes to the entity sprite batch
-	for each (Box b in boxEntities)
+	for each (Box* b in boxEntities)
 	{
-		b.add(mEntitySpriteBatch, mWorldCamera);
+		b->add(mEntitySpriteBatch, mWorldCamera);
 	}
 
 	//Add the ground to the entity sprite batch
-	for each (Ground g in groundEntities)
+	for each (Ground* g in groundEntities)
 	{
-		g.add(mEntitySpriteBatch, mWorldCamera);
+		g->add(mEntitySpriteBatch, mWorldCamera);
 	}
 
 	//Add the enemies to the entity sprite batch
@@ -173,7 +173,7 @@ void GraphicsManager::updateGraphics(const float fps, Player& player, std::vecto
 	}
 
 	//Add the player the entity sprite batch
-	player.add(mEntitySpriteBatch, mWorldCamera);
+	player->add(mEntitySpriteBatch, mWorldCamera);
 
 	//Sort the sprite batch and create render batches
 	mEntitySpriteBatch.end();

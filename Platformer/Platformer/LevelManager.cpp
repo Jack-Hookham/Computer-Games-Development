@@ -1,8 +1,8 @@
 #include "LevelManager.h"
 
 bool LevelManager::loadLevel(const std::string filePath, std::unique_ptr<b2World>& world, 
-	AudioManager& audioManager, Player& player, std::vector<Ground>& groundEntities,
-	std::vector<Box>& boxEntities, std::vector<Enemy*>& enemyEntities)
+	AudioManager& audioManager, Player* player, std::vector<Ground*>& groundEntities,
+	std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities)
 {
 	bool success = true;
 
@@ -108,7 +108,7 @@ void LevelManager::log(const std::string text)
 	std::cout << "[LevelManager] " << text << std::endl;
 }
 
-void LevelManager::loadPlayer(std::unique_ptr<b2World>& world, Player& player, AudioManager& audioManager, const std::string line)
+void LevelManager::loadPlayer(std::unique_ptr<b2World>& world, Player* player, AudioManager& audioManager, const std::string line)
 {
 	//Initialise player params
 	glm::vec2 position;
@@ -143,10 +143,10 @@ void LevelManager::loadPlayer(std::unique_ptr<b2World>& world, Player& player, A
 	}
 
 	//Initialise player instance
-	player.init(world.get(), position, dimensions, colour, playerTextures, playerSounds, true);
+	player->init(world.get(), position, dimensions, colour, playerTextures, playerSounds, true);
 }
 
-void LevelManager::loadGround(std::unique_ptr<b2World>& world, std::vector<Ground>& groundEntities, const std::string line)
+void LevelManager::loadGround(std::unique_ptr<b2World>& world, std::vector<Ground*>& groundEntities, const std::string line)
 {
 	//Ground params
 	glm::vec2 position;
@@ -168,13 +168,13 @@ void LevelManager::loadGround(std::unique_ptr<b2World>& world, std::vector<Groun
 	glm::vec4 texCoords = { position.x, position.y, dimensions.x, dimensions.y };
 
 	//Create the ground entity
-	Ground ground;
-	ground.init(world.get(), position, dimensions, colour, texture, friction, texCoords, true);
+	Ground* ground = new Ground;
+	ground->init(world.get(), position, dimensions, colour, texture, friction, texCoords, true);
 	groundEntities.push_back(ground);
 
 }
 
-void LevelManager::loadBox(std::unique_ptr<b2World>& world, std::vector<Box>& boxEntities, const std::string line)
+void LevelManager::loadBox(std::unique_ptr<b2World>& world, std::vector<Box*>& boxEntities, const std::string line)
 {
 	//Box params
 	glm::vec2 position;
@@ -197,8 +197,8 @@ void LevelManager::loadBox(std::unique_ptr<b2World>& world, std::vector<Box>& bo
 	glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 	//Create the box entity
-	Box box;
-	box.init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, false);
+	Box* box = new Box;
+	box->init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, false);
 	boxEntities.push_back(box);
 }
 

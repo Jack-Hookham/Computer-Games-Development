@@ -48,6 +48,9 @@ private:
 
 	//Main loop for the game
 	int gameLoop();	
+
+	//Delete entity pointers, close SDL controller stuff
+	void quit();
 	
 	//Log for GameManager
 	void log(const std::string text);
@@ -101,9 +104,9 @@ private:
 	std::unique_ptr<b2World> mWorld;
 
 	//Entities
-	Player mPlayer;
-	std::vector<Box> mBoxEntities;
-	std::vector<Ground> mGroundEntities;
+	Player* mPlayer;
+	std::vector<Box*> mBoxEntities;
+	std::vector<Ground*> mGroundEntities;
 	std::vector<Enemy*> mEnemyEntities;
 
 	//Analog joystick dead zone

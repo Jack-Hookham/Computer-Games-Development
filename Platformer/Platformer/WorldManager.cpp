@@ -9,7 +9,7 @@ WorldManager::~WorldManager()
 }
 
 std::unique_ptr<b2World> WorldManager::generateWorld(const std::string levelPath, AudioManager& audioManager, 
-	Player& player, std::vector<Ground>& groundEntities, std::vector<Box>& boxEntities, std::vector<Enemy*>& enemyEntities)
+	Player* player, std::vector<Ground*>& groundEntities, std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities)
 {
 	log("Generating world");
 
@@ -28,24 +28,24 @@ std::unique_ptr<b2World> WorldManager::generateWorld(const std::string levelPath
 }
 
 //Used to ground to the world after the level has been loaded (currently on right click)
-void WorldManager::addGroundToWorld(std::vector<Ground>& groundEntities, std::unique_ptr<b2World>& world, const glm::vec2& position, 
+void WorldManager::addGroundToWorld(std::vector<Ground*>& groundEntities, std::unique_ptr<b2World>& world, const glm::vec2& position, 
 	const glm::vec2& dimensions, const Colour& colour, const Texture& texture, const float friction, const glm::vec4& texCoords, 
 	const bool fixedRotation)
 {
-	Ground ground;
-	ground.init(world.get(), position, dimensions, colour, texture, friction, texCoords, fixedRotation);
+	Ground* ground = new Ground;
+	ground->init(world.get(), position, dimensions, colour, texture, friction, texCoords, fixedRotation);
 	groundEntities.push_back(ground);
 
 	log("Created ground at " + std::to_string(position.x) + " " + std::to_string(position.y));
 }
 
 //Used to add boxes to the world after the level has been loaded (currently on left click)
-void WorldManager::addBoxToWorld(std::vector<Box>& boxEntities, std::unique_ptr<b2World>& world, const glm::vec2& position, 
+void WorldManager::addBoxToWorld(std::vector<Box*>& boxEntities, std::unique_ptr<b2World>& world, const glm::vec2& position, 
 	const glm::vec2& dimensions, const Colour& colour, const Texture& texture, const float density, const float friction, 
 	const glm::vec4& texCoords, const bool fixedRotation)
 {
-	Box newBox;
-	newBox.init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, fixedRotation);
+	Box* newBox = new Box;
+	newBox->init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, fixedRotation);
 	boxEntities.push_back(newBox);
 
 	log("Created a box at " + std::to_string(position.x) + " " + std::to_string(position.y));

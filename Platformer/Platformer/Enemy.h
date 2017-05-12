@@ -65,17 +65,17 @@ private:
 		glm::vec2(1.56f, 1.1f), glm::vec2(2.31f, 1.13f), glm::vec2(2.17f, 1.18f) };
 
 	//Animation timer
-	float mAnimationTimer;
+	float mAnimationTimer = 0.0f;
 
-	int mDirection;
+	int mDirection = 1;
 
 	//State bool checks
-	bool mInAir;
-	bool mAttacking;
-	bool mJumping;
+	bool mInAir = true;
+	bool mAttacking = false;
+	bool mJumping = false;
 
-	float mJumpTimer;
-	float mAttackTimer;
+	float mJumpTimer = 0.0f;
+	float mAttackTimer = 0.0f;
 
 	SoundEffect mSounds[ENEMY_NUM_SOUNDS];
 };

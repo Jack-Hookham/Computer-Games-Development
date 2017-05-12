@@ -69,6 +69,7 @@ int GameManager::init()
 	}
 
 	//Initialise the box2D world
+	mPlayer = new Player;
 	mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities);
 
 	//Initialise physics
@@ -161,15 +162,7 @@ int GameManager::gameLoop()
 		}
 	}
 
-	for each (Enemy* e in mEnemyEntities)
-	{
-		delete e;
-	}
-	mEnemyEntities.clear();
-
-	//Close game controller
-	SDL_GameControllerClose(mGameController);
-	mGameController = NULL;
+	quit();
 
 	return 0;
 }
@@ -268,7 +261,16 @@ void GameManager::manageInput()
 	//Reload level if r pressed
 	if (mInputManager.isKeyPressed(SDLK_r))
 	{
+		for each (Box* b in mBoxEntities)
+		{
+			delete b;
+		}
 		mGroundEntities.clear();
+
+		for each (Ground* g in mGroundEntities)
+		{
+			delete g;
+		}
 		mBoxEntities.clear();
 
 		for each (Enemy* e in mEnemyEntities)
@@ -318,7 +320,7 @@ void GameManager::manageInput()
 	}
 
 	//Manage input for the player
-	mPlayer.input(mInputManager);
+	mPlayer->input(mInputManager);
 
 	if (mInputManager.isKeyDown(SDLK_q) || mInputManager.isKeyDown(SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
 	{
@@ -333,6 +335,32 @@ void GameManager::manageInput()
 
 	//Update the input manager - copies current input map to previous input map
 	mInputManager.update();
+}
+
+//Delete entity pointers, close SDL controller stuff
+void GameManager::quit()
+{
+	for each (Box* b in mBoxEntities)
+	{
+		delete b;
+	}
+	mGroundEntities.clear();
+
+	for each (Ground* g in mGroundEntities)
+	{
+		delete g;
+	}
+	mBoxEntities.clear();
+
+	for each (Enemy* e in mEnemyEntities)
+	{
+		delete e;
+	}
+	mEnemyEntities.clear();
+
+	//Close game controller
+	SDL_GameControllerClose(mGameController);
+	mGameController = NULL;
 }
 
 

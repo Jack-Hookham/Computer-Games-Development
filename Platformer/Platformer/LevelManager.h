@@ -38,16 +38,16 @@ class LevelManager
 public:
 	//Load the level
 	static bool loadLevel(const std::string filePath, std::unique_ptr<b2World>& world, 
-		AudioManager& audioManager, Player& player, std::vector<Ground>& groundEntities,
-		std::vector<Box>& boxEntities, std::vector<Enemy*>& enemyEntities);
+		AudioManager& audioManager, Player* player, std::vector<Ground*>& groundEntities,
+		std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities);
 
 private:
 	static void log(const std::string text);
 
 	//Load functions for various entities
-	static void loadPlayer(std::unique_ptr<b2World>& world, Player& player, AudioManager& audioManager, const std::string line);
-	static void loadGround(std::unique_ptr<b2World>& world, std::vector<Ground>& groundEntities, const std::string line);
-	static void loadBox(std::unique_ptr<b2World>& world, std::vector<Box>& boxEntities, const std::string line);
+	static void loadPlayer(std::unique_ptr<b2World>& world, Player* player, AudioManager& audioManager, const std::string line);
+	static void loadGround(std::unique_ptr<b2World>& world, std::vector<Ground*>& groundEntities, const std::string line);
+	static void loadBox(std::unique_ptr<b2World>& world, std::vector<Box*>& boxEntities, const std::string line);
 	static void loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*>& enemyEntities, AudioManager& audioManager,
 		const std::string line, int id);
 

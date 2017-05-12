@@ -4,8 +4,8 @@ STARTGROUND
 -10 5 4 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
 5 0 49 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
 -30 -50 99 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
--129 50 1 99 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
-68 50 1 99 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
+-130 48 1 99 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
+70 48 1 99 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
 -30 20 10 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
 -30 28 4 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
 ENDGROUND
