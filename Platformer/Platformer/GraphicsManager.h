@@ -68,8 +68,6 @@ private:
 	//Camera for the HUD
 	Camera mHUDCamera;
 
-	Player mPlayer;
-
 	//Entity sprite batch
 	SpriteBatch mEntitySpriteBatch;
 

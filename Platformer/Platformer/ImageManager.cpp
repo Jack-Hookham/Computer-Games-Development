@@ -37,9 +37,6 @@ Texture ImageManager::loadTexture(std::string filePath)
 	//GLenum format, GLenum type, const GLvoid * data)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &(output[0]));
 
-	//Generate mipmaps for the texture object
-	glGenerateMipmap(GL_TEXTURE_2D);
-
 	//Set texture parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);

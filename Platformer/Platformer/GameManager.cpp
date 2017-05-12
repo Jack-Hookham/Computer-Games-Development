@@ -314,6 +314,12 @@ void GameManager::manageInput()
 	{
 		//Zoom out
 		mGraphicsManager.setCameraScale(-SCALE_SPEED);
+	}	
+	//Move camera
+	if (mInputManager.isKeyDown(SDLK_a))
+	{
+		mGraphicsManager.translateCamera(glm::vec2(-CAMERA_SPEED, 0.0f));
+		std::cout << mGraphicsManager.getCamera().getPosition().x << ", " << mGraphicsManager.getCamera().getPosition().x << std::endl;
 	}
 
 	//Update the input manager - copies current input map to previous input map
