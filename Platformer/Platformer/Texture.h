@@ -7,6 +7,7 @@
 
 struct Texture
 {
+	std::string filePath;
 	GLuint id;
 	int width;
 	int height;

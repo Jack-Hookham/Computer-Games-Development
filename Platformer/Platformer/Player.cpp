@@ -18,12 +18,12 @@ void Player::init(b2World* world, const glm::vec2& position,
 	mDimensions = dimensions;
 	mColour = colour;
 
-	for (int i = 0; i < NUM_STATES; i++)
+	for (int i = 0; i < PLAYER_NUM_STATES; i++)
 	{
 		mSpriteSheets[i].init(textures[i], mSheetDimensions[i]);
 	}
 
-	for (int i = 0; i < NUM_SOUNDS; i++)
+	for (int i = 0; i < PLAYER_NUM_SOUNDS; i++)
 	{
 		mSounds[i] = sounds[i];
 	}
@@ -92,13 +92,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mState != JUMP_ATTACK)
+				if (mState != PLAYER_JUMP_ATTACK)
 				{
-					if (mState != ATTACK)
+					if (mState != PLAYER_ATTACK)
 					{
 						mAnimationTimer = 0.0f;
 					}
-					mState = JUMP_ATTACK;
+					mState = PLAYER_JUMP_ATTACK;
 				}
 			}
 
@@ -108,9 +108,9 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				tileIndex = 5;
 
 				//if the state just started reset the animation time
-				if (mState != JUMP)
+				if (mState != PLAYER_JUMP)
 				{
-					mState = JUMP;
+					mState = PLAYER_JUMP;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -118,13 +118,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			else if (velocity.y <= 0.0f)
 			{
 				tileIndex = 4;
-				mState = IN_AIR;
+				mState = PLAYER_IN_AIR;
 			}
 			//if rising
 			else
 			{
 				tileIndex = 0;
-				mState = IN_AIR;
+				mState = PLAYER_IN_AIR;
 			}
 		}
 		//if on ground
@@ -137,13 +137,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mState != ATTACK)
+				if (mState != PLAYER_ATTACK)
 				{
-					if (mState != JUMP_ATTACK)
+					if (mState != PLAYER_JUMP_ATTACK)
 					{
 						mAnimationTimer = 0.0f;
 					}
-					mState = ATTACK;
+					mState = PLAYER_ATTACK;
 				}
 			}
 
@@ -155,9 +155,9 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = abs(velocity.x) * 0.025f;
 
 				//if the state just started reset the animation time
-				if (mState != RUN)
+				if (mState != PLAYER_RUN)
 				{
-					mState = RUN;
+					mState = PLAYER_RUN;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -167,9 +167,9 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				tileIndex = 4;
 
 				//if state just started reset the animation time
-				if (mState != IDLE)
+				if (mState != PLAYER_IDLE)
 				{
-					mState = IDLE;
+					mState = PLAYER_IDLE;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -206,13 +206,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 		//Adjust position and dimensions based on the current sprite
 		dimensions.x *= mStateMultipliers[mState].x;
 		dimensions.y *= mStateMultipliers[mState].y;
-		if (mState != IDLE)
+		if (mState != PLAYER_IDLE)
 		{
 			if (mDirection == -1)
 			{
 				position.x -= dimensions.x * 0.5f;
 			}
-			position.y -= dimensions.y * (mStateMultipliers[mState].y - mStateMultipliers[IDLE].y) * 0.7f;
+			position.y -= dimensions.y * (mStateMultipliers[mState].y - mStateMultipliers[PLAYER_IDLE].y) * 0.7f;
 		}
 
 		//Increment animation time
@@ -236,7 +236,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 	}
 }
 
-void Player::update(InputManager& inputManager)
+void Player::input(InputManager& inputManager)
 {
 	//Cap the player's speed
 	if (mBody->GetLinearVelocity().x > MAX_SPEED)
@@ -249,12 +249,12 @@ void Player::update(InputManager& inputManager)
 	}
 
 	//Left and right movement
-	if ((inputManager.isKeyDown(SDLK_a) || inputManager.getLeftStickDirection() < 0) && mState != ATTACK)
+	if ((inputManager.isKeyDown(SDLK_a) || inputManager.getLeftStickDirection() < 0) && mState != PLAYER_ATTACK)
 	{
 		mBody->ApplyForceToCenter(b2Vec2(-100.0f, 0.0f), true);
 		mDirection = -1;
 	}
-	else if ((inputManager.isKeyDown(SDLK_d) || inputManager.getLeftStickDirection() > 0) && mState != ATTACK)
+	else if ((inputManager.isKeyDown(SDLK_d) || inputManager.getLeftStickDirection() > 0) && mState != PLAYER_ATTACK)
 	{
 		mDirection = 1;
 		mBody->ApplyForceToCenter(b2Vec2(100.0f, 0.0f), true);
@@ -295,9 +295,9 @@ void Player::update(InputManager& inputManager)
 				if (inputManager.isKeyPressed(SDLK_w) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_A))
 				{
 					//Jump
-					mBody->ApplyLinearImpulse(b2Vec2(0.0f, 30.0f), b2Vec2(0.0f, 0.0f), true);
+					mBody->ApplyLinearImpulse(b2Vec2(0.0f, 50.0f), b2Vec2(0.0f, 0.0f), true);
 					mJumping = true;
-					mSounds[JUMP_SOUND].play();
+					mSounds[PLAYER_JUMP_SOUND].play();
 					break;
 				}
 			}
@@ -307,7 +307,7 @@ void Player::update(InputManager& inputManager)
 	//Attack
 	if (inputManager.isKeyPressed(SDLK_SPACE) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_X))
 	{
-		mSounds[ATTACK_SOUND].play();
+		mSounds[PLAYER_ATTACK_SOUND].play();
 		mAttacking = true;
 	}
 }

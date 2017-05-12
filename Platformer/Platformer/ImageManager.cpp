@@ -4,6 +4,7 @@
 Texture ImageManager::loadTexture(std::string filePath)
 {
 	Texture texture;
+	texture.filePath = filePath;
 
 	//Input for picoPNG decodePNG()
 	std::vector<unsigned char> input;

@@ -69,7 +69,7 @@ int GameManager::init()
 	}
 
 	//Initialise the box2D world
-	mWorld = mWorldManager.generateWorld(mFirstLevel, mAudioManager, mPlayer, mGroundEntities, mBoxEntities);
+	mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities);
 
 	//Initialise physics
 	if (mPhysicsManager.initPhysics(mDesiredFPS))
@@ -135,7 +135,7 @@ int GameManager::gameLoop()
 		manageInput();
 
 		//Update all physics
-		mPhysicsManager.updatePhysics(mWorld);
+		mPhysicsManager.updatePhysics(mWorld, mEnemyEntities);
 
 		//Calculate fps
 		int tickCount = mFPSTimer.getTicks();
@@ -150,7 +150,7 @@ int GameManager::gameLoop()
 		frameCount++;
 
 		//Update all graphics
-		mGraphicsManager.updateGraphics(fps, mPlayer, mBoxEntities, mGroundEntities);
+		mGraphicsManager.updateGraphics(fps, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities);
 
 		//If frame finished early cap the frame rate
 		int frameTicks = mFrameTimer.getTicks();
@@ -160,6 +160,12 @@ int GameManager::gameLoop()
 			SDL_Delay(mScreenTicksPerFrame - (float)frameTicks);
 		}
 	}
+
+	for each (Enemy* e in mEnemyEntities)
+	{
+		delete e;
+	}
+	mEnemyEntities.clear();
 
 	//Close game controller
 	SDL_GameControllerClose(mGameController);
@@ -262,7 +268,16 @@ void GameManager::manageInput()
 	//Reload level if r pressed
 	if (mInputManager.isKeyPressed(SDLK_r))
 	{
-		mWorld = mWorldManager.generateWorld(mFirstLevel, mAudioManager, mPlayer, mGroundEntities, mBoxEntities);
+		mGroundEntities.clear();
+		mBoxEntities.clear();
+
+		for each (Enemy* e in mEnemyEntities)
+		{
+			delete e;
+		}
+		mEnemyEntities.clear();
+
+		mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities);
 	}
 
 	//Mouse buttons
@@ -303,7 +318,7 @@ void GameManager::manageInput()
 	}
 
 	//Manage input for the player
-	mPlayer.update(mInputManager);
+	mPlayer.input(mInputManager);
 
 	if (mInputManager.isKeyDown(SDLK_q) || mInputManager.isKeyDown(SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
 	{
@@ -315,12 +330,6 @@ void GameManager::manageInput()
 		//Zoom out
 		mGraphicsManager.setCameraScale(-SCALE_SPEED);
 	}	
-	//Move camera
-	if (mInputManager.isKeyDown(SDLK_a))
-	{
-		mGraphicsManager.translateCamera(glm::vec2(-CAMERA_SPEED, 0.0f));
-		std::cout << mGraphicsManager.getCamera().getPosition().x << ", " << mGraphicsManager.getCamera().getPosition().x << std::endl;
-	}
 
 	//Update the input manager - copies current input map to previous input map
 	mInputManager.update();

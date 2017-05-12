@@ -9,21 +9,18 @@ WorldManager::~WorldManager()
 }
 
 std::unique_ptr<b2World> WorldManager::generateWorld(const std::string levelPath, AudioManager& audioManager, 
-	Player& player, std::vector<Ground>& groundEntities, std::vector<Box>& boxEntities)
+	Player& player, std::vector<Ground>& groundEntities, std::vector<Box>& boxEntities, std::vector<Enemy*>& enemyEntities)
 {
 	log("Generating world");
-
-	groundEntities.clear();
-	boxEntities.clear();
 
 	//The box2D world
 	std::unique_ptr<b2World> world;
 
 	//Box2D world setup
-	b2Vec2 gravity(0.0f, -9.8f);
+	b2Vec2 gravity(0.0f, -20.0f);
 	world = std::make_unique<b2World>(gravity);
 
-	LevelManager::loadLevel(levelPath, world, audioManager, player, groundEntities, boxEntities);
+	LevelManager::loadLevel(levelPath, world, audioManager, player, groundEntities, boxEntities, enemyEntities);
 
 	log("World generated");
 

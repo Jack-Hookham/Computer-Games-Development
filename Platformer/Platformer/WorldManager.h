@@ -17,7 +17,7 @@ public:
 
 	//Generate the box2D world
 	std::unique_ptr<b2World> generateWorld(const std::string levelPath, AudioManager& audioManager, Player& player,
-		std::vector<Ground>& groundEntities, std::vector<Box>& boxEntities);
+		std::vector<Ground>& groundEntities, std::vector<Box>& boxEntities, std::vector<Enemy*>& enemyEntities);
 
 	//Add a ground entity to the world after it has been created
 	void addGroundToWorld(std::vector<Ground>& groundEntities, std::unique_ptr<b2World>& world, const glm::vec2& position,

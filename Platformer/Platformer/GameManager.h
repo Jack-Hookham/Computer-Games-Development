@@ -20,9 +20,7 @@
 #include "InputManager.h"
 #include "WorldManager.h"
 #include "AudioManager.h"
-#include "Player.h"
 #include "Timer.h"
-#include "Box.h"
 
 //Manager for the whole engine
 //Left clicking on the screen will create a box at the mouse position
@@ -84,7 +82,8 @@ private:
 	InputManager mInputManager;
 	WorldManager mWorldManager;
 
-	const std::string mFirstLevel = "../res/levels/test_level.txt";
+	const std::string mTestLevelPath = "../res/levels/test_level.txt";
+	const std::string mMainLevelPath = "../res/levels/main_level.txt";
 
 	//Audio stuff
 	AudioManager mAudioManager;
@@ -105,6 +104,7 @@ private:
 	Player mPlayer;
 	std::vector<Box> mBoxEntities;
 	std::vector<Ground> mGroundEntities;
+	std::vector<Enemy*> mEnemyEntities;
 
 	//Analog joystick dead zone
 	const int JOYSTICK_DEAD_ZONE = 8000;

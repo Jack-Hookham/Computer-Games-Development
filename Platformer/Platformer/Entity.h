@@ -13,6 +13,7 @@
 class Box;
 class Ground;
 class Player;
+class Enemy;
 
 class Entity
 {

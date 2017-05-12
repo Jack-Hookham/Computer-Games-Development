@@ -111,6 +111,9 @@
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header Files\Enitities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

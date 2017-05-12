@@ -25,6 +25,7 @@
 #include "Player.h"
 #include "Box.h"
 #include "Ground.h"
+#include "Enemy.h"
 
 class GraphicsManager
 {
@@ -38,7 +39,7 @@ public:
 
 	//Update the graphics for the current frame
 	void updateGraphics(const float fps, Player& player, std::vector<Box>& boxEntities, 
-		std::vector<Ground>& groundEntities);
+		std::vector<Ground>& groundEntities, std::vector<Enemy*>& enemyEntities);
 
 	void translateCamera(const glm::vec2 translation);
 	void setCameraScale(const float scale);

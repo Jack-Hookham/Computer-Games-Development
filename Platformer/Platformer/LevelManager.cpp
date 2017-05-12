@@ -2,7 +2,7 @@
 
 bool LevelManager::loadLevel(const std::string filePath, std::unique_ptr<b2World>& world, 
 	AudioManager& audioManager, Player& player, std::vector<Ground>& groundEntities,
-	std::vector<Box>& boxEntities)
+	std::vector<Box>& boxEntities, std::vector<Enemy*>& enemyEntities)
 {
 	bool success = true;
 
@@ -78,6 +78,22 @@ bool LevelManager::loadLevel(const std::string filePath, std::unique_ptr<b2World
 			}
 			log("Boxes loaded");
 		}
+
+		else if (line == "STARTENEMY")
+		{
+			int id = 0;
+			//Get the next line
+			std::getline(file, line);
+			//Load the box entities
+			log("Loading enemies");
+			while (line != "ENDENEMY")
+			{
+				loadEnemy(world, enemyEntities, audioManager, line, id);
+				std::getline(file, line);
+				id++;
+			}
+			log("Enemies loaded");
+		}
 	}
 
 	log("Level successfully loaded from: " + filePath);
@@ -99,8 +115,8 @@ void LevelManager::loadPlayer(std::unique_ptr<b2World>& world, Player& player, A
 	glm::vec2 dimensions;
 	Colour colour;
 	glm::vec4 colourVec;	
-	Texture playerTextures[NUM_STATES];
-	SoundEffect playerSounds[NUM_SOUNDS];
+	Texture playerTextures[PLAYER_NUM_STATES];
+	SoundEffect playerSounds[PLAYER_NUM_SOUNDS];
 
 	std::istringstream iss(line);
 
@@ -111,7 +127,7 @@ void LevelManager::loadPlayer(std::unique_ptr<b2World>& world, Player& player, A
 	colour = Colour(colourVec);
 
 	//Populate the texture array
-	for (int i = 0; i < NUM_STATES; i++)
+	for (int i = 0; i < PLAYER_NUM_STATES; i++)
 	{
 		std::string texturePath;
 		iss >> texturePath;
@@ -119,7 +135,7 @@ void LevelManager::loadPlayer(std::unique_ptr<b2World>& world, Player& player, A
 	}
 
 	//Populate the sound array
-	for (int i = 0; i < NUM_SOUNDS; i++)
+	for (int i = 0; i < PLAYER_NUM_SOUNDS; i++)
 	{
 		std::string soundPath;
 		iss >> soundPath;
@@ -185,6 +201,48 @@ void LevelManager::loadBox(std::unique_ptr<b2World>& world, std::vector<Box>& bo
 	box.init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, false);
 	boxEntities.push_back(box);
 }
+
+void LevelManager::loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*>& enemyEntities, AudioManager& audioManager, 
+	const std::string line, int id)
+{
+	//Initialise player params
+	glm::vec2 position;
+	glm::vec2 dimensions;
+	Colour colour;
+	glm::vec4 colourVec;
+	Texture enemyTextures[ENEMY_NUM_STATES];
+	SoundEffect enemySounds[ENEMY_NUM_SOUNDS];
+
+	std::istringstream iss(line);
+
+	//Populate params from string stream
+	iss >> position.x >> position.y >> dimensions.x >> dimensions.y >> colourVec.x >> colourVec.y >>
+		colourVec.z >> colourVec.w;
+
+	colour = Colour(colourVec);
+
+	//Populate the texture array
+	for (int i = 0; i < ENEMY_NUM_STATES; i++)
+	{
+		std::string texturePath;
+		iss >> texturePath;
+		enemyTextures[i] = ResourceManager::getTexture(texturePath);
+	}
+
+	//Populate the sound array
+	for (int i = 0; i < ENEMY_NUM_SOUNDS; i++)
+	{
+		std::string soundPath;
+		iss >> soundPath;
+		enemySounds[i] = audioManager.loadSoundEffect(soundPath);
+	}
+
+	//Initialise player instance
+	Enemy* enemy = new Enemy;
+	enemy->init(world.get(), position, dimensions, colour, enemyTextures, enemySounds, id, true);
+	enemyEntities.emplace_back(enemy);
+}
+
 
 //Quickly generates random box data and writes it to a file
 //Used for generating random boxes for the level, not actually used in the engine

@@ -31,8 +31,14 @@ bool PhysicsManager::initPhysics(const int desiredFPS)
 }
 
 //Update the world
-void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world)
+void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, std::vector<Enemy*>& enemyEntities)
 {
+	//Enemy logic update
+	for each (Enemy* e in enemyEntities)
+	{
+		e->update();
+	}
+
 	//Step the b2World with the timestep
 	world->Step(mBox2DTimeStep, mVelocityIterations, mPositionIterations);
 }
