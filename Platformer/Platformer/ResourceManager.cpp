@@ -2,7 +2,7 @@
 
 std::map<std::string, Texture> ResourceManager::mTextureMap;
 
-Texture ResourceManager::getTexture(const std::string path)
+Texture ResourceManager::getTexture(const std::string path, const bool repeat)
 {
 	std::map<std::string, Texture>::iterator i = mTextureMap.find(path);
 
@@ -10,7 +10,7 @@ Texture ResourceManager::getTexture(const std::string path)
 	if (i == mTextureMap.end())
 	{
 		//Load texture
-		Texture newTexture = ImageManager::loadTexture(path);
+		Texture newTexture = ImageManager::loadTexture(path, repeat);
 		//Add texture to map
 		mTextureMap.insert(make_pair(path, newTexture));
 

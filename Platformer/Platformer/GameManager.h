@@ -49,6 +49,9 @@ private:
 	//Main loop for the game
 	int gameLoop();	
 
+	//Delete entities
+	void deleteEntities();
+
 	//Delete entity pointers, close SDL controller stuff
 	void quit();
 	

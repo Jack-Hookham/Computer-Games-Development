@@ -18,7 +18,7 @@ class ResourceManager
 public:
 	//Get a texture
 	//If the texture doesn't already exist add it to the map
-	static Texture getTexture(const std::string path);
+	static Texture getTexture(const std::string path, const bool repeat = true);
 
 private:
 	//Log for ResourceManager

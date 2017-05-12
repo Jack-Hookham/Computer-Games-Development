@@ -61,16 +61,16 @@ ENDBOX
 
 STARTPLAYER
 -28 30 1 2 255 255 255 255
-../res/textures/ninja_adventure/spritesheet/idle.png
-../res/textures/ninja_adventure/spritesheet/run.png
-../res/textures/ninja_adventure/spritesheet/jump.png
-../res/textures/ninja_adventure/spritesheet/jump.png
-../res/textures/ninja_adventure/spritesheet/attack.png
-../res/textures/ninja_adventure/spritesheet/jump_attack.png
+../res/textures/ninja_adventure/player/spritesheet/idle.png
+../res/textures/ninja_adventure/player/spritesheet/run.png
+../res/textures/ninja_adventure/player/spritesheet/jump.png
+../res/textures/ninja_adventure/player/spritesheet/jump.png
+../res/textures/ninja_adventure/player/spritesheet/attack.png
+../res/textures/ninja_adventure/player/spritesheet/jump_attack.png
 ../res/sound/platformer_jumping/jump_01.wav
 ../res/sound/melee_sounds/sword_sound.wav
 ENDPLAYER
 
 STARTENEMY
--23 22 1 2 128 128 128 255 ../res/textures/ninja_adventure/spritesheet/idle.png ../res/textures/ninja_adventure/spritesheet/run.png ../res/textures/ninja_adventure/spritesheet/jump.png ../res/textures/ninja_adventure/spritesheet/jump.png ../res/textures/ninja_adventure/spritesheet/attack.png ../res/textures/ninja_adventure/spritesheet/jump_attack.png ../res/sound/platformer_jumping/jump_01.wav ../res/sound/melee_sounds/sword_sound.wav
+-23 22 1 2 255 255 255 255 ../res/textures/ninja_adventure/enemy/spritesheet/idle.png ../res/textures/ninja_adventure/enemy/spritesheet/run.png ../res/textures/ninja_adventure/enemy/spritesheet/jump.png ../res/textures/ninja_adventure/enemy/spritesheet/jump.png ../res/textures/ninja_adventure/enemy/spritesheet/attack.png ../res/textures/ninja_adventure/enemy/spritesheet/jump_attack.png ../res/sound/platformer_jumping/jump_01.wav ../res/sound/melee_sounds/sword_sound.wav
 ENDENEMY

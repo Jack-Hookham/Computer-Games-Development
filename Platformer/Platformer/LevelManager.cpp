@@ -131,7 +131,7 @@ void LevelManager::loadPlayer(std::unique_ptr<b2World>& world, Player* player, A
 	{
 		std::string texturePath;
 		iss >> texturePath;
-		playerTextures[i] = ResourceManager::getTexture(texturePath);
+		playerTextures[i] = ResourceManager::getTexture(texturePath, false);
 	}
 
 	//Populate the sound array
@@ -226,7 +226,7 @@ void LevelManager::loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*
 	{
 		std::string texturePath;
 		iss >> texturePath;
-		enemyTextures[i] = ResourceManager::getTexture(texturePath);
+		enemyTextures[i] = ResourceManager::getTexture(texturePath, false);
 	}
 
 	//Populate the sound array

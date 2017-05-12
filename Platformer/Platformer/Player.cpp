@@ -6,6 +6,7 @@ Player::Player()
 
 Player::~Player()
 {
+	Entity::~Entity();
 }
 
 //Override entity init to add capsule collision to the player
@@ -73,7 +74,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 
 	//Track the current tile
 	int tileIndex;
-	float animationSpeed = 0.2f;
+	float animationSpeed = 0.05f;
 
 	//Store the velocity
 	glm::vec2 velocity = glm::vec2(mBody->GetLinearVelocity().x, mBody->GetLinearVelocity().y);

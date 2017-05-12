@@ -12,7 +12,7 @@
 class ImageManager
 {
 public:
-	static Texture loadTexture(std::string filePath);
+	static Texture loadTexture(std::string filePath, const bool repeat = true);
 
 private:
 	static void log(const std::string text);

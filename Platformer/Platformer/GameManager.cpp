@@ -167,11 +167,6 @@ int GameManager::gameLoop()
 	return 0;
 }
 
-void GameManager::log(const std::string text)
-{
-	std::cout << "[GameManager] " << text << std::endl;
-}
-
 void GameManager::manageInput()
 {
 	//Event handler
@@ -261,23 +256,7 @@ void GameManager::manageInput()
 	//Reload level if r pressed
 	if (mInputManager.isKeyPressed(SDLK_r))
 	{
-		for each (Box* b in mBoxEntities)
-		{
-			delete b;
-		}
-		mGroundEntities.clear();
-
-		for each (Ground* g in mGroundEntities)
-		{
-			delete g;
-		}
-		mBoxEntities.clear();
-
-		for each (Enemy* e in mEnemyEntities)
-		{
-			delete e;
-		}
-		mEnemyEntities.clear();
+		deleteEntities();
 
 		mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities);
 	}
@@ -337,8 +316,7 @@ void GameManager::manageInput()
 	mInputManager.update();
 }
 
-//Delete entity pointers, close SDL controller stuff
-void GameManager::quit()
+void GameManager::deleteEntities()
 {
 	for each (Box* b in mBoxEntities)
 	{
@@ -357,11 +335,21 @@ void GameManager::quit()
 		delete e;
 	}
 	mEnemyEntities.clear();
+}
+
+//Delete entity pointers, close SDL controller stuff
+void GameManager::quit()
+{
+	deleteEntities();
 
 	//Close game controller
 	SDL_GameControllerClose(mGameController);
 	mGameController = NULL;
 }
 
+void GameManager::log(const std::string text)
+{
+	std::cout << "[GameManager] " << text << std::endl;
+}
 
 

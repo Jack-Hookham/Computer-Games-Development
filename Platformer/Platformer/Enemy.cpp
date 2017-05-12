@@ -6,6 +6,7 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
+	Entity::~Entity();
 }
 
 void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, 
@@ -98,11 +99,12 @@ void Enemy::update()
 	}
 
 	//Direction
-	if (mBody->GetLinearVelocity().x > 0.0f)
+	if (mBody->GetLinearVelocity().x > 0.01f)
 	{
 		mDirection = 1;
 	}
-	else
+	
+	if (mBody->GetLinearVelocity().x < -0.01f)
 	{
 		mDirection = -1;
 	}
