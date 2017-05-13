@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EntityBox2D.h"
+#include "Marker.h"
 #include "InputManager.h"
 #include "SpriteSheet.h"
 #include "AudioManager.h"
@@ -34,7 +35,7 @@ public:
 		const glm::vec2& dimensions, const Colour& colour, const Texture textures[],
 		const SoundEffect sounds[], int id, const bool fixedRotation = true);
 
-	void update();
+	void update(std::vector<Marker*>& markerEntities);
 
 	//Animate, cull then add Enemy to SpriteBatch
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
@@ -79,6 +80,7 @@ private:
 
 	float mJumpTimer = 0.0f;
 	float mAttackTimer = 0.0f;
+	float mDirectionTimer = 50.0f;
 
 	SoundEffect mSounds[ENEMY_NUM_SOUNDS];
 };

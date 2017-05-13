@@ -67,7 +67,7 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 	mFixtures[2] = mBody->CreateFixture(&circleDef);
 }
 
-void Enemy::update()
+void Enemy::update(std::vector<Marker*>& markerEntities)
 {	
 	//Cap the speed
 	if (mBody->GetLinearVelocity().x > MAX_SPEED)
@@ -109,20 +109,46 @@ void Enemy::update()
 	}
 
 	//Direction
-	if (mBody->GetLinearVelocity().x > 0.01f)
+	//if (mBody->GetLinearVelocity().x > 0.01f)
+	//{
+	//	mSpriteDirection = 1;
+	//}
+	//
+	//if (mBody->GetLinearVelocity().x < -0.01f)
+	//{
+	//	mSpriteDirection = -1;
+	//}
+
+	if (mDirectionTimer <= 50.0f)
 	{
-		mSpriteDirection = 1;
-	}
-	
-	if (mBody->GetLinearVelocity().x < -0.01f)
-	{
-		mSpriteDirection = -1;
+		mDirectionTimer++;
 	}
 
 	//Search for player
 	if (mSearching)
 	{
-		
+		if (mDirectionTimer > 50.0f)
+		{
+			for each (Marker* m in markerEntities)
+			{
+				//Turn around if marker hit
+				if (mBody->GetPosition().x < m->getPosition().x + m->getDimensions().x &&
+					mBody->GetPosition().x + mDimensions.x > m->getPosition().x &&
+					mBody->GetPosition().y < m->getPosition().y + m->getDimensions().y &&
+					mBody->GetPosition().y + mDimensions.y > m->getPosition().y)
+
+				//if (mBody->GetPosition().x + mDimensions.x / 2 < m->getPosition().x + m->getDimensions().x / 2 &&
+				//	mBody->GetPosition().x + mDimensions.x / 2 > m->getPosition().x + m->getDimensions().x / 2 &&
+				//	mBody->GetPosition().y + mDimensions.y / 2 < m->getPosition().y + m->getDimensions().y / 2 &&
+				//	mBody->GetPosition().y + mDimensions.y / 2 > m->getPosition().y + m->getDimensions().y / 2)
+				{
+					mMoveDirection = -mMoveDirection;
+					mSpriteDirection = -mSpriteDirection;
+					mDirectionTimer = 0.0f;
+					break;
+				}
+			}
+		}
 
 
 		mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
