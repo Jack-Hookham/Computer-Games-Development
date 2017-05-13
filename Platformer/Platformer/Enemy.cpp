@@ -19,6 +19,8 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 	mDimensions = dimensions;
 	mColour = colour;
 
+	mDirectionTimer = DIRECTION_TIMER_CAP;
+
 	for (int i = 0; i < ENEMY_NUM_STATES; i++)
 	{
 		mSpriteSheets[i].init(textures[i], mSheetDimensions[i]);
@@ -67,8 +69,10 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 	mFixtures[2] = mBody->CreateFixture(&circleDef);
 }
 
-void Enemy::update(std::vector<Marker*>& markerEntities)
+void Enemy::update(Player* player, std::vector<Marker*>& markerEntities)
 {	
+	EntityBox2D::update();
+
 	//Cap the speed
 	if (mBody->GetLinearVelocity().x > MAX_SPEED)
 	{
@@ -119,40 +123,76 @@ void Enemy::update(std::vector<Marker*>& markerEntities)
 	//	mSpriteDirection = -1;
 	//}
 
-	if (mDirectionTimer <= 50.0f)
+	if (mDirectionTimer <= DIRECTION_TIMER_CAP)
 	{
 		mDirectionTimer++;
+	}
+
+	glm::vec2 playerDistance = glm::vec2(
+		mPosition.x + mDimensions.x / 2.0f - (player->getPosition().x + player->getDimensions().x / 2.0f),
+		mPosition.y + mDimensions.x / 2.0f - (player->getPosition().y + player->getDimensions().y / 2.0f));
+
+	std::cout << glm::length(playerDistance) << std::endl;
+
+	//Player within range?
+	if (glm::length(playerDistance) < AGGRO_RANGE)
+	{
+		mSearching = false;
+	}
+	else
+	{
+		mSearching = true;
 	}
 
 	//Search for player
 	if (mSearching)
 	{
-		if (mDirectionTimer > 50.0f)
+		if (mDirectionTimer > 50)
 		{
 			for each (Marker* m in markerEntities)
 			{
 				//Turn around if marker hit
-				if (mBody->GetPosition().x < m->getPosition().x + m->getDimensions().x &&
-					mBody->GetPosition().x + mDimensions.x > m->getPosition().x &&
-					mBody->GetPosition().y < m->getPosition().y + m->getDimensions().y &&
-					mBody->GetPosition().y + mDimensions.y > m->getPosition().y)
+				//if (mBody->GetPosition().x < m->getPosition().x + m->getDimensions().x &&
+				//	mBody->GetPosition().x + mDimensions.x > m->getPosition().x &&
+				//	mBody->GetPosition().y < m->getPosition().y + m->getDimensions().y &&
+				//	mBody->GetPosition().y + mDimensions.y > m->getPosition().y)
 
-				//if (mBody->GetPosition().x + mDimensions.x / 2 < m->getPosition().x + m->getDimensions().x / 2 &&
-				//	mBody->GetPosition().x + mDimensions.x / 2 > m->getPosition().x + m->getDimensions().x / 2 &&
-				//	mBody->GetPosition().y + mDimensions.y / 2 < m->getPosition().y + m->getDimensions().y / 2 &&
-				//	mBody->GetPosition().y + mDimensions.y / 2 > m->getPosition().y + m->getDimensions().y / 2)
+				if (mPosition.x < m->getPosition().x + mDimensions.x / 2 + m->getDimensions().x / 2 &&
+					mPosition.x + mDimensions.x / 2 + m->getDimensions().x / 2 > m->getPosition().x &&
+					mPosition.y < m->getPosition().y + mDimensions.y / 2 + m->getDimensions().y / 2 &&
+					mPosition.y + mDimensions.y / 2 + m->getDimensions().y / 2 > m->getPosition().y)
 				{
 					mMoveDirection = -mMoveDirection;
 					mSpriteDirection = -mSpriteDirection;
-					mDirectionTimer = 0.0f;
+					mDirectionTimer = 0;
 					break;
 				}
 			}
 		}
-
-
-		mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
 	}
+	else
+	{
+
+		if (mDirectionTimer > 10)
+		{
+			//face the player
+			if (playerDistance.x < 0.0f)
+			{
+				mMoveDirection = 1;
+				mSpriteDirection = 1;
+				mDirectionTimer = 0;
+			}
+			else
+			{
+				mMoveDirection = -1;
+				mSpriteDirection = -1;
+				mDirectionTimer = 0;
+			}
+		}
+	}
+
+
+	mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
 }
 
 void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)

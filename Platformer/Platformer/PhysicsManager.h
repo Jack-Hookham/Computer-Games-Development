@@ -25,7 +25,7 @@ public:
 	bool initPhysics(const int desiredFPS);
 
 	//Update the world
-	void updatePhysics(std::unique_ptr<b2World>& world, std::vector<Enemy*>& enemyEntities, 
+	void updatePhysics(std::unique_ptr<b2World>& world, Player* player, std::vector<Enemy*>& enemyEntities,
 		std::vector<Marker*>& markerEntities);
 
 private:

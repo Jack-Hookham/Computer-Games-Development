@@ -76,6 +76,6 @@ STARTENEMY
 ENDENEMY
 
 STARTMARKER
--39 21 2 2 255 255 255 64 ../res/textures/other/marker.png
--21 21 2 2 255 255 255 64 ../res/textures/other/marker.png
+-40 21 2 2 255 255 255 255 ../res/textures/other/marker.png
+-22 21 2 2 255 255 255 255 ../res/textures/other/marker.png
 ENDMARKER

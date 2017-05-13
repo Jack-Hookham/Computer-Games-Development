@@ -33,6 +33,12 @@ void EntityBox2D::init(b2World* world, const glm::vec2& position, const glm::vec
 	mFixture = mBody->CreateFixture(&fixtureDef);
 }
 
+void EntityBox2D::update()
+{
+	mPosition.x = mBody->GetPosition().x;
+	mPosition.y = mBody->GetPosition().y;
+}
+
 void EntityBox2D::add(SpriteBatch & spriteBatch, Camera & camera)
 {
 	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x / 2.0f, mBody->GetPosition().y - mDimensions.y / 2.0f);

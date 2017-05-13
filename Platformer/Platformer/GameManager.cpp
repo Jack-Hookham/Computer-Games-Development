@@ -137,7 +137,7 @@ int GameManager::gameLoop()
 		manageInput();
 
 		//Update all physics
-		mPhysicsManager.updatePhysics(mWorld, mEnemyEntities, mMarkerEntities);
+		mPhysicsManager.updatePhysics(mWorld, mPlayer, mEnemyEntities, mMarkerEntities);
 
 		//Calculate fps
 		int tickCount = mFPSTimer.getTicks();

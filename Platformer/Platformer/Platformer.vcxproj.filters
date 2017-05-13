@@ -118,7 +118,7 @@
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
     <ClCompile Include="EntityBox2D.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -210,7 +210,7 @@
       <Filter>Header Files\Enitities</Filter>
     </ClInclude>
     <ClInclude Include="EntityBox2D.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Enitities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
