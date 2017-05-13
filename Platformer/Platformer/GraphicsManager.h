@@ -55,7 +55,7 @@ private:
 	void initShaders();
 
 	//Draw the HUD
-	void drawHUD(const float fps);
+	void drawHUD(const float fps, const Player* player, const std::vector<Enemy*>& enemyEntities);
 
 	//Screen dimensions
 	int mScreenWidth;

@@ -21,7 +21,8 @@
 * Space - attack
 */
 
-enum PlayerMoveState
+//Enum used to play the correct animation based on the current state
+enum PlayerAnimState
 {
 	PLAYER_IDLE,
 	PLAYER_RUN,
@@ -55,9 +56,12 @@ public:
 	//Animate, cull then add Player to SpriteBatch
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
+	inline const int getHealth() const { return mHealth; }
+	inline const void setHealth(const int health) { mHealth = health; }
+
 private:
 
-	PlayerMoveState mState = PLAYER_IDLE;
+	PlayerAnimState mAnimState = PLAYER_IDLE;
 
 	//Player has 3 fixtures - middle square and a circle on the top and bottom
 	//This creates a capsule shape and gives smoother movement
@@ -93,6 +97,8 @@ private:
 
 	float mJumpTimer = 0.0f;
 	float mAttackTimer = 0.0f;
+
+	int mHealth = 100;
 
 	SoundEffect mSounds[PLAYER_NUM_SOUNDS];
 };

@@ -6,7 +6,6 @@ Player::Player()
 
 Player::~Player()
 {
-	EntityBox2D::~EntityBox2D();
 }
 
 //Override entity init to add capsule collision to the player
@@ -93,13 +92,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mState != PLAYER_JUMP_ATTACK)
+				if (mAnimState != PLAYER_JUMP_ATTACK)
 				{
-					if (mState != PLAYER_ATTACK)
+					if (mAnimState != PLAYER_ATTACK)
 					{
 						mAnimationTimer = 0.0f;
 					}
-					mState = PLAYER_JUMP_ATTACK;
+					mAnimState = PLAYER_JUMP_ATTACK;
 				}
 			}
 
@@ -109,9 +108,9 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				tileIndex = 5;
 
 				//if the state just started reset the animation time
-				if (mState != PLAYER_JUMP)
+				if (mAnimState != PLAYER_JUMP)
 				{
-					mState = PLAYER_JUMP;
+					mAnimState = PLAYER_JUMP;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -119,13 +118,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			else if (velocity.y <= 0.0f)
 			{
 				tileIndex = 4;
-				mState = PLAYER_IN_AIR;
+				mAnimState = PLAYER_IN_AIR;
 			}
 			//if rising
 			else
 			{
 				tileIndex = 0;
-				mState = PLAYER_IN_AIR;
+				mAnimState = PLAYER_IN_AIR;
 			}
 		}
 		//if on ground
@@ -138,13 +137,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mState != PLAYER_ATTACK)
+				if (mAnimState != PLAYER_ATTACK)
 				{
-					if (mState != PLAYER_JUMP_ATTACK)
+					if (mAnimState != PLAYER_JUMP_ATTACK)
 					{
 						mAnimationTimer = 0.0f;
 					}
-					mState = PLAYER_ATTACK;
+					mAnimState = PLAYER_ATTACK;
 				}
 			}
 
@@ -156,9 +155,9 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = abs(velocity.x) * 0.025f;
 
 				//if the state just started reset the animation time
-				if (mState != PLAYER_RUN)
+				if (mAnimState != PLAYER_RUN)
 				{
-					mState = PLAYER_RUN;
+					mAnimState = PLAYER_RUN;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -168,9 +167,9 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				tileIndex = 4;
 
 				//if state just started reset the animation time
-				if (mState != PLAYER_IDLE)
+				if (mAnimState != PLAYER_IDLE)
 				{
-					mState = PLAYER_IDLE;
+					mAnimState = PLAYER_IDLE;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -179,7 +178,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 		//only play the jump animation once
 		if (mJumping)
 		{
-			if (mJumpTimer < mNumSprites[mState])
+			if (mJumpTimer < mNumSprites[mAnimState])
 			{
 				mJumpTimer += animationSpeed;
 			}
@@ -193,7 +192,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 		//only play the attack animation once
 		if (mAttacking)
 		{
-			if (mAttackTimer < mNumSprites[mState])
+			if (mAttackTimer < mNumSprites[mAnimState])
 			{
 				mAttackTimer += animationSpeed;
 			}
@@ -205,34 +204,34 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 		}
 
 		//Adjust position and dimensions based on the current sprite
-		dimensions.x *= mStateMultipliers[mState].x;
-		dimensions.y *= mStateMultipliers[mState].y;
-		if (mState != PLAYER_IDLE)
+		dimensions.x *= mStateMultipliers[mAnimState].x;
+		dimensions.y *= mStateMultipliers[mAnimState].y;
+		if (mAnimState != PLAYER_IDLE)
 		{
 			if (mDirection == -1)
 			{
 				position.x -= dimensions.x * 0.5f;
 			}
-			position.y -= dimensions.y * (mStateMultipliers[mState].y - mStateMultipliers[PLAYER_IDLE].y) * 0.7f;
+			position.y -= dimensions.y * (mStateMultipliers[mAnimState].y - mStateMultipliers[PLAYER_IDLE].y) * 0.7f;
 		}
 
 		//Increment animation time
 		mAnimationTimer += animationSpeed;
 
 		//Apply animation
-		tileIndex += (int)mAnimationTimer % mNumSprites[mState];
+		tileIndex += (int)mAnimationTimer % mNumSprites[mAnimState];
 
-		glm::vec4 texCoords = mSpriteSheets[mState].getTexCoords(tileIndex);
+		glm::vec4 texCoords = mSpriteSheets[mAnimState].getTexCoords(tileIndex);
 
 		//if moving left
 		if (mDirection == -1)
 		{
 			//flip x texCoords
-			texCoords.x += 1.0f / mSpriteSheets[mState].getDimensions().x;
+			texCoords.x += 1.0f / mSpriteSheets[mAnimState].getDimensions().x;
 			texCoords.z *= -1;
 		}
 
-		spriteBatch.addSprite(position, dimensions, texCoords, mSpriteSheets[mState].getTexture().id, 
+		spriteBatch.addSprite(position, dimensions, texCoords, mSpriteSheets[mAnimState].getTexture().id, 
 			0.0f, mColour, mBody->GetAngle());
 	}
 }
@@ -250,12 +249,12 @@ void Player::input(InputManager& inputManager)
 	}
 
 	//Left and right movement
-	if ((inputManager.isKeyDown(SDLK_a) || inputManager.getLeftStickDirection() < 0) && mState != PLAYER_ATTACK)
+	if ((inputManager.isKeyDown(SDLK_a) || inputManager.getLeftStickDirection() < 0) && mAnimState != PLAYER_ATTACK)
 	{
 		mBody->ApplyForceToCenter(b2Vec2(-100.0f, 0.0f), true);
 		mDirection = -1;
 	}
-	else if ((inputManager.isKeyDown(SDLK_d) || inputManager.getLeftStickDirection() > 0) && mState != PLAYER_ATTACK)
+	else if ((inputManager.isKeyDown(SDLK_d) || inputManager.getLeftStickDirection() > 0) && mAnimState != PLAYER_ATTACK)
 	{
 		mDirection = 1;
 		mBody->ApplyForceToCenter(b2Vec2(100.0f, 0.0f), true);

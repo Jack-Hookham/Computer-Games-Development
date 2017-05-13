@@ -6,7 +6,6 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
-	EntityBox2D::~EntityBox2D();
 }
 
 void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, 
@@ -214,7 +213,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities)
 		}
 	}
 
-
 	mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
 }
 
@@ -243,13 +241,13 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mState != ENEMY_JUMP_ATTACK)
+				if (mAnimState != ENEMY_JUMP_ATTACK)
 				{
-					if (mState != ENEMY_ATTACK)
+					if (mAnimState != ENEMY_ATTACK)
 					{
 						//mAnimationTimer = 0.0f;
 					}
-					mState = ENEMY_JUMP_ATTACK;
+					mAnimState = ENEMY_JUMP_ATTACK;
 				}
 			}
 
@@ -259,9 +257,9 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 				tileIndex = 5;
 
 				//if the state just started reset the animation time
-				if (mState != ENEMY_JUMP)
+				if (mAnimState != ENEMY_JUMP)
 				{
-					mState = ENEMY_JUMP;
+					mAnimState = ENEMY_JUMP;
 					//mAnimationTimer = 0.0f;
 				}
 			}
@@ -269,13 +267,13 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 			else if (velocity.y <= 0.0f)
 			{
 				tileIndex = 4;
-				mState = ENEMY_IN_AIR;
+				mAnimState = ENEMY_IN_AIR;
 			}
 			//if rising
 			else
 			{
 				tileIndex = 0;
-				mState = ENEMY_IN_AIR;
+				mAnimState = ENEMY_IN_AIR;
 			}
 		}
 		//if on ground
@@ -288,13 +286,13 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mState != ENEMY_ATTACK)
+				if (mAnimState != ENEMY_ATTACK)
 				{
-					if (mState != ENEMY_JUMP_ATTACK)
+					if (mAnimState != ENEMY_JUMP_ATTACK)
 					{
 						//mAnimationTimer = 0.0f;
 					}
-					mState = ENEMY_ATTACK;
+					mAnimState = ENEMY_ATTACK;
 				}
 			}
 
@@ -306,9 +304,9 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = abs(velocity.x) * 0.025f;
 
 				//if the state just started reset the animation time
-				if (mState != ENEMY_RUN)
+				if (mAnimState != ENEMY_RUN)
 				{
-					mState = ENEMY_RUN;
+					mAnimState = ENEMY_RUN;
 					//mAnimationTimer = 0.0f;
 				}
 			}
@@ -318,9 +316,9 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 				tileIndex = 4;
 
 				//if state just started reset the animation time
-				if (mState != ENEMY_IDLE)
+				if (mAnimState != ENEMY_IDLE)
 				{
-					mState = ENEMY_IDLE;
+					mAnimState = ENEMY_IDLE;
 					//mAnimationTimer = 0.0f;
 				}
 			}
@@ -329,7 +327,7 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 		//only play the jump animation once
 		if (mJumping)
 		{
-			if (mJumpTimer < mNumSprites[mState])
+			if (mJumpTimer < mNumSprites[mAnimState])
 			{
 				mJumpTimer += animationSpeed;
 			}
@@ -343,7 +341,7 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 		//only play the attack animation once
 		if (mAttacking)
 		{
-			if (mAttackTimer < mNumSprites[mState])
+			if (mAttackTimer < mNumSprites[mAnimState])
 			{
 				mAttackTimer += animationSpeed;
 			}
@@ -355,33 +353,33 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 		}
 
 		//Adjust position and dimensions based on the current sprite
-		dimensions.x *= mStateMultipliers[mState].x;
-		dimensions.y *= mStateMultipliers[mState].y;
-		if (mState != ENEMY_IDLE)
+		dimensions.x *= mStateMultipliers[mAnimState].x;
+		dimensions.y *= mStateMultipliers[mAnimState].y;
+		if (mAnimState != ENEMY_IDLE)
 		{
 			if (mSpriteDirection == -1)
 			{
 				position.x -= dimensions.x * 0.5f;
 			}
-			position.y -= dimensions.y * (mStateMultipliers[mState].y - mStateMultipliers[ENEMY_IDLE].y) * 0.7f;
+			position.y -= dimensions.y * (mStateMultipliers[mAnimState].y - mStateMultipliers[ENEMY_IDLE].y) * 0.7f;
 		}
 
 		//Increment animation time
 		mAnimationTimer += animationSpeed;
 
 		//Apply animation
-		tileIndex += (int)mAnimationTimer % mNumSprites[mState];
+		tileIndex += (int)mAnimationTimer % mNumSprites[mAnimState];
 
-		glm::vec4 texCoords = mSpriteSheets[mState].getTexCoords(tileIndex);
+		glm::vec4 texCoords = mSpriteSheets[mAnimState].getTexCoords(tileIndex);
 
 		//if moving left
 		if (mSpriteDirection == -1)
 		{
 			//flip x texCoords
-			texCoords.x += 1.0f / mSpriteSheets[mState].getDimensions().x;
+			texCoords.x += 1.0f / mSpriteSheets[mAnimState].getDimensions().x;
 			texCoords.z *= -1;
 		}
 
-		spriteBatch.addSprite(position, dimensions, texCoords, mSpriteSheets[mState].getTexture().id, 0.0f, mColour, mBody->GetAngle());
+		spriteBatch.addSprite(position, dimensions, texCoords, mSpriteSheets[mAnimState].getTexture().id, 0.0f, mColour, mBody->GetAngle());
 	}
 }

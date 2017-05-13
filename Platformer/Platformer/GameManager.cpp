@@ -259,6 +259,7 @@ void GameManager::manageInput()
 	{
 		deleteEntities();
 
+		mPlayer = new Player;
 		mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
 			mMarkerEntities);
 	}
@@ -324,13 +325,13 @@ void GameManager::deleteEntities()
 	{
 		delete b;
 	}
-	mGroundEntities.clear();
+	mBoxEntities.clear();
 
 	for each (Ground* g in mGroundEntities)
 	{
 		delete g;
 	}
-	mBoxEntities.clear();
+	mGroundEntities.clear();
 
 	for each (Enemy* e in mEnemyEntities)
 	{
@@ -343,6 +344,8 @@ void GameManager::deleteEntities()
 		delete m;
 	}
 	mMarkerEntities.clear();
+
+	delete mPlayer;
 }
 
 //Delete entity pointers, close SDL controller stuff

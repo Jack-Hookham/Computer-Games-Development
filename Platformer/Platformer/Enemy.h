@@ -7,7 +7,7 @@
 #include "SpriteSheet.h"
 #include "AudioManager.h"
 
-enum EnemyMoveState
+enum EnemyAnimState
 {
 	ENEMY_IDLE,
 	ENEMY_RUN,
@@ -41,11 +41,14 @@ public:
 	//Animate, cull then add Enemy to SpriteBatch
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
+	inline const int getHealth() const { return mHealth; }
+	inline const void setHealth(const int health) { mHealth = health; }
+
 private:
 
 	int mID;
 
-	EnemyMoveState mState = ENEMY_IDLE;
+	EnemyAnimState mAnimState = ENEMY_IDLE;
 
 	//Enemy has 3 fixtures - middle square and a circle on the top and bottom
 	//This creates a capsule shape and gives smoother movement
@@ -86,6 +89,8 @@ private:
 	int mDirectionTimer;
 
 	const float AGGRO_RANGE = 20.0f;
+
+	int mHealth = 100;
 
 	SoundEffect mSounds[ENEMY_NUM_SOUNDS];
 };

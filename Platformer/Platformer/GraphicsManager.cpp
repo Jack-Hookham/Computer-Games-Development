@@ -62,7 +62,7 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 	mHUDSpriteBatch.bufferData();
 
 	//Load the HUD front
-	mHUDFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 32);
+	mHUDFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 24);
 
 	if (success)
 	{
@@ -101,7 +101,7 @@ void GraphicsManager::initShaders()
 }
 
 //Draw the HUD using the HUD camera - currently just shows fps
-void GraphicsManager::drawHUD(const float fps)
+void GraphicsManager::drawHUD(const float fps, const Player* player, const std::vector<Enemy*>& enemyEntities)
 {
 	char buffer[128];
 
@@ -112,10 +112,22 @@ void GraphicsManager::drawHUD(const float fps)
 	mHUDSpriteBatch.begin();
 
 	//Add the fps to the HUD buffer
-	sprintf_s(buffer, "FPS: %.2f", fps);
+	sprintf_s(buffer, "FPS: %.1f", fps);
 
 	//Add the buffer to the HUD
-	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10, mScreenHeight - 40), 
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10, mScreenHeight - 30.0f), 
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	//Add player health to the HUD buffer
+	sprintf_s(buffer, "Player HP: %d", player->getHealth());
+
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10, mScreenHeight - 50.0f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	//Add enemy health to the HUD buffer
+	sprintf_s(buffer, "Enemy HP: %d", enemyEntities[0]->getHealth());
+
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10, mScreenHeight - 70.0f),
 		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
 
 	//Sort the sprite batch and create render batches
@@ -188,7 +200,7 @@ void GraphicsManager::updateGraphics(const float fps, Player* player, std::vecto
 	mEntitySpriteBatch.renderBatches();
 
 	//Draw the HUD
-	drawHUD(fps);
+	drawHUD(fps, player, enemyEntities);
 
 	//Undbind texture
 	glBindTexture(GL_TEXTURE_2D, 0);
