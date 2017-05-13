@@ -2,7 +2,7 @@
 
 bool LevelManager::loadLevel(const std::string filePath, std::unique_ptr<b2World>& world, 
 	AudioManager& audioManager, Player* player, std::vector<Ground*>& groundEntities,
-	std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities)
+	std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities)
 {
 	bool success = true;
 
@@ -94,6 +94,22 @@ bool LevelManager::loadLevel(const std::string filePath, std::unique_ptr<b2World
 			}
 			log("Enemies loaded");
 		}
+
+		else if (line == "STARTMARKER")
+		{
+			int id = 0;
+			//Get the next line
+			std::getline(file, line);
+			//Load the box entities
+			log("Loading markers");
+			while (line != "ENDMARKER")
+			{
+				loadMarker(markerEntities, line, id);
+				std::getline(file, line);
+				id++;
+			}
+			log("Markers loaded");
+		}
 	}
 
 	log("Level successfully loaded from: " + filePath);
@@ -170,7 +186,7 @@ void LevelManager::loadGround(std::unique_ptr<b2World>& world, std::vector<Groun
 	//Create the ground entity
 	Ground* ground = new Ground;
 	ground->init(world.get(), position, dimensions, colour, texture, friction, texCoords, true);
-	groundEntities.push_back(ground);
+	groundEntities.emplace_back(ground);
 
 }
 
@@ -199,7 +215,7 @@ void LevelManager::loadBox(std::unique_ptr<b2World>& world, std::vector<Box*>& b
 	//Create the box entity
 	Box* box = new Box;
 	box->init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, false);
-	boxEntities.push_back(box);
+	boxEntities.emplace_back(box);
 }
 
 void LevelManager::loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*>& enemyEntities, AudioManager& audioManager, 
@@ -241,6 +257,32 @@ void LevelManager::loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*
 	Enemy* enemy = new Enemy;
 	enemy->init(world.get(), position, dimensions, colour, enemyTextures, enemySounds, id, true);
 	enemyEntities.emplace_back(enemy);
+}
+
+void LevelManager::loadMarker(std::vector<Marker*>& markerEntities, const std::string line, int id)
+{
+	//Box params
+	glm::vec2 position;
+	glm::vec2 dimensions;
+	Colour colour;
+	glm::vec4 colourVec;
+	std::string texturePath;
+	Texture texture;
+
+	std::istringstream iss(line);
+
+	//Populate params from string stream
+	iss >> position.x >> position.y >> dimensions.x >> dimensions.y >> colourVec.x >> colourVec.y >>
+		colourVec.z >> colourVec.w >> texturePath;
+
+	colour = Colour(colourVec);
+	texture = ResourceManager::getTexture(texturePath);
+	glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
+
+	//Create the box entity
+	Marker* marker = new Marker;
+	marker->init(position, dimensions, colour, texture, texCoords);
+	markerEntities.emplace_back(marker);
 }
 
 

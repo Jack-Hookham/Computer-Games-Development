@@ -6,7 +6,7 @@ Player::Player()
 
 Player::~Player()
 {
-	Entity::~Entity();
+	EntityBox2D::~EntityBox2D();
 }
 
 //Override entity init to add capsule collision to the player

@@ -70,7 +70,8 @@ int GameManager::init()
 
 	//Initialise the box2D world
 	mPlayer = new Player;
-	mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities);
+	mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
+		mMarkerEntities);
 
 	//Initialise physics
 	if (mPhysicsManager.initPhysics(mDesiredFPS))
@@ -151,7 +152,7 @@ int GameManager::gameLoop()
 		frameCount++;
 
 		//Update all graphics
-		mGraphicsManager.updateGraphics(fps, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities);
+		mGraphicsManager.updateGraphics(fps, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities, mMarkerEntities);
 
 		//If frame finished early cap the frame rate
 		int frameTicks = mFrameTimer.getTicks();
@@ -258,7 +259,8 @@ void GameManager::manageInput()
 	{
 		deleteEntities();
 
-		mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities);
+		mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
+			mMarkerEntities);
 	}
 
 	//Mouse buttons
@@ -335,6 +337,12 @@ void GameManager::deleteEntities()
 		delete e;
 	}
 	mEnemyEntities.clear();
+
+	for each (Marker* m in mMarkerEntities)
+	{
+		delete m;
+	}
+	mMarkerEntities.clear();
 }
 
 //Delete entity pointers, close SDL controller stuff

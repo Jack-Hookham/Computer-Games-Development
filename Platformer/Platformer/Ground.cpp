@@ -7,7 +7,7 @@ Ground::Ground()
 
 Ground::~Ground()
 {
-	Entity::~Entity();
+	EntityBox2D::~EntityBox2D();
 }
 
 void Ground::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,

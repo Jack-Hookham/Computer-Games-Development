@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity.h"
+#include "EntityBox2D.h"
 #include "InputManager.h"
 #include "SpriteSheet.h"
 #include "AudioManager.h"
@@ -23,7 +23,7 @@ enum EnemySound
 	ENEMY_NUM_SOUNDS
 };
 
-class Enemy : public Entity
+class Enemy : public EntityBox2D
 {
 public:
 	Enemy();
@@ -40,6 +40,7 @@ public:
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
 private:
+
 	int mID;
 
 	EnemyMoveState mState = ENEMY_IDLE;
@@ -67,12 +68,14 @@ private:
 	//Animation timer
 	float mAnimationTimer = 0.0f;
 
-	int mDirection = 1;
+	int mSpriteDirection = 1;
+	int mMoveDirection = 1;
 
 	//State bool checks
 	bool mInAir = true;
 	bool mAttacking = false;
 	bool mJumping = false;
+	bool mSearching = true;
 
 	float mJumpTimer = 0.0f;
 	float mAttackTimer = 0.0f;

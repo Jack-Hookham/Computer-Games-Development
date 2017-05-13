@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity.h"
+#include "EntityBox2D.h"
 #include "InputManager.h"
 #include "SpriteSheet.h"
 #include "AudioManager.h"
@@ -39,7 +39,7 @@ enum PlayerSound
 	PLAYER_NUM_SOUNDS
 };
 
-class Player : public Entity
+class Player : public EntityBox2D
 {
 public:
 	Player();
@@ -56,6 +56,7 @@ public:
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
 private:
+
 	PlayerMoveState mState = PLAYER_IDLE;
 
 	//Player has 3 fixtures - middle square and a circle on the top and bottom

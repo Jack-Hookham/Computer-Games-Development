@@ -1,15 +1,15 @@
-#include "Entity.h"
+#include "Marker.h"
 
-Entity::Entity()
+Marker::Marker()
 {
 }
 
-Entity::~Entity()
+Marker::~Marker()
 {
 }
 
-void Entity::init(const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour,
-	const Texture& texture, const glm::vec4& texCoords)
+void Marker::init(const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, const Texture& texture, 
+	const glm::vec4& texCoords, const bool fixedRotation)
 {
 	//Initialise the entity's variables
 	mPosition = position;
@@ -19,8 +19,7 @@ void Entity::init(const glm::vec2& position, const glm::vec2& dimensions, const 
 	mTexCoords = texCoords;
 }
 
-//Add Entity to SpriteBatch
-void Entity::add(SpriteBatch& spriteBatch, Camera& camera)
+void Marker::add(SpriteBatch & spriteBatch, Camera & camera)
 {
 	if (camera.isOnCamera(mPosition, mDimensions))
 	{

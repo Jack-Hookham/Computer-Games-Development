@@ -6,7 +6,7 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
-	Entity::~Entity();
+	EntityBox2D::~EntityBox2D();
 }
 
 void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, 
@@ -68,7 +68,17 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 }
 
 void Enemy::update()
-{
+{	
+	//Cap the speed
+	if (mBody->GetLinearVelocity().x > MAX_SPEED)
+	{
+		mBody->SetLinearVelocity(b2Vec2(MAX_SPEED, mBody->GetLinearVelocity().y));
+	}
+	else if (mBody->GetLinearVelocity().x < -MAX_SPEED)
+	{
+		mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED, mBody->GetLinearVelocity().y));
+	}
+
 	//Check if in air
 	//Loop through all contact edges
 	mInAir = true;
@@ -101,12 +111,21 @@ void Enemy::update()
 	//Direction
 	if (mBody->GetLinearVelocity().x > 0.01f)
 	{
-		mDirection = 1;
+		mSpriteDirection = 1;
 	}
 	
 	if (mBody->GetLinearVelocity().x < -0.01f)
 	{
-		mDirection = -1;
+		mSpriteDirection = -1;
+	}
+
+	//Search for player
+	if (mSearching)
+	{
+		
+
+
+		mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
 	}
 }
 
@@ -191,7 +210,7 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 			}
 
 			//if moving
-			else if (abs(velocity.x) > 1.0f && ((velocity.x > 0 && mDirection > 0 || (velocity.x < 0 && mDirection < 0))))
+			else if (abs(velocity.x) > 1.0f && ((velocity.x > 0 && mSpriteDirection > 0 || (velocity.x < 0 && mSpriteDirection < 0))))
 			{
 				tileIndex = 5;
 				//scale up the animation speed depending on the player's speed
@@ -251,7 +270,7 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 		dimensions.y *= mStateMultipliers[mState].y;
 		if (mState != ENEMY_IDLE)
 		{
-			if (mDirection == -1)
+			if (mSpriteDirection == -1)
 			{
 				position.x -= dimensions.x * 0.5f;
 			}
@@ -267,13 +286,13 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 		glm::vec4 texCoords = mSpriteSheets[mState].getTexCoords(tileIndex);
 
 		//if moving left
-		if (mDirection == -1)
+		if (mSpriteDirection == -1)
 		{
 			//flip x texCoords
 			texCoords.x += 1.0f / mSpriteSheets[mState].getDimensions().x;
 			texCoords.z *= -1;
 		}
 
-		spriteBatch.addSprite(position, mDimensions, texCoords, mSpriteSheets[mState].getTexture().id, 0.0f, mColour, mBody->GetAngle());
+		spriteBatch.addSprite(position, dimensions, texCoords, mSpriteSheets[mState].getTexture().id, 0.0f, mColour, mBody->GetAngle());
 	}
 }

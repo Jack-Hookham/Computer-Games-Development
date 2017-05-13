@@ -6,5 +6,5 @@ Box::Box()
 
 Box::~Box()
 {
-	Entity::~Entity();
+	EntityBox2D::~EntityBox2D();
 }

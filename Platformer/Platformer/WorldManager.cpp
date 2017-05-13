@@ -9,7 +9,8 @@ WorldManager::~WorldManager()
 }
 
 std::unique_ptr<b2World> WorldManager::generateWorld(const std::string levelPath, AudioManager& audioManager, 
-	Player* player, std::vector<Ground*>& groundEntities, std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities)
+	Player* player, std::vector<Ground*>& groundEntities, std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities,
+	std::vector<Marker*>& markerEntities)
 {
 	log("Generating world");
 
@@ -20,7 +21,7 @@ std::unique_ptr<b2World> WorldManager::generateWorld(const std::string levelPath
 	b2Vec2 gravity(0.0f, -20.0f);
 	world = std::make_unique<b2World>(gravity);
 
-	LevelManager::loadLevel(levelPath, world, audioManager, player, groundEntities, boxEntities, enemyEntities);
+	LevelManager::loadLevel(levelPath, world, audioManager, player, groundEntities, boxEntities, enemyEntities, markerEntities);
 
 	log("World generated");
 
@@ -34,7 +35,7 @@ void WorldManager::addGroundToWorld(std::vector<Ground*>& groundEntities, std::u
 {
 	Ground* ground = new Ground;
 	ground->init(world.get(), position, dimensions, colour, texture, friction, texCoords, fixedRotation);
-	groundEntities.push_back(ground);
+	groundEntities.emplace_back(ground);
 
 	log("Created ground at " + std::to_string(position.x) + " " + std::to_string(position.y));
 }
@@ -46,7 +47,7 @@ void WorldManager::addBoxToWorld(std::vector<Box*>& boxEntities, std::unique_ptr
 {
 	Box* newBox = new Box;
 	newBox->init(world.get(), position, dimensions, colour, texture, density, friction, texCoords, fixedRotation);
-	boxEntities.push_back(newBox);
+	boxEntities.emplace_back(newBox);
 
 	log("Created a box at " + std::to_string(position.x) + " " + std::to_string(position.y));
 }

@@ -10,6 +10,7 @@
 #include "Box.h"
 #include "Ground.h"
 #include "Enemy.h"
+#include "Marker.h"
 
 /*
 Static class for loading level files
@@ -39,7 +40,7 @@ public:
 	//Load the level
 	static bool loadLevel(const std::string filePath, std::unique_ptr<b2World>& world, 
 		AudioManager& audioManager, Player* player, std::vector<Ground*>& groundEntities,
-		std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities);
+		std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities);
 
 private:
 	static void log(const std::string text);
@@ -50,6 +51,7 @@ private:
 	static void loadBox(std::unique_ptr<b2World>& world, std::vector<Box*>& boxEntities, const std::string line);
 	static void loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*>& enemyEntities, AudioManager& audioManager,
 		const std::string line, int id);
+	static void loadMarker(std::vector<Marker*>& markerEntities, const std::string line, int id);
 
 	//Used to generate random data for box entities which can then be put in a level file
 	static void generateBoxeData(int n);

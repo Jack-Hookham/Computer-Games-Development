@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Entity.h"
+#include "EntityBox2D.h"
 
 //Used to create ground in the world
 //Density should usually be 0.0f means it isn't effected by physics in the b2World
 
-class Ground : public Entity
+class Ground : public EntityBox2D
 {
 public:
 	Ground();
@@ -16,5 +16,7 @@ public:
 		const bool fixedRotation = true);
 
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
+
+private:
 };
 
