@@ -7,7 +7,7 @@ STARTGROUND
 -130 48 1 99 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
 70 48 1 99 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
 -30 20 10 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
--54 26 6 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
+-50 28 4 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
 ENDGROUND
 
 STARTBOX
@@ -60,7 +60,7 @@ STARTBOX
 ENDBOX
 
 STARTPLAYER
--50 30 1 2 255 255 255 255
+-35 30 1 2 255 255 255 255
 ../res/textures/ninja_adventure/player/spritesheet/idle.png
 ../res/textures/ninja_adventure/player/spritesheet/run.png
 ../res/textures/ninja_adventure/player/spritesheet/jump.png

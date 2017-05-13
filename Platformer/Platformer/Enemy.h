@@ -85,7 +85,7 @@ private:
 	const int DIRECTION_TIMER_CAP = 100;
 	int mDirectionTimer;
 
-	const float AGGRO_RANGE = 10.0f;
+	const float AGGRO_RANGE = 20.0f;
 
 	SoundEffect mSounds[ENEMY_NUM_SOUNDS];
 };

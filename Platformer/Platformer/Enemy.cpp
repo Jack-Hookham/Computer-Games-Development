@@ -69,6 +69,7 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 	mFixtures[2] = mBody->CreateFixture(&circleDef);
 }
 
+//Enemy logic
 void Enemy::update(Player* player, std::vector<Marker*>& markerEntities)
 {	
 	EntityBox2D::update();
@@ -132,7 +133,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities)
 		mPosition.x + mDimensions.x / 2.0f - (player->getPosition().x + player->getDimensions().x / 2.0f),
 		mPosition.y + mDimensions.x / 2.0f - (player->getPosition().y + player->getDimensions().y / 2.0f));
 
-	std::cout << glm::length(playerDistance) << std::endl;
+	//std::cout << glm::length(playerDistance) << std::endl;
 
 	//Player within range?
 	if (glm::length(playerDistance) < AGGRO_RANGE)
@@ -145,6 +146,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities)
 	}
 
 	//Search for player
+	//While searching enemy moves along x axis and changes direction when it hits a marker
 	if (mSearching)
 	{
 		if (mDirectionTimer > 50)
@@ -172,7 +174,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities)
 	}
 	else
 	{
-
 		if (mDirectionTimer > 10)
 		{
 			//face the player
@@ -187,6 +188,28 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities)
 				mMoveDirection = -1;
 				mSpriteDirection = -1;
 				mDirectionTimer = 0;
+			}
+		}
+
+		//if player is > 4m above
+		if (player->getPosition().y > mPosition.y + 4.0f)
+		{
+			for each (Marker* m in markerEntities)
+			{
+				//Jump if a marker is hit
+				if (mPosition.x < m->getPosition().x + mDimensions.x / 2 + m->getDimensions().x / 2 &&
+					mPosition.x + mDimensions.x / 2 + m->getDimensions().x / 2 > m->getPosition().x &&
+					mPosition.y < m->getPosition().y + mDimensions.y / 2 + m->getDimensions().y / 2 &&
+					mPosition.y + mDimensions.y / 2 + m->getDimensions().y / 2 > m->getPosition().y)
+				{
+					if (!mInAir && !mJumping)
+					{
+						//Jump
+						mBody->ApplyLinearImpulse(b2Vec2(0.0f, 50.0f), b2Vec2(0.0f, 0.0f), true);
+						mJumping = true;
+						mSounds[ENEMY_JUMP_SOUND].play();
+					}
+				}
 			}
 		}
 	}
