@@ -121,7 +121,7 @@
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
     <ClCompile Include="CollisionBox.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -216,7 +216,7 @@
       <Filter>Header Files\Enitities</Filter>
     </ClInclude>
     <ClInclude Include="CollisionBox.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Enitities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

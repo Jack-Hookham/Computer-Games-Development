@@ -91,8 +91,16 @@ private:
 	const float AGGRO_RANGE = 20.0f;
 
 	int mHealth = 100;
+	bool mDead = false;
 	bool mIsHurt = false;
 	int invinsibleTimer = 0;
+
+	//Melee attack range
+	glm::vec2 mAttackRange;
+	//Box in front of the enemy representing melee attack area
+	glm::vec4 mAttackBox;
+
+	const int SWORD_DAMAGE = 20;
 
 	SoundEffect mSounds[ENEMY_NUM_SOUNDS];
 };

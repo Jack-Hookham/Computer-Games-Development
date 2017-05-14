@@ -76,6 +76,16 @@ void Player::update()
 
 	mAttackBox = glm::vec4(mPosition.x + mDimensions.x * 0.1f, mPosition.y + mDimensions.y * 0.5f - mAttackRange.y,
 		mAttackRange.x * mDirection, mAttackRange.y);
+
+	//Cap the player's speed
+	if (mBody->GetLinearVelocity().x > MAX_SPEED)
+	{
+		mBody->SetLinearVelocity(b2Vec2(MAX_SPEED, mBody->GetLinearVelocity().y));
+	}
+	else if (mBody->GetLinearVelocity().x < -MAX_SPEED)
+	{
+		mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED, mBody->GetLinearVelocity().y));
+	}
 }
 
 void Player::add(SpriteBatch& spriteBatch, Camera& camera)
@@ -250,16 +260,6 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 
 void Player::input(InputManager& inputManager)
 {
-	//Cap the player's speed
-	if (mBody->GetLinearVelocity().x > MAX_SPEED)
-	{
-		mBody->SetLinearVelocity(b2Vec2(MAX_SPEED, mBody->GetLinearVelocity().y));
-	}
-	else if (mBody->GetLinearVelocity().x < -MAX_SPEED)
-	{
-		mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED, mBody->GetLinearVelocity().y));
-	}
-
 	//Left and right movement
 	if ((inputManager.isKeyDown(SDLK_a) || inputManager.getLeftStickDirection() < 0) && mAnimState != PLAYER_ATTACK)
 	{
