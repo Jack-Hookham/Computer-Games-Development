@@ -59,6 +59,7 @@ public:
 	inline const bool getAttacking() const { return mAttacking; }
 	inline const int getHealth() const { return mHealth; }
 	inline const int getDirection() const { return mDirection; }
+	inline const glm::vec2 getAttackRange() const { return mAttackRange; }
 
 	inline const void setHealth(const int health) { mHealth = health; }
 
@@ -102,6 +103,7 @@ private:
 	float mAttackTimer = 0.0f;
 
 	int mHealth = 100;
+	glm::vec2 mAttackRange;
 
 	SoundEffect mSounds[PLAYER_NUM_SOUNDS];
 };

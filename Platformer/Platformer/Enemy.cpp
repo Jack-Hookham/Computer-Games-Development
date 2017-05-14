@@ -158,10 +158,10 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				//	mBody->GetPosition().y < m->getPosition().y + m->getDimensions().y &&
 				//	mBody->GetPosition().y + mDimensions.y > m->getPosition().y)
 
-				if (mPosition.x < m->getPosition().x + mDimensions.x / 2 + m->getDimensions().x / 2 &&
-					mPosition.x + mDimensions.x / 2 + m->getDimensions().x / 2 > m->getPosition().x &&
-					mPosition.y < m->getPosition().y + mDimensions.y / 2 + m->getDimensions().y / 2 &&
-					mPosition.y + mDimensions.y / 2 + m->getDimensions().y / 2 > m->getPosition().y)
+				if (mPosition.x < m->getPosition().x + mDimensions.x * 0.5f + m->getDimensions().x * 0.5f &&
+					mPosition.x + mDimensions.x * 0.5f + m->getDimensions().x * 0.5f > m->getPosition().x &&
+					mPosition.y < m->getPosition().y + mDimensions.y * 0.5f + m->getDimensions().y * 0.5f &&
+					mPosition.y + mDimensions.y * 0.5f + m->getDimensions().y * 0.5f > m->getPosition().y)
 				{
 					mMoveDirection = -mMoveDirection;
 					mSpriteDirection = -mSpriteDirection;
@@ -196,10 +196,10 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			for each (Marker* m in markerEntities)
 			{
 				//Jump if inside a marker
-				if (mPosition.x < m->getPosition().x + mDimensions.x / 2 + m->getDimensions().x / 2 &&
-					mPosition.x + mDimensions.x / 2 + m->getDimensions().x / 2 > m->getPosition().x &&
-					mPosition.y < m->getPosition().y + mDimensions.y / 2 + m->getDimensions().y / 2 &&
-					mPosition.y + mDimensions.y / 2 + m->getDimensions().y / 2 > m->getPosition().y)
+				if (mPosition.x < m->getPosition().x + mDimensions.x * 0.5f + m->getDimensions().x * 0.5f &&
+					mPosition.x + mDimensions.x * 0.5f + m->getDimensions().x * 0.5f > m->getPosition().x &&
+					mPosition.y < m->getPosition().y + mDimensions.y * 0.5f + m->getDimensions().y * 0.5f &&
+					mPosition.y + mDimensions.y * 0.5f + m->getDimensions().y * 0.5f > m->getPosition().y)
 				{
 					if (!mInAir && !mJumping)
 					{
@@ -223,33 +223,56 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 		}
 	}
 
-	//if the player attacks and hits the enemy
-	float xRange = 1.2f + player->getDimensions().x * 0.5f;
-	float yRange = 1.0f + player->getDimensions().y * 0.5f;
-
 	//Calculate the attack box area in front of the player
 	glm::vec4 attackBox = glm::vec4(
 		player->getPosition().x + player->getDimensions().x * 0.1f,
-		player->getPosition().y + player->getDimensions().y * 0.5f - yRange,
-		xRange * player->getDirection(), yRange);
+		player->getPosition().y + player->getDimensions().y * 0.5f - player->getAttackRange().y,
+		player->getAttackRange().x * player->getDirection(), player->getAttackRange().y);
 
 	//Draw the attack box (debugging)
 	collisionBoxEntities[0]->setPosition(attackBox.x, attackBox.y);
 	collisionBoxEntities[0]->setDimensions(attackBox.z, attackBox.w);
 
 	//if player is attacking and enemy is inside attackbox
-	if (player->getAttacking() && !mIsHurt &&
-		mPosition.x < attackBox.x + mDimensions.x * 0.5f + attackBox.z &&
-		mPosition.x + mDimensions.x * 0.5f + attackBox.z > attackBox.x &&
-		mPosition.y < attackBox.y + mDimensions.y * 0.5f + attackBox.w &&
-		mPosition.y + mDimensions.y * 0.5f + attackBox.w > attackBox.y)
+	if (player->getAttacking() && !mIsHurt)
 	{
-		std::cout << "hit\n";
-		mIsHurt = true;
-		mHealth -= 20;
+		//left of player
+		if (mPosition.x < player->getPosition().x)
+		{
+			if (/*player->getAttacking() && !mIsHurt &&*/
+				mPosition.x < attackBox.x + mDimensions.x * 0.5f - attackBox.z * 0.5f * -1.0f &&
+				mPosition.x + mDimensions.x * 0.5f - attackBox.z * 0.5f > attackBox.x &&
+				mPosition.y < attackBox.y + mDimensions.y * 0.5f + attackBox.w * 0.5f &&
+				mPosition.y + mDimensions.y * 0.5f + attackBox.w * 0.5f > attackBox.y)
+			{
+				std::cout << "hit\n";
+				mIsHurt = true;
+				mHealth -= 20;
 
-		mBody->ApplyForceToCenter(b2Vec2(-20000.0f * mMoveDirection, 1000.0f), true);
+				mBody->ApplyForceToCenter(b2Vec2(-20000.0f * mMoveDirection, 1000.0f), true);
+			}
+		}
+		//right of player
+		else
+		{
+			if (/*player->getAttacking() && !mIsHurt &&*/
+				mPosition.x < attackBox.x + mDimensions.x * 0.5f + attackBox.z * 0.5f &&
+				mPosition.x + mDimensions.x * 0.5f + attackBox.z * 0.5f > attackBox.x &&
+				mPosition.y < attackBox.y + mDimensions.y * 0.5f + attackBox.w * 0.5f &&
+				mPosition.y + mDimensions.y * 0.5f + attackBox.w * 0.5f > attackBox.y)
+			{
+				std::cout << "hit\n";
+				mIsHurt = true;
+				mHealth -= 20;
+
+				mBody->ApplyForceToCenter(b2Vec2(-20000.0f * mMoveDirection, 1000.0f), true);
+			}
+		}
+		
 	}
+	
+
+
 
 	if (!mIsHurt)
 	{

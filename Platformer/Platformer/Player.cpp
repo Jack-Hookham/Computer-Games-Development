@@ -18,6 +18,8 @@ void Player::init(b2World* world, const glm::vec2& position,
 	mDimensions = dimensions;
 	mColour = colour;
 
+	mAttackRange = glm::vec2(1.2f + mDimensions.x * 0.5f, 1.0f + mDimensions.y * 0.5f);
+
 	for (int i = 0; i < PLAYER_NUM_STATES; i++)
 	{
 		mSpriteSheets[i].init(textures[i], mSheetDimensions[i]);
