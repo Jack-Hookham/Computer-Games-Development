@@ -42,6 +42,19 @@ void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, Player* play
 		e->update(player, markerEntities, collisionBoxEntities);
 	}
 
+	for (auto it = enemyEntities.begin(); it != enemyEntities.end();)
+	{
+		if ((*it)->getDead())
+		{
+			delete *it;
+			it = enemyEntities.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
 	//Step the b2World with the timestep
 	world->Step(mBox2DTimeStep, mVelocityIterations, mPositionIterations);
 }

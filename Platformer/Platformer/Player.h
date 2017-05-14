@@ -114,7 +114,7 @@ private:
 	//Box in front of the player representing melee attack area
 	glm::vec4 mAttackBox;
 
-	const int SWORD_DAMAGE = 50;
+	const int SWORD_DAMAGE = 100;
 
 	SoundEffect mSounds[PLAYER_NUM_SOUNDS];
 };

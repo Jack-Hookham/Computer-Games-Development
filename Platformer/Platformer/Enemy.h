@@ -42,6 +42,8 @@ public:
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
 	inline const int getHealth() const { return mHealth; }
+	inline const bool getDead() const { return mDead; }
+
 	inline const void setHealth(const int health) { mHealth = health; }
 
 private:
@@ -55,14 +57,15 @@ private:
 	b2Fixture* mFixtures[3];
 
 	//Limit the player's speed
-	const float MAX_SPEED = 10.0f;
+	const float MAX_SPEED = 9.0f;
 
 	//IDLE, RUN, JUMP, IN_AIR, ATTACK, JUMP_ATTACK
 	//Array of sprite sheets for the different states
 	SpriteSheet mSpriteSheets[ENEMY_NUM_STATES];
 
 	//Number of sprites for each state
-	int mNumSprites[ENEMY_NUM_STATES] = { 10, 10, 3, 1, 10, 10 };//Rows and columns in the sprite sheet
+	int mNumSprites[ENEMY_NUM_STATES] = { 10, 10, 3, 1, 10, 10};
+	//Rows and columns in the sprite sheet
 	glm::ivec2 mSheetDimensions[ENEMY_NUM_STATES] = { glm::ivec2(4, 3), glm::ivec2(5, 2), glm::ivec2(5, 2),
 		glm::ivec2(5, 2), glm::ivec2(3, 4), glm::ivec2(4, 3) };
 
