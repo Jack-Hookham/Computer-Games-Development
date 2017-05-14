@@ -51,6 +51,8 @@ public:
 		const glm::vec2& dimensions, const Colour& colour, const Texture textures[], 
 		const SoundEffect sounds[], const bool fixedRotation = true);
 
+	void update();
+
 	void input(InputManager& inputManager);
 
 	//Animate, cull then add Player to SpriteBatch
@@ -60,6 +62,7 @@ public:
 	inline const int getHealth() const { return mHealth; }
 	inline const int getDirection() const { return mDirection; }
 	inline const glm::vec2 getAttackRange() const { return mAttackRange; }
+	inline const int getSwordDamage() const { return SWORD_DAMAGE; }
 
 	inline const void setHealth(const int health) { mHealth = health; }
 
@@ -104,6 +107,10 @@ private:
 
 	int mHealth = 100;
 	glm::vec2 mAttackRange;
+	//Box in front of the player representing melee attack area
+	glm::vec4 mAttackBox;
+
+	const int SWORD_DAMAGE = 50;
 
 	SoundEffect mSounds[PLAYER_NUM_SOUNDS];
 };

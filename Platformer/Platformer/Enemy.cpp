@@ -233,14 +233,14 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	collisionBoxEntities[0]->setPosition(attackBox.x, attackBox.y);
 	collisionBoxEntities[0]->setDimensions(attackBox.z, attackBox.w);
 
-	//if player is attacking and enemy is inside attackbox
+	//if player is attacking and enemy isn't already hurt
 	if (player->getAttacking() && !mIsHurt)
 	{
 		//left of player
 		if (mPosition.x < player->getPosition().x)
 		{
 			if (/*player->getAttacking() && !mIsHurt &&*/
-				mPosition.x < attackBox.x + mDimensions.x * 0.5f - attackBox.z * 0.5f * -1.0f &&
+				mPosition.x < attackBox.x + mDimensions.x * 0.5f - attackBox.z * 0.5f &&
 				mPosition.x + mDimensions.x * 0.5f - attackBox.z * 0.5f > attackBox.x &&
 				mPosition.y < attackBox.y + mDimensions.y * 0.5f + attackBox.w * 0.5f &&
 				mPosition.y + mDimensions.y * 0.5f + attackBox.w * 0.5f > attackBox.y)
@@ -263,17 +263,16 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			{
 				std::cout << "hit\n";
 				mIsHurt = true;
-				mHealth -= 20;
+				mHealth -= player->getSwordDamage();
 
 				mBody->ApplyForceToCenter(b2Vec2(-20000.0f * mMoveDirection, 1000.0f), true);
 			}
 		}
-		
 	}
 	
 
 
-
+	//Move if not hurt
 	if (!mIsHurt)
 	{
 		mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);

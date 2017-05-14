@@ -19,6 +19,8 @@ void Player::init(b2World* world, const glm::vec2& position,
 	mColour = colour;
 
 	mAttackRange = glm::vec2(1.2f + mDimensions.x * 0.5f, 1.0f + mDimensions.y * 0.5f);
+	mAttackBox = glm::vec4(mPosition.x + mDimensions.x * 0.1f, mPosition.y + mDimensions.y * 0.5f - mAttackRange.y,
+		mAttackRange.x * mDirection, mAttackRange.y);
 
 	for (int i = 0; i < PLAYER_NUM_STATES; i++)
 	{
@@ -66,6 +68,14 @@ void Player::init(b2World* world, const glm::vec2& position,
 	//Bottom
 	circleShape.m_p.Set(0.0f, (-mDimensions.y + mDimensions.x) * 0.5f);
 	mFixtures[2] = mBody->CreateFixture(&circleDef);
+}
+
+void Player::update()
+{
+	EntityBox2D::update();
+
+	mAttackBox = glm::vec4(mPosition.x + mDimensions.x * 0.1f, mPosition.y + mDimensions.y * 0.5f - mAttackRange.y,
+		mAttackRange.x * mDirection, mAttackRange.y);
 }
 
 void Player::add(SpriteBatch& spriteBatch, Camera& camera)
