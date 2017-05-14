@@ -239,6 +239,9 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 
 	//*****Calculate whether enemy has been hit by player*****
 
+	collisionBoxEntities[0]->setPosition(player->getAttackBox().x, player->getAttackBox().y);
+	collisionBoxEntities[0]->setDimensions(player->getAttackBox().z, player->getAttackBox().w);
+
 	//if player is attacking and enemy isn't already hurt
 	if (player->getAttacking() && !mIsHurt)
 	{
@@ -253,7 +256,8 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			{
 				std::cout << "hit\n";
 				mIsHurt = true;
-				mHealth -= player->getSwordDamage();
+				//mHealth -= player->getSwordDamage();
+				mHealth--;
 
 				if (mHealth > 0)
 				{
@@ -272,7 +276,8 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			{
 				std::cout << "hit\n";
 				mIsHurt = true;
-				mHealth -= player->getSwordDamage();
+				//mHealth -= player->getSwordDamage();
+				mHealth--;
 
 				if (mHealth > 0)
 				{
@@ -288,8 +293,8 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 		mAttackRange.x * mSpriteDirection, mAttackRange.y);
 
 	//Draw the attack box (debugging)
-	collisionBoxEntities[0]->setPosition(mAttackBox.x, mAttackBox.y);
-	collisionBoxEntities[0]->setDimensions(mAttackBox.z, mAttackBox.w);
+	//collisionBoxEntities[0]->setPosition(mAttackBox.x, mAttackBox.y);
+	//collisionBoxEntities[0]->setDimensions(mAttackBox.z, mAttackBox.w);
 
 	if (!mAttacking)
 	{

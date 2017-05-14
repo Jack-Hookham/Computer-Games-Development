@@ -314,12 +314,12 @@ void GameManager::manageInput()
 	//Manage input for the player
 	mPlayer->input(mInputManager);
 
-	if (mInputManager.isKeyDown(SDLK_q) || mInputManager.isKeyDown(SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
+	if (mInputManager.isKeyDown(SDLK_COMMA) || mInputManager.isKeyDown(SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
 	{
 		//Zoom in
 		mGraphicsManager.setCameraScale(SCALE_SPEED);
 	}
-	if (mInputManager.isKeyDown(SDLK_e) || mInputManager.isKeyDown(SDL_CONTROLLER_BUTTON_RIGHTSHOULDER))
+	if (mInputManager.isKeyDown(SDLK_PERIOD) || mInputManager.isKeyDown(SDL_CONTROLLER_BUTTON_RIGHTSHOULDER))
 	{
 		//Zoom out
 		mGraphicsManager.setCameraScale(-SCALE_SPEED);

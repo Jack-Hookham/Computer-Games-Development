@@ -42,6 +42,7 @@ void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, Player* play
 		e->update(player, markerEntities, collisionBoxEntities);
 	}
 
+	//Delete enemy if dead flag is set
 	for (auto it = enemyEntities.begin(); it != enemyEntities.end();)
 	{
 		if ((*it)->getDead())

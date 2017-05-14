@@ -6,6 +6,10 @@ Player::Player()
 
 Player::~Player()
 {
+	for each (Kunai* k in mKunaiEntities)
+	{
+		delete k;
+	}
 }
 
 //Override entity init to add capsule collision to the player
@@ -86,6 +90,26 @@ void Player::update()
 	{
 		mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED, mBody->GetLinearVelocity().y));
 	}
+
+	for each (Kunai* k in mKunaiEntities)
+	{
+		k->update();
+	}
+
+
+	//Delete kunai after period of time
+	for (auto it = mKunaiEntities.begin(); it != mKunaiEntities.end();)
+	{
+		if ((*it)->getLifeTimer().getTicks() > KUNAI_LIFE_SPAN)
+		{
+			delete *it;
+			it = mKunaiEntities.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
 }
 
 void Player::add(SpriteBatch& spriteBatch, Camera& camera)
@@ -121,6 +145,23 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 						mAnimationTimer = 0.0f;
 					}
 					mAnimState = PLAYER_JUMP_ATTACK;
+				}
+			}	
+			
+			//if throwing
+			if (mThrowing)
+			{
+				tileIndex = 5;
+				animationSpeed = 0.4f;
+
+				//if the state just started reset the animation time
+				if (mAnimState != PLAYER_JUMP_THROW)
+				{
+					if (mAnimState != PLAYER_THROW)
+					{
+						mAnimationTimer = 0.0f;
+					}
+					mAnimState = PLAYER_JUMP_THROW;
 				}
 			}
 
@@ -166,6 +207,23 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 						mAnimationTimer = 0.0f;
 					}
 					mAnimState = PLAYER_ATTACK;
+				}
+			}
+
+			//if throwing
+			else if (mThrowing)
+			{
+				tileIndex = 5;
+				animationSpeed = 0.4f;
+
+				//if the state just started reset the animation time
+				if (mAnimState != PLAYER_THROW)
+				{
+					if (mAnimState != PLAYER_JUMP_THROW)
+					{
+						mAnimationTimer = 0.0f;
+					}
+					mAnimState = PLAYER_THROW;
 				}
 			}
 
@@ -223,6 +281,20 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				mAttacking = false;
 				mAttackTimer = 0.0f;
 			}
+		}		
+		
+		//only play the throw animation once
+		if (mThrowing)
+		{
+			if (mThrowTimer < mNumSprites[mAnimState])
+			{
+				mThrowTimer += animationSpeed;
+			}
+			else
+			{
+				mThrowing = false;
+				mThrowTimer = 0.0f;
+			}
 		}
 
 		//Adjust position and dimensions based on the current sprite
@@ -248,25 +320,30 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 		//if moving left
 		if (mDirection == -1)
 		{
-			//flip x texCoords
+			//flip texCoords
 			texCoords.x += 1.0f / mSpriteSheets[mAnimState].getDimensions().x;
-			texCoords.z *= -1;
+			texCoords.z *= -1.0f;
 		}
 
 		spriteBatch.addSprite(position, dimensions, texCoords, mSpriteSheets[mAnimState].getTexture().id, 
 			0.0f, mColour, mBody->GetAngle());
+	}
+
+	for each (Kunai* k in mKunaiEntities)
+	{
+		k->add(spriteBatch, camera);
 	}
 }
 
 void Player::input(InputManager& inputManager)
 {
 	//Left and right movement
-	if ((inputManager.isKeyDown(SDLK_a) || inputManager.getLeftStickDirection() < 0) && mAnimState != PLAYER_ATTACK)
+	if ((inputManager.isKeyDown(SDLK_a) || inputManager.getLeftStickDirection() < 0) && mAnimState != PLAYER_ATTACK && mAnimState != PLAYER_THROW)
 	{
 		mBody->ApplyForceToCenter(b2Vec2(-100.0f, 0.0f), true);
 		mDirection = -1;
 	}
-	else if ((inputManager.isKeyDown(SDLK_d) || inputManager.getLeftStickDirection() > 0) && mAnimState != PLAYER_ATTACK)
+	else if ((inputManager.isKeyDown(SDLK_d) || inputManager.getLeftStickDirection() > 0) && mAnimState != PLAYER_ATTACK && mAnimState != PLAYER_THROW)
 	{
 		mDirection = 1;
 		mBody->ApplyForceToCenter(b2Vec2(100.0f, 0.0f), true);
@@ -317,9 +394,44 @@ void Player::input(InputManager& inputManager)
 	}
 
 	//Attack
-	if (inputManager.isKeyPressed(SDLK_SPACE) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_X))
+	if (!mAttacking && (inputManager.isKeyPressed(SDLK_SPACE) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_X)))
 	{
 		mSounds[PLAYER_ATTACK_SOUND].play();
 		mAttacking = true;
+	}
+
+	if (!mThrowing && (
+		inputManager.isKeyPressed(SDLK_q) || inputManager.isKeyPressed(SDLK_q) || 
+		inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_Y) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_B)))
+	{
+		mSounds[PLAYER_THROW_SOUND].play();
+		mThrowing = true;
+
+		if (inputManager.isKeyPressed(SDLK_q) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_Y))
+		{
+			Kunai* kunai1 = new Kunai;
+			Kunai* kunai2 = new Kunai;
+			Kunai* kunai3 = new Kunai;
+
+			glm::vec2 kunaiPos = glm::vec2(mPosition.x - mDimensions.x * 0.5f, mPosition.y);
+			glm::vec2 kunaiDims = glm::vec2(1.0f, 0.2f);
+			Colour kunaiColour = { 255, 255, 255, 255 };
+			Texture kunaiTexture = ResourceManager::getTexture(mKunaiPath);
+			glm::vec4 kunaiTexCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
+
+			//if moving left
+			if (mDirection == -1)
+			{
+				//flip texCoords
+				kunaiTexCoords.x += 1.0f / kunaiDims.x;
+				kunaiTexCoords.z *= -1.0f;
+			}
+
+			glm::vec2 kunaiVel1 = glm::vec2(0.05f * mDirection, 0.0f);
+
+			kunai1->init(kunaiPos, kunaiDims, kunaiColour, kunaiTexture, kunaiVel1, kunaiTexCoords);
+
+			mKunaiEntities.emplace_back(kunai1);
+		}
 	}
 }

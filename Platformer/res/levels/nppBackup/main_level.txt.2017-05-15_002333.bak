@@ -71,7 +71,7 @@ STARTPLAYER
 ../res/textures/ninja_adventure/player/spritesheet/jump_throw.png
 ../res/sound/platformer_jumping/jump_01.wav
 ../res/sound/melee_sounds/sword_sound.wav
-../res/sound/throw/throw_sound.wav
+../res/sound/throw/throw_sound.mp3
 ENDPLAYER
 
 STARTENEMY

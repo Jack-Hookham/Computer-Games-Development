@@ -4,6 +4,7 @@
 #include "InputManager.h"
 #include "SpriteSheet.h"
 #include "AudioManager.h"
+#include "Kunai.h"
 
 /*
 * Player class
@@ -30,6 +31,8 @@ enum PlayerAnimState
 	PLAYER_IN_AIR,
 	PLAYER_ATTACK,
 	PLAYER_JUMP_ATTACK,
+	PLAYER_THROW,
+	PLAYER_JUMP_THROW,
 	PLAYER_NUM_STATES
 };
 
@@ -37,6 +40,7 @@ enum PlayerSound
 {
 	PLAYER_JUMP_SOUND,
 	PLAYER_ATTACK_SOUND,
+	PLAYER_THROW_SOUND,
 	PLAYER_NUM_SOUNDS
 };
 
@@ -85,15 +89,15 @@ private:
 	SpriteSheet mSpriteSheets[PLAYER_NUM_STATES];
 
 	//Number of sprites for each state
-	int mNumSprites[PLAYER_NUM_STATES] = { 10, 10, 3, 1, 10, 10};
+	int mNumSprites[PLAYER_NUM_STATES] = { 10, 10, 3, 1, 10, 10, 10, 10};
 
 	//Rows and columns in the sprite sheet
 	glm::ivec2 mSheetDimensions[PLAYER_NUM_STATES] = { glm::ivec2(4, 3), glm::ivec2(5, 2), glm::ivec2(5, 2), 
-		glm::ivec2(5, 2), glm::ivec2(3, 4), glm::ivec2(4, 3) };
+		glm::ivec2(5, 2), glm::ivec2(3, 4), glm::ivec2(4, 3), glm::ivec2(5, 2), glm::ivec2(5, 2) };
 
 	//Multipliers to adjust the sprite position and dimension based on the state (new dimensions/base dimensions)
 	glm::vec2 mStateMultipliers[PLAYER_NUM_STATES] = { glm::vec2(1.0f), glm::vec2(1.56f, 1.04f),  glm::vec2(1.56f, 1.1f),
-		glm::vec2(1.56f, 1.1f), glm::vec2(2.31f, 1.13f), glm::vec2(2.17f, 1.18f) };
+		glm::vec2(1.56f, 1.1f), glm::vec2(2.31f, 1.13f), glm::vec2(2.17f, 1.18f), glm::vec2(1.63f, 1.03f), glm::vec2(1.55f, 0.98f) };
 
 	//Animation timer
 	float mAnimationTimer = 0.0f;
@@ -102,11 +106,13 @@ private:
 
 	//State bool checks
 	bool mInAir = true;
-	bool mAttacking = false;
 	bool mJumping = false;
+	bool mAttacking = false;
+	bool mThrowing = false;
 
 	float mJumpTimer = 0.0f;
 	float mAttackTimer = 0.0f;
+	float mThrowTimer = 0.0f;
 
 	int mHealth = 100;
 	//Melee attack range
@@ -117,5 +123,10 @@ private:
 	const int SWORD_DAMAGE = 100;
 
 	SoundEffect mSounds[PLAYER_NUM_SOUNDS];
+
+	std::vector<Kunai*> mKunaiEntities;
+	const std::string mKunaiPath = "../res/textures/ninja_adventure/player/png/Kunai.png";
+
+	const int KUNAI_LIFE_SPAN = 10000;
 };
 

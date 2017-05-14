@@ -78,6 +78,8 @@ bool AudioManager::initAudio()
 
 SoundEffect AudioManager::loadSoundEffect(const std::string& path)
 {
+	log("Loading sound effect from " + path);
+
 	//Iterator for the sound effect map
 	std::map<std::string, Mix_Chunk*>::iterator i = mSoundEffectMap.find(path);
 
