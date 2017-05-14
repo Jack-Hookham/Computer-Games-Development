@@ -125,8 +125,13 @@ private:
 	SoundEffect mSounds[PLAYER_NUM_SOUNDS];
 
 	std::vector<Kunai*> mKunaiEntities;
-	const std::string mKunaiPath = "../res/textures/ninja_adventure/player/png/Kunai.png";
+	const Texture mKunaiTexture = ResourceManager::getTexture("../res/textures/ninja_adventure/player/png/Kunai.png");
 
 	const int KUNAI_LIFE_SPAN = 10000;
+
+	//Timing stuff for spawning multiple kunai in a line
+	const int KUNAI_SPAWN_TIME = 100;
+	Timer mKunaiSpawnTimer;
+	int mSpawnedKunai = 0;
 };
 

@@ -110,6 +110,40 @@ void Player::update()
 			it++;
 		}
 	}
+
+	if (mKunaiSpawnTimer.getTicks() > KUNAI_SPAWN_TIME)
+	{
+		Kunai* kunai = new Kunai;
+
+		glm::vec2 kunaiPos = glm::vec2(
+			mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection,
+			mPosition.y - mDimensions.y * 0.2f);
+		glm::vec2 kunaiDims = glm::vec2(1.0f, 0.2f);
+		Colour kunaiColour = { 255, 255, 255, 255 };
+		glm::vec4 kunaiTexCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
+
+		//if moving left
+		if (mDirection == -1)
+		{
+			//flip texCoords
+			kunaiTexCoords.x += 1.0f / kunaiDims.x;
+			kunaiTexCoords.z *= -1.0f;
+		}
+
+		glm::vec2 kunaiVel = glm::vec2(0.5f * mDirection, 0.0f);
+
+		kunai->init(kunaiPos, kunaiDims, kunaiColour, mKunaiTexture, kunaiVel, kunaiTexCoords);
+		mKunaiEntities.emplace_back(kunai);
+
+		mKunaiSpawnTimer.restart();
+		mSpawnedKunai++;
+	}
+	
+	if (mSpawnedKunai >= 3)
+	{
+		mKunaiSpawnTimer.stop();
+		mSpawnedKunai = 0;
+	}
 }
 
 void Player::add(SpriteBatch& spriteBatch, Camera& camera)
@@ -409,14 +443,14 @@ void Player::input(InputManager& inputManager)
 
 		if (inputManager.isKeyPressed(SDLK_q) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_Y))
 		{
-			Kunai* kunai1 = new Kunai;
-			Kunai* kunai2 = new Kunai;
-			Kunai* kunai3 = new Kunai;
 
-			glm::vec2 kunaiPos = glm::vec2(mPosition.x - mDimensions.x * 0.5f, mPosition.y);
+			Kunai* kunai = new Kunai;
+
+			glm::vec2 kunaiPos = glm::vec2(
+				mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection, 
+				mPosition.y - mDimensions.y * 0.2f);
 			glm::vec2 kunaiDims = glm::vec2(1.0f, 0.2f);
 			Colour kunaiColour = { 255, 255, 255, 255 };
-			Texture kunaiTexture = ResourceManager::getTexture(mKunaiPath);
 			glm::vec4 kunaiTexCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 			//if moving left
@@ -427,11 +461,12 @@ void Player::input(InputManager& inputManager)
 				kunaiTexCoords.z *= -1.0f;
 			}
 
-			glm::vec2 kunaiVel1 = glm::vec2(0.05f * mDirection, 0.0f);
+			glm::vec2 kunaiVel = glm::vec2(0.5f * mDirection, 0.0f);
 
-			kunai1->init(kunaiPos, kunaiDims, kunaiColour, kunaiTexture, kunaiVel1, kunaiTexCoords);
-
-			mKunaiEntities.emplace_back(kunai1);
+			kunai->init(kunaiPos, kunaiDims, kunaiColour, mKunaiTexture, kunaiVel, kunaiTexCoords);
+			mKunaiEntities.emplace_back(kunai);
+			mKunaiSpawnTimer.start();
+			mSpawnedKunai++;
 		}
 	}
 }
