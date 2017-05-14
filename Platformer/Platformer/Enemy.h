@@ -36,7 +36,7 @@ public:
 		const glm::vec2& dimensions, const Colour& colour, const Texture textures[],
 		const SoundEffect sounds[], int id, const bool fixedRotation = true);
 
-	void update(Player* player, std::vector<Marker*>& markerEntities);
+	void update(Player* player, std::vector<Marker*>& markerEntities, std::vector<Marker*>& collisionBoxEntities);
 
 	//Animate, cull then add Enemy to SpriteBatch
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
@@ -91,6 +91,8 @@ private:
 	const float AGGRO_RANGE = 20.0f;
 
 	int mHealth = 100;
+	bool mIsHurt = false;
+	int invinsibleTimer = 0;
 
 	SoundEffect mSounds[ENEMY_NUM_SOUNDS];
 };

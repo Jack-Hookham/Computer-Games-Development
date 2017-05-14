@@ -73,6 +73,11 @@ int GameManager::init()
 	mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
 		mMarkerEntities);
 
+	Marker* collisionBox = new Marker;
+	Texture collisionTexture = ResourceManager::getTexture("../res/textures/other/collisionDebug.png");
+	collisionBox->init(mPlayer->getPosition(), mPlayer->getDimensions(), Colour(255.0f, 255.0f, 255.0f, 64.0f), collisionTexture);
+	mCollisionBoxEntities.emplace_back(collisionBox);
+
 	//Initialise physics
 	if (mPhysicsManager.initPhysics(mDesiredFPS))
 	{
@@ -120,7 +125,7 @@ int GameManager::init()
 int GameManager::gameLoop()
 {
 	//Play the background music file
-	mMusic.play(-1);
+	//mMusic.play(-1);
 
 	//Count the number of frames to calculate fps
 	int frameCount = 0;
@@ -137,7 +142,7 @@ int GameManager::gameLoop()
 		manageInput();
 
 		//Update all physics
-		mPhysicsManager.updatePhysics(mWorld, mPlayer, mEnemyEntities, mMarkerEntities);
+		mPhysicsManager.updatePhysics(mWorld, mPlayer, mEnemyEntities, mMarkerEntities, mCollisionBoxEntities);
 
 		//Calculate fps
 		int tickCount = mFPSTimer.getTicks();
@@ -152,7 +157,7 @@ int GameManager::gameLoop()
 		frameCount++;
 
 		//Update all graphics
-		mGraphicsManager.updateGraphics(fps, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities, mMarkerEntities);
+		mGraphicsManager.updateGraphics(fps, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities, mMarkerEntities, mCollisionBoxEntities);
 
 		//If frame finished early cap the frame rate
 		int frameTicks = mFrameTimer.getTicks();
@@ -262,6 +267,11 @@ void GameManager::manageInput()
 		mPlayer = new Player;
 		mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
 			mMarkerEntities);
+
+		Marker* collisionBox = new Marker;
+		Texture collisionTexture = ResourceManager::getTexture("../res/textures/other/collisionDebug.png");
+		collisionBox->init(mPlayer->getPosition(), mPlayer->getDimensions(), Colour(255.0f, 255.0f, 255.0f, 64.0f), collisionTexture);
+		mCollisionBoxEntities.emplace_back(collisionBox);
 	}
 
 	//Mouse buttons
@@ -344,6 +354,12 @@ void GameManager::deleteEntities()
 		delete m;
 	}
 	mMarkerEntities.clear();
+
+	for each (Marker* m in mCollisionBoxEntities)
+	{
+		delete m;
+	}
+	mCollisionBoxEntities.clear();
 
 	delete mPlayer;
 }

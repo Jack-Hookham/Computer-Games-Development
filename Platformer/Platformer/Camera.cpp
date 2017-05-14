@@ -87,11 +87,11 @@ bool Camera::isOnCamera(const glm::vec2& position, const glm::vec2& dimensions)
 	//glm::vec2 scaledScreenDimensions = glm::vec2(mScreenWidth, mScreenHeight) / (mScale * 2.0f);
 
 	//Minimum distance before a collision occurs
-	float minDistanceX = dimensions.x / 2.0f + scaledScreenDimensions.x / 2.0f;
-	float minDistanceY = dimensions.y / 2.0f + scaledScreenDimensions.y / 2.0f;
+	float minDistanceX = dimensions.x * 0.5f + scaledScreenDimensions.x * 0.5f;
+	float minDistanceY = dimensions.y * 0.5f + scaledScreenDimensions.y * 0.5f;
 
 	//Centre position of the entity
-	glm::vec2 centreEntityPos = position + dimensions / 2.0f;
+	glm::vec2 centreEntityPos = position + dimensions * 0.5f;
 
 	//Centre position of the camera
 	glm::vec2 centreCameraPos = mPosition;

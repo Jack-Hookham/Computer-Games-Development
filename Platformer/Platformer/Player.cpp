@@ -37,7 +37,7 @@ void Player::init(b2World* world, const glm::vec2& position,
 
 	//Box shape definition
 	b2PolygonShape boxShape;
-	boxShape.SetAsBox(dimensions.x / 2.0f, (dimensions.y - dimensions.x) / 2.0f);
+	boxShape.SetAsBox(dimensions.x * 0.5f, (dimensions.y - dimensions.x) * 0.5f);
 
 	//Box fixture definition
 	b2FixtureDef fixtureDef;
@@ -49,7 +49,7 @@ void Player::init(b2World* world, const glm::vec2& position,
 	//Circles on the top and bottom of the player for better movement
 	//Circle shape definition
 	b2CircleShape circleShape;
-	circleShape.m_radius = dimensions.x / 2.0f;
+	circleShape.m_radius = dimensions.x * 0.5f;
 
 	//Circle fixture definition
 	b2FixtureDef circleDef;
@@ -58,17 +58,17 @@ void Player::init(b2World* world, const glm::vec2& position,
 	circleDef.friction = 0.3f;
 
 	//Top
-	circleShape.m_p.Set(0.0f, (mDimensions.y - mDimensions.x) / 2.0f);
+	circleShape.m_p.Set(0.0f, (mDimensions.y - mDimensions.x) * 0.5f);
 	mFixtures[1] = mBody->CreateFixture(&circleDef);
 
 	//Bottom
-	circleShape.m_p.Set(0.0f, (-mDimensions.y + mDimensions.x) / 2.0f);
+	circleShape.m_p.Set(0.0f, (-mDimensions.y + mDimensions.x) * 0.5f);
 	mFixtures[2] = mBody->CreateFixture(&circleDef);
 }
 
 void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 {
-	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x / 2.0f, mBody->GetPosition().y - mDimensions.y / 2.0f);
+	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x * 0.5f, mBody->GetPosition().y - mDimensions.y * 0.5f);
 	glm::vec2 dimensions = mDimensions;
 
 	//Track the current tile

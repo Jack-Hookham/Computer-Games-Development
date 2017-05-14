@@ -23,7 +23,7 @@ void EntityBox2D::init(b2World* world, const glm::vec2& position, const glm::vec
 
 	//Box shape definition
 	b2PolygonShape boxShape;
-	boxShape.SetAsBox(mDimensions.x / 2.0f, mDimensions.y / 2.0f);
+	boxShape.SetAsBox(mDimensions.x * 0.5f, mDimensions.y * 0.5f);
 
 	//Box fixture definition
 	b2FixtureDef fixtureDef;
@@ -41,7 +41,7 @@ void EntityBox2D::update()
 
 void EntityBox2D::add(SpriteBatch & spriteBatch, Camera & camera)
 {
-	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x / 2.0f, mBody->GetPosition().y - mDimensions.y / 2.0f);
+	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x * 0.5f, mBody->GetPosition().y - mDimensions.y * 0.5f);
 
 	if (camera.isOnCamera(position, mDimensions))
 	{

@@ -112,6 +112,7 @@ private:
 	std::vector<Ground*> mGroundEntities;
 	std::vector<Enemy*> mEnemyEntities;
 	std::vector<Marker*> mMarkerEntities;
+	std::vector<Marker*> mCollisionBoxEntities;
 
 	//Analog joystick dead zone
 	const int JOYSTICK_DEAD_ZONE = 8000;

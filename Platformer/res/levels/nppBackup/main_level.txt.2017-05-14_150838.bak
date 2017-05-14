@@ -7,7 +7,7 @@ STARTGROUND
 -130 48 1 99 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
 70 48 1 99 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
 -30 20 10 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
--80 26 36 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
+-80 26 20 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
 ENDGROUND
 
 STARTBOX

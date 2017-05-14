@@ -32,14 +32,14 @@ bool PhysicsManager::initPhysics(const int desiredFPS)
 
 //Update the world
 void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, Player* player, std::vector<Enemy*>& enemyEntities,
-	std::vector<Marker*>& markerEntities)
+	std::vector<Marker*>& markerEntities, std::vector<Marker*>& collisionBoxEntities)
 {
 	player->update();
 
 	//Enemy logic update
 	for each (Enemy* e in enemyEntities)
 	{
-		e->update(player, markerEntities);
+		e->update(player, markerEntities, collisionBoxEntities);
 	}
 
 	//Step the b2World with the timestep

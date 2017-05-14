@@ -39,7 +39,7 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 
 	//Box shape definition
 	b2PolygonShape boxShape;
-	boxShape.SetAsBox(dimensions.x / 2.0f, (dimensions.y - dimensions.x) / 2.0f);
+	boxShape.SetAsBox(dimensions.x * 0.5f, (dimensions.y - dimensions.x) * 0.5f);
 
 	//Box fixture definition
 	b2FixtureDef fixtureDef;
@@ -51,7 +51,7 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 	//Circles on the top and bottom of the player for better movement
 	//Circle shape definition
 	b2CircleShape circleShape;
-	circleShape.m_radius = dimensions.x / 2.0f;
+	circleShape.m_radius = dimensions.x * 0.5f;
 
 	//Circle fixture definition
 	b2FixtureDef circleDef;
@@ -60,16 +60,16 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 	circleDef.friction = 0.3f;
 
 	//Top
-	circleShape.m_p.Set(0.0f, (mDimensions.y - mDimensions.x) / 2.0f);
+	circleShape.m_p.Set(0.0f, (mDimensions.y - mDimensions.x) * 0.5f);
 	mFixtures[1] = mBody->CreateFixture(&circleDef);
 
 	//Bottom
-	circleShape.m_p.Set(0.0f, (-mDimensions.y + mDimensions.x) / 2.0f);
+	circleShape.m_p.Set(0.0f, (-mDimensions.y + mDimensions.x) * 0.5f);
 	mFixtures[2] = mBody->CreateFixture(&circleDef);
 }
 
 //Enemy logic
-void Enemy::update(Player* player, std::vector<Marker*>& markerEntities)
+void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::vector<Marker*>& collisionBoxEntities)
 {	
 	EntityBox2D::update();
 
@@ -129,8 +129,8 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities)
 	}
 
 	glm::vec2 playerDistance = glm::vec2(
-		mPosition.x + mDimensions.x / 2.0f - (player->getPosition().x + player->getDimensions().x / 2.0f),
-		mPosition.y + mDimensions.x / 2.0f - (player->getPosition().y + player->getDimensions().y / 2.0f));
+		mPosition.x + mDimensions.x * 0.5f - (player->getPosition().x + player->getDimensions().x * 0.5f),
+		mPosition.y + mDimensions.x * 0.5f - (player->getPosition().y + player->getDimensions().y * 0.5f));
 
 	//std::cout << glm::length(playerDistance) << std::endl;
 
@@ -195,7 +195,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities)
 		{
 			for each (Marker* m in markerEntities)
 			{
-				//Jump if a marker is hit
+				//Jump if inside a marker
 				if (mPosition.x < m->getPosition().x + mDimensions.x / 2 + m->getDimensions().x / 2 &&
 					mPosition.x + mDimensions.x / 2 + m->getDimensions().x / 2 > m->getPosition().x &&
 					mPosition.y < m->getPosition().y + mDimensions.y / 2 + m->getDimensions().y / 2 &&
@@ -213,12 +213,53 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities)
 		}
 	}
 
-	mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
+	if (mIsHurt)
+	{
+		invinsibleTimer++;
+		if (invinsibleTimer > 40)
+		{
+			mIsHurt = false;
+			invinsibleTimer = 0;
+		}
+	}
+
+	//if the player attacks and hits the enemy
+	float xRange = 1.2f + player->getDimensions().x * 0.5f;
+	float yRange = 1.0f + player->getDimensions().y * 0.5f;
+
+	//Calculate the attack box area in front of the player
+	glm::vec4 attackBox = glm::vec4(
+		player->getPosition().x + player->getDimensions().x * 0.1f,
+		player->getPosition().y + player->getDimensions().y * 0.5f - yRange,
+		xRange * player->getDirection(), yRange);
+
+	//Draw the attack box (debugging)
+	collisionBoxEntities[0]->setPosition(attackBox.x, attackBox.y);
+	collisionBoxEntities[0]->setDimensions(attackBox.z, attackBox.w);
+
+	//if player is attacking and enemy is inside attackbox
+	if (player->getAttacking() && !mIsHurt &&
+		mPosition.x < attackBox.x + mDimensions.x * 0.5f + attackBox.z &&
+		mPosition.x + mDimensions.x * 0.5f + attackBox.z > attackBox.x &&
+		mPosition.y < attackBox.y + mDimensions.y * 0.5f + attackBox.w &&
+		mPosition.y + mDimensions.y * 0.5f + attackBox.w > attackBox.y)
+	{
+		std::cout << "hit\n";
+		mIsHurt = true;
+		mHealth -= 20;
+
+		mBody->ApplyForceToCenter(b2Vec2(-20000.0f * mMoveDirection, 1000.0f), true);
+	}
+
+	if (!mIsHurt)
+	{
+		mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
+	}
 }
 
 void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 {
-	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x / 2.0f, mBody->GetPosition().y - mDimensions.y / 2.0f);
+	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x * 0.5f, mBody->GetPosition().y - mDimensions.y * 0.5f);
 	glm::vec2 dimensions = mDimensions;
 
 	//Track the current tile

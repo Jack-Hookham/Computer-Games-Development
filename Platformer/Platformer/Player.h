@@ -56,7 +56,10 @@ public:
 	//Animate, cull then add Player to SpriteBatch
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
+	inline const bool getAttacking() const { return mAttacking; }
 	inline const int getHealth() const { return mHealth; }
+	inline const int getDirection() const { return mDirection; }
+
 	inline const void setHealth(const int health) { mHealth = health; }
 
 private:

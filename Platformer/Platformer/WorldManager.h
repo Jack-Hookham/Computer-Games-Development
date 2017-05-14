@@ -8,7 +8,6 @@
 #include "LevelManager.h"
 
 //Manages the box2D world
-
 class WorldManager
 {
 public:

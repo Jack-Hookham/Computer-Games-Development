@@ -138,7 +138,7 @@ void GraphicsManager::drawHUD(const float fps, const Player* player, const std::
 }
 
 void GraphicsManager::updateGraphics(const float fps, Player* player, std::vector<Box*>& boxEntities,
-	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities)
+	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, std::vector<Marker*>& collisionBoxEntities)
 {
 	//Update cameras
 	const glm::vec2 worldCameraPos = glm::vec2(player->getBody()->GetPosition().x, player->getBody()->GetPosition().y);
@@ -186,6 +186,11 @@ void GraphicsManager::updateGraphics(const float fps, Player* player, std::vecto
 	
 	//Add the markers to the entity sprite batch
 	for each (Marker* m in markerEntities)
+	{
+		m->add(mEntitySpriteBatch, mWorldCamera);
+	}
+
+	for each (Marker* m in collisionBoxEntities)
 	{
 		m->add(mEntitySpriteBatch, mWorldCamera);
 	}

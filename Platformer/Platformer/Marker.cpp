@@ -9,7 +9,7 @@ Marker::~Marker()
 }
 
 void Marker::init(const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, const Texture& texture, 
-	const glm::vec4& texCoords, const bool fixedRotation)
+	const glm::vec4& texCoords)
 {
 	//Initialise the entity's variables
 	mPosition = position;

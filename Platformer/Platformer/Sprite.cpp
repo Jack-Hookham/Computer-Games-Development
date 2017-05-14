@@ -36,7 +36,7 @@ Sprite::Sprite(const glm::vec2& position, const glm::vec2& dimensions, const glm
 	this->texture = texture;
 	this->depth = depth;
 
-	glm::vec2 halfDimensions(dimensions.x / 2.0f, dimensions.y / 2.0f);
+	glm::vec2 halfDimensions(dimensions.x * 0.5f, dimensions.y * 0.5f);
 
 	//Get points centered at origin
 	glm::vec2 tl(-halfDimensions.x, halfDimensions.y);
