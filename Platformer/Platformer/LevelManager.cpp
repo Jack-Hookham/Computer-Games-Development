@@ -302,7 +302,7 @@ void LevelManager::addSpawnPos(std::vector<glm::vec2>& enemySpawnPositions, cons
 {
 	glm::vec2 position;
 	std::istringstream iss(line);
-	iss >> position.x, position.y;
+	iss >> position.x >> position.y;
 	enemySpawnPositions.emplace_back(position);
 }
 

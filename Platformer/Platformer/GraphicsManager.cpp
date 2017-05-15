@@ -101,7 +101,7 @@ void GraphicsManager::initShaders()
 }
 
 //Draw the HUD using the HUD camera - currently just shows fps
-void GraphicsManager::drawHUD(const float fps, const Player* player, const std::vector<Enemy*>& enemyEntities)
+void GraphicsManager::drawHUD(const float fps, const Player* player)
 {
 	char buffer[128];
 
@@ -122,12 +122,6 @@ void GraphicsManager::drawHUD(const float fps, const Player* player, const std::
 	sprintf_s(buffer, "Player HP: %d", player->getHealth());
 
 	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10, mScreenHeight - 50.0f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
-
-	//Add enemy health to the HUD buffer
-	sprintf_s(buffer, "Enemy HP: %d", enemyEntities[0]->getHealth());
-
-	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10, mScreenHeight - 70.0f),
 		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
 
 	//Sort the sprite batch and create render batches
@@ -206,7 +200,7 @@ void GraphicsManager::updateGraphics(const float fps, Player* player, std::vecto
 	mEntitySpriteBatch.renderBatches();
 
 	//Draw the HUD
-	drawHUD(fps, player, enemyEntities);
+	drawHUD(fps, player);
 
 	//Undbind texture
 	glBindTexture(GL_TEXTURE_2D, 0);

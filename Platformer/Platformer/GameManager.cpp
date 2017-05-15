@@ -152,9 +152,7 @@ int GameManager::gameLoop()
 		//Spawn enemies if below enemy limit
 		if (mEnemyEntities.size() < MAX_ENEMIES)
 		{
-			Enemy* enemy = new Enemy;
-			enemy->init(mWorldManager.world.get(), mEnemySpawnPositions[0], mEnemyDims, mEnemyColour, mEnemyTextures, mEnemySounds);
-			mEnemyEntities.emplace_back(enemy);
+			spawnEnemy();
 		}
 
 		//Manage the user input, check the players
@@ -192,6 +190,37 @@ int GameManager::gameLoop()
 	quit();
 
 	return 0;
+}
+
+//Spawn an enemy at one of the spawn positions off screen
+void GameManager::spawnEnemy()
+{
+	//Find a spawn position off screen
+	std::vector<glm::vec2> possibleSpawnPositions;
+
+	//Create vector of all off screen positions
+	for each (glm::vec2 position in mEnemySpawnPositions)
+	{
+		//if the spawn position is off the camera add it to the vector
+		if (!mGraphicsManager.getCamera().isOnCamera(position, mEnemyDims))
+		{
+			possibleSpawnPositions.emplace_back(position);
+		}
+	}
+
+	//if > 0 possible positions found
+	if (possibleSpawnPositions.size() > 0)
+	{
+		//Random number
+		std::mt19937 randGenerator(std::rand());
+		int indexMax = possibleSpawnPositions.size() - 1;
+		std::uniform_int_distribution<int> indexGen(0, indexMax);
+		int index = indexGen(randGenerator);
+
+		Enemy* enemy = new Enemy;
+		enemy->init(mWorldManager.world.get(), possibleSpawnPositions[index], mEnemyDims, mEnemyColour, mEnemyTextures, mEnemySounds);
+		mEnemyEntities.emplace_back(enemy);
+	}
 }
 
 void GameManager::manageInput()
@@ -296,7 +325,7 @@ void GameManager::manageInput()
 		deleteEntities();
 
 		mPlayer = new Player;
-		mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
+		mWorldManager.generateWorld(mTestLevel2Path, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
 			mMarkerEntities, mEnemySpawnPositions);
 
 		Marker* collisionBox = new Marker;
@@ -393,6 +422,8 @@ void GameManager::deleteEntities()
 		delete m;
 	}
 	mCollisionBoxEntities.clear();
+
+	mEnemySpawnPositions.clear();
 
 	delete mPlayer;
 }

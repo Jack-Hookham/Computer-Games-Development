@@ -10,6 +10,7 @@ Player::~Player()
 	{
 		delete k;
 	}
+	mProjectileEntities.clear();
 }
 
 //Override entity init to add capsule collision to the player

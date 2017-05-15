@@ -49,6 +49,8 @@ private:
 	//Main loop for the game
 	int gameLoop();	
 
+	void spawnEnemy();
+
 	//Delete entities
 	void deleteEntities();
 
