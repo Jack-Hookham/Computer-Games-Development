@@ -24,12 +24,12 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 
 	mDirectionTimer = DIRECTION_TIMER_CAP;
 
-	for (int i = 0; i < ENEMY_NUM_STATES; i++)
+	for (int i = 0; i < NUM_STATES; i++)
 	{
 		mSpriteSheets[i].init(textures[i], mSheetDimensions[i]);
 	}
 
-	for (int i = 0; i < ENEMY_NUM_SOUNDS; i++)
+	for (int i = 0; i < NUM_SOUNDS; i++)
 	{
 		mSounds[i] = sounds[i];
 	}
@@ -220,7 +220,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 						//Jump
 						mBody->ApplyLinearImpulse(b2Vec2(0.0f, 50.0f), b2Vec2(0.0f, 0.0f), true);
 						mJumping = true;
-						mSounds[ENEMY_JUMP_SOUND].play();
+						mSounds[JUMP_SOUND].play();
 					}
 				}
 			}
@@ -307,7 +307,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				player->getPosition().y < mAttackBox.y + player->getDimensions().y * 0.5f + mAttackBox.w * 0.5f &&
 				player->getPosition().y + player->getDimensions().y * 0.5f + mAttackBox.w * 0.5f > mAttackBox.y)
 			{
-				mSounds[PLAYER_ATTACK_SOUND].play();
+				mSounds[ATTACK_SOUND].play();
 				mAttacking = true;
 				player->setHealth(player->getHealth() - SWORD_DAMAGE);
 			}
@@ -321,7 +321,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				player->getPosition().y < mAttackBox.y + player->getDimensions().y * 0.5f + mAttackBox.w * 0.5f &&
 				player->getPosition().y + player->getDimensions().y * 0.5f + mAttackBox.w * 0.5f > mAttackBox.y)
 			{
-				mSounds[PLAYER_ATTACK_SOUND].play();
+				mSounds[ATTACK_SOUND].play();
 				mAttacking = true;
 				player->setHealth(player->getHealth() - SWORD_DAMAGE);
 			}
@@ -389,13 +389,13 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mAnimState != ENEMY_JUMP_ATTACK)
+				if (mAnimState != JUMP_ATTACK)
 				{
-					if (mAnimState != ENEMY_ATTACK)
+					if (mAnimState != ATTACK)
 					{
 						mAnimationTimer = 0.0f;
 					}
-					mAnimState = ENEMY_JUMP_ATTACK;
+					mAnimState = JUMP_ATTACK;
 				}
 			}
 
@@ -405,9 +405,9 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 				tileIndex = 5;
 
 				//if the state just started reset the animation time
-				if (mAnimState != ENEMY_JUMP)
+				if (mAnimState != JUMP)
 				{
-					mAnimState = ENEMY_JUMP;
+					mAnimState = JUMP;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -415,13 +415,13 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 			else if (velocity.y <= 0.0f)
 			{
 				tileIndex = 4;
-				mAnimState = ENEMY_IN_AIR;
+				mAnimState = IN_AIR;
 			}
 			//if rising
 			else
 			{
 				tileIndex = 0;
-				mAnimState = ENEMY_IN_AIR;
+				mAnimState = IN_AIR;
 			}
 		}
 		//if on ground
@@ -434,13 +434,13 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mAnimState != ENEMY_ATTACK)
+				if (mAnimState != ATTACK)
 				{
-					if (mAnimState != ENEMY_JUMP_ATTACK)
+					if (mAnimState != JUMP_ATTACK)
 					{
 						mAnimationTimer = 0.0f;
 					}
-					mAnimState = ENEMY_ATTACK;
+					mAnimState = ATTACK;
 				}
 			}
 
@@ -452,9 +452,9 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = abs(velocity.x) * 0.025f;
 
 				//if the state just started reset the animation time
-				if (mAnimState != ENEMY_RUN)
+				if (mAnimState != RUN)
 				{
-					mAnimState = ENEMY_RUN;
+					mAnimState = RUN;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -464,9 +464,9 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 				tileIndex = 4;
 
 				//if state just started reset the animation time
-				if (mAnimState != ENEMY_IDLE)
+				if (mAnimState != IDLE)
 				{
-					mAnimState = ENEMY_IDLE;
+					mAnimState = IDLE;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -503,13 +503,13 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 		//Adjust position and dimensions based on the current sprite
 		dimensions.x *= mStateMultipliers[mAnimState].x;
 		dimensions.y *= mStateMultipliers[mAnimState].y;
-		if (mAnimState != ENEMY_IDLE)
+		if (mAnimState != IDLE)
 		{
 			if (mSpriteDirection == -1)
 			{
 				position.x -= dimensions.x * 0.5f;
 			}
-			position.y -= dimensions.y * (mStateMultipliers[mAnimState].y - mStateMultipliers[ENEMY_IDLE].y) * 0.7f;
+			position.y -= dimensions.y * (mStateMultipliers[mAnimState].y - mStateMultipliers[IDLE].y) * 0.7f;
 		}
 
 		//Increment animation time

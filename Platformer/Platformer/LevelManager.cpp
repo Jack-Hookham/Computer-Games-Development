@@ -131,8 +131,8 @@ void LevelManager::loadPlayer(std::unique_ptr<b2World>& world, Player* player, A
 	glm::vec2 dimensions;
 	Colour colour;
 	glm::vec4 colourVec;	
-	Texture playerTextures[PLAYER_NUM_STATES];
-	SoundEffect playerSounds[PLAYER_NUM_SOUNDS];
+	Texture playerTextures[Player::NUM_STATES];
+	SoundEffect playerSounds[Player::NUM_SOUNDS];
 
 	std::istringstream iss(line);
 
@@ -143,7 +143,7 @@ void LevelManager::loadPlayer(std::unique_ptr<b2World>& world, Player* player, A
 	colour = Colour(colourVec);
 
 	//Populate the texture array
-	for (int i = 0; i < PLAYER_NUM_STATES; i++)
+	for (int i = 0; i < Player::NUM_STATES; i++)
 	{
 		std::string texturePath;
 		iss >> texturePath;
@@ -151,7 +151,7 @@ void LevelManager::loadPlayer(std::unique_ptr<b2World>& world, Player* player, A
 	}
 
 	//Populate the sound array
-	for (int i = 0; i < PLAYER_NUM_SOUNDS; i++)
+	for (int i = 0; i < Player::NUM_SOUNDS; i++)
 	{
 		std::string soundPath;
 		iss >> soundPath;
@@ -221,13 +221,15 @@ void LevelManager::loadBox(std::unique_ptr<b2World>& world, std::vector<Box*>& b
 void LevelManager::loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*>& enemyEntities, AudioManager& audioManager, 
 	const std::string line, int id)
 {
+	Enemy* enemy = new Enemy;
+
 	//Initialise player params
 	glm::vec2 position;
 	glm::vec2 dimensions;
 	Colour colour;
 	glm::vec4 colourVec;
-	Texture enemyTextures[ENEMY_NUM_STATES];
-	SoundEffect enemySounds[ENEMY_NUM_SOUNDS];
+	Texture enemyTextures[Enemy::NUM_STATES];
+	SoundEffect enemySounds[Enemy::NUM_SOUNDS];
 
 	std::istringstream iss(line);
 
@@ -238,7 +240,7 @@ void LevelManager::loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*
 	colour = Colour(colourVec);
 
 	//Populate the texture array
-	for (int i = 0; i < ENEMY_NUM_STATES; i++)
+	for (int i = 0; i < Enemy::NUM_STATES; i++)
 	{
 		std::string texturePath;
 		iss >> texturePath;
@@ -246,15 +248,14 @@ void LevelManager::loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*
 	}
 
 	//Populate the sound array
-	for (int i = 0; i < ENEMY_NUM_SOUNDS; i++)
+	for (int i = 0; i < Enemy::NUM_SOUNDS; i++)
 	{
 		std::string soundPath;
 		iss >> soundPath;
 		enemySounds[i] = audioManager.loadSoundEffect(soundPath);
 	}
 
-	//Initialise player instance
-	Enemy* enemy = new Enemy;
+	//Initialise enemy instance
 	enemy->init(world.get(), position, dimensions, colour, enemyTextures, enemySounds, id, true);
 	enemyEntities.emplace_back(enemy);
 }

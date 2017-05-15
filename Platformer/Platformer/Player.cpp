@@ -26,12 +26,12 @@ void Player::init(b2World* world, const glm::vec2& position,
 	mAttackBox = glm::vec4(mPosition.x + mDimensions.x * 0.1f, mPosition.y + mDimensions.y * 0.5f - mAttackRange.y,
 		mAttackRange.x * mDirection, mAttackRange.y);
 
-	for (int i = 0; i < PLAYER_NUM_STATES; i++)
+	for (int i = 0; i < NUM_STATES; i++)
 	{
 		mSpriteSheets[i].init(textures[i], mSheetDimensions[i]);
 	}
 
-	for (int i = 0; i < PLAYER_NUM_SOUNDS; i++)
+	for (int i = 0; i < NUM_SOUNDS; i++)
 	{
 		mSounds[i] = sounds[i];
 	}
@@ -221,13 +221,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mAnimState != PLAYER_JUMP_ATTACK)
+				if (mAnimState != JUMP_ATTACK)
 				{
-					if (mAnimState != PLAYER_ATTACK)
+					if (mAnimState != ATTACK)
 					{
 						mAnimationTimer = 0.0f;
 					}
-					mAnimState = PLAYER_JUMP_ATTACK;
+					mAnimState = JUMP_ATTACK;
 				}
 			}	
 			
@@ -238,13 +238,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mAnimState != PLAYER_JUMP_THROW)
+				if (mAnimState != JUMP_THROW)
 				{
-					if (mAnimState != PLAYER_THROW)
+					if (mAnimState != THROW)
 					{
 						mAnimationTimer = 0.0f;
 					}
-					mAnimState = PLAYER_JUMP_THROW;
+					mAnimState = JUMP_THROW;
 				}
 			}
 
@@ -254,9 +254,9 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				tileIndex = 5;
 
 				//if the state just started reset the animation time
-				if (mAnimState != PLAYER_JUMP)
+				if (mAnimState != JUMP)
 				{
-					mAnimState = PLAYER_JUMP;
+					mAnimState = JUMP;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -264,13 +264,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			else if (velocity.y <= 0.0f)
 			{
 				tileIndex = 4;
-				mAnimState = PLAYER_IN_AIR;
+				mAnimState = IN_AIR;
 			}
 			//if rising
 			else
 			{
 				tileIndex = 0;
-				mAnimState = PLAYER_IN_AIR;
+				mAnimState = IN_AIR;
 			}
 		}
 		//if on ground
@@ -283,13 +283,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mAnimState != PLAYER_ATTACK)
+				if (mAnimState != ATTACK)
 				{
-					if (mAnimState != PLAYER_JUMP_ATTACK)
+					if (mAnimState != JUMP_ATTACK)
 					{
 						mAnimationTimer = 0.0f;
 					}
-					mAnimState = PLAYER_ATTACK;
+					mAnimState = ATTACK;
 				}
 			}
 
@@ -300,13 +300,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = 0.4f;
 
 				//if the state just started reset the animation time
-				if (mAnimState != PLAYER_THROW)
+				if (mAnimState != THROW)
 				{
-					if (mAnimState != PLAYER_JUMP_THROW)
+					if (mAnimState != JUMP_THROW)
 					{
 						mAnimationTimer = 0.0f;
 					}
-					mAnimState = PLAYER_THROW;
+					mAnimState = THROW;
 				}
 			}
 
@@ -318,9 +318,9 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				animationSpeed = abs(velocity.x) * 0.025f;
 
 				//if the state just started reset the animation time
-				if (mAnimState != PLAYER_RUN)
+				if (mAnimState != RUN)
 				{
-					mAnimState = PLAYER_RUN;
+					mAnimState = RUN;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -330,9 +330,9 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 				tileIndex = 4;
 
 				//if state just started reset the animation time
-				if (mAnimState != PLAYER_IDLE)
+				if (mAnimState != IDLE)
 				{
-					mAnimState = PLAYER_IDLE;
+					mAnimState = IDLE;
 					mAnimationTimer = 0.0f;
 				}
 			}
@@ -383,13 +383,13 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 		//Adjust position and dimensions based on the current sprite
 		dimensions.x *= mStateMultipliers[mAnimState].x;
 		dimensions.y *= mStateMultipliers[mAnimState].y;
-		if (mAnimState != PLAYER_IDLE)
+		if (mAnimState != IDLE)
 		{
 			if (mDirection == -1)
 			{
 				position.x -= dimensions.x * 0.5f;
 			}
-			position.y -= dimensions.y * (mStateMultipliers[mAnimState].y - mStateMultipliers[PLAYER_IDLE].y) * 0.7f;
+			position.y -= dimensions.y * (mStateMultipliers[mAnimState].y - mStateMultipliers[IDLE].y) * 0.7f;
 		}
 
 		//Increment animation time
@@ -422,13 +422,13 @@ void Player::input(InputManager& inputManager)
 {
 	//Left and right movement
 	if ((inputManager.getKeyboard()->isKeyDown(SDLK_a) || inputManager.getController()->getLeftStickDirection() < 0) &&
-		mAnimState != PLAYER_ATTACK && mAnimState != PLAYER_THROW)
+		mAnimState != ATTACK && mAnimState != THROW)
 	{
 		mBody->ApplyForceToCenter(b2Vec2(-100.0f, 0.0f), true);
 		mDirection = -1;
 	}
 	else if ((inputManager.getKeyboard()->isKeyDown(SDLK_d) || inputManager.getController()->getLeftStickDirection() > 0) &&
-		mAnimState != PLAYER_ATTACK && mAnimState != PLAYER_THROW)
+		mAnimState != ATTACK && mAnimState != THROW)
 	{
 		mDirection = 1;
 		mBody->ApplyForceToCenter(b2Vec2(100.0f, 0.0f), true);
@@ -472,7 +472,7 @@ void Player::input(InputManager& inputManager)
 					//Jump
 					mBody->ApplyLinearImpulse(b2Vec2(0.0f, 50.0f), b2Vec2(0.0f, 0.0f), true);
 					mJumping = true;
-					mSounds[PLAYER_JUMP_SOUND].play();
+					mSounds[JUMP_SOUND].play();
 					break;
 				}
 			}
@@ -483,7 +483,7 @@ void Player::input(InputManager& inputManager)
 	if (!mAttacking && (inputManager.getKeyboard()->isKeyPressed(SDLK_SPACE) ||
 		inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_X)))
 	{
-		mSounds[PLAYER_ATTACK_SOUND].play();
+		mSounds[ATTACK_SOUND].play();
 		mAttacking = true;
 	}
 
@@ -491,7 +491,7 @@ void Player::input(InputManager& inputManager)
 		inputManager.getKeyboard()->isKeyPressed(SDLK_q) || inputManager.getKeyboard()->isKeyPressed(SDLK_e) ||
 		inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_Y) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B)))
 	{
-		mSounds[PLAYER_THROW_SOUND].play();
+		mSounds[THROW_SOUND].play();
 		mThrowing = true;
 
 		if (inputManager.getKeyboard()->isKeyPressed(SDLK_q) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_Y))
