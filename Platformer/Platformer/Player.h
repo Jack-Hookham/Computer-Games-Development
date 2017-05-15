@@ -140,7 +140,7 @@ private:
 	int mLineProjectiles = 0;
 
 	//Timing stuff for staggering multiple projectile spawns in a spread
-	const int SPREAD_SPAWN_TIME = 1;
+	const int SPREAD_SPAWN_TIME = 50;
 	Timer mSpreadSpawnTimer;
 	int mSpreadProjectiles = 0;
 	float mSpreadMultiplierY = -1.0f;
