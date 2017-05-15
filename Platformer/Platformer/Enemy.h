@@ -80,8 +80,7 @@ private:
 	//Animation timer
 	float mAnimationTimer = 0.0f;
 
-	int mSpriteDirection = 1;
-	int mMoveDirection = 1;
+	int mDirection = 1;
 
 	//State bool checks
 	bool mInAir = true;

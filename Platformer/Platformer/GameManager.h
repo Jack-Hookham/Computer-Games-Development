@@ -103,9 +103,6 @@ private:
 	//Timer for each frame
 	Timer mFrameTimer;
 
-	//The box2D world
-	std::unique_ptr<b2World> mWorld;
-
 	//Entities
 	Player* mPlayer;
 	std::vector<Box*> mBoxEntities;

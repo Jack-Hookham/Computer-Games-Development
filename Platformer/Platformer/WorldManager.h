@@ -15,7 +15,7 @@ public:
 	~WorldManager();
 
 	//Generate the box2D world
-	std::unique_ptr<b2World> generateWorld(const std::string levelPath, AudioManager& audioManager, Player* player,
+	void generateWorld(const std::string levelPath, AudioManager& audioManager, Player* player,
 		std::vector<Ground*>& groundEntities, std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities,
 		std::vector<Marker*>& markerEntities);
 
@@ -29,6 +29,10 @@ public:
 		const glm::vec2& dimensions, const Colour& colour, const Texture& texture, const float density = 1.0f,
 		const float friction = 0.3f, const glm::vec4& texCoords = { 0.0f, 0.0f, 1.0f, 1.0f }, const bool fixedRotation = false);
 
+	//Box2D world
+	std::unique_ptr<b2World> world;
+
 private:
 	void log(const std::string text);
+
 };

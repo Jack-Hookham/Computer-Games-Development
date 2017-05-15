@@ -67,6 +67,7 @@ void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, Player* play
 				p->getPosition().y < g->getPosition().y + g->getDimensions().y &&
 				p->getPosition().y + g->getDimensions().y + p->getDimensions().y > g->getPosition().y)
 			{
+				p->setActive(false);
 				p->setVelocity(glm::vec2(0.0f, 0.0f));
 			}
 		}

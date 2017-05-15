@@ -20,7 +20,7 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 
 	mAttackRange = glm::vec2(1.2f + mDimensions.x * 0.5f, 1.0f + mDimensions.y * 0.5f);
 	mAttackBox = glm::vec4(mPosition.x + mDimensions.x * 0.1f, mPosition.y + mDimensions.y * 0.5f - mAttackRange.y,
-		mAttackRange.x * mSpriteDirection, mAttackRange.y);
+		mAttackRange.x * mDirection, mAttackRange.y);
 
 	mDirectionTimer = DIRECTION_TIMER_CAP;
 
@@ -77,16 +77,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 {	
 	EntityBox2D::update();
 
-	if (mHealth < 0)
-	{
-		mHealth = 0;
-	}
-
-	if (mHealth <= 0)
-	{
-		mDead = true;
-	}
-
 	//Cap the speed
 	if (mBody->GetLinearVelocity().x > MAX_SPEED)
 	{
@@ -125,17 +115,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			}
 		}
 	}
-
-	//Direction
-	//if (mBody->GetLinearVelocity().x > 0.01f)
-	//{
-	//	mSpriteDirection = 1;
-	//}
-	//
-	//if (mBody->GetLinearVelocity().x < -0.01f)
-	//{
-	//	mSpriteDirection = -1;
-	//}
 
 	if (mDirectionTimer <= DIRECTION_TIMER_CAP)
 	{
@@ -177,8 +156,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 					mPosition.y < m->getPosition().y + mDimensions.y * 0.5f + m->getDimensions().y * 0.5f &&
 					mPosition.y + mDimensions.y * 0.5f + m->getDimensions().y * 0.5f > m->getPosition().y)
 				{
-					mMoveDirection = -mMoveDirection;
-					mSpriteDirection = -mSpriteDirection;
+					mDirection = -mDirection;
 					mDirectionTimer = 0;
 					break;
 				}
@@ -192,14 +170,12 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			//face the player
 			if (playerDistance.x < 0.0f)
 			{
-				mMoveDirection = 1;
-				mSpriteDirection = 1;
+				mDirection = 1;
 				mDirectionTimer = 0;
 			}
 			else
 			{
-				mMoveDirection = -1;
-				mSpriteDirection = -1;
+				mDirection = -1;
 				mDirectionTimer = 0;
 			}
 		}
@@ -257,12 +233,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			{
 				mIsHurt = true;
 				mHealth -= player->getSwordDamage();
-				//mHealth--;
-
-				if (mHealth > 0)
-				{
-					mBody->ApplyForceToCenter(b2Vec2(-20000.0f * hitDirection, 1000.0f), true);
-				}
+				mBody->ApplyForceToCenter(b2Vec2(-20000.0f * hitDirection, 1000.0f), true);
 			}
 		}
 		//right of player
@@ -277,12 +248,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			{
 				mIsHurt = true;
 				mHealth -= player->getSwordDamage();
-				//mHealth;
-
-				if (mHealth > 0)
-				{
-					mBody->ApplyForceToCenter(b2Vec2(-20000.0f * hitDirection, 1000.0f), true);
-				}
+				mBody->ApplyForceToCenter(b2Vec2(-20000.0f * hitDirection, 1000.0f), true);
 			}
 		}
 	}
@@ -290,19 +256,18 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//*****Calculate whether to attack*****
 	//Update the attack box
 	mAttackBox = glm::vec4(mPosition.x + mDimensions.x * 0.1f, mPosition.y + mDimensions.y * 0.5f - mAttackRange.y,
-		mAttackRange.x * mSpriteDirection, mAttackRange.y);
+		mAttackRange.x * mDirection, mAttackRange.y);
 
 	//Draw the attack box (debugging)
-	//collisionBoxEntities[0]->setPosition(mAttackBox.x, mAttackBox.y);
-	//collisionBoxEntities[0]->setDimensions(mAttackBox.z, mAttackBox.w);
+	collisionBoxEntities[0]->setPosition(mAttackBox.x, mAttackBox.y);
+	collisionBoxEntities[0]->setDimensions(mAttackBox.z, mAttackBox.w);
 
 	if (!mAttacking)
 	{
-		//left of player
+		//right of player
 		if (mPosition.x > player->getPosition().x)
 		{
-			if (/*player->getAttacking() && !mIsHurt &&*/
-				player->getPosition().x < mAttackBox.x + player->getDimensions().x * 0.5f - mAttackBox.z * 0.5f &&
+			if (player->getPosition().x < mAttackBox.x + player->getDimensions().x * 0.5f - mAttackBox.z * 0.5f &&
 				player->getPosition().x + player->getDimensions().x * 0.5f - mAttackBox.z * 0.5f > mAttackBox.x &&
 				player->getPosition().y < mAttackBox.y + player->getDimensions().y * 0.5f + mAttackBox.w * 0.5f &&
 				player->getPosition().y + player->getDimensions().y * 0.5f + mAttackBox.w * 0.5f > mAttackBox.y)
@@ -312,11 +277,10 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				player->setHealth(player->getHealth() - SWORD_DAMAGE);
 			}
 		}
-		//right of player
+		//left of player
 		else
 		{
-			if (/*player->getAttacking() && !mIsHurt &&*/
-				player->getPosition().x < mAttackBox.x + player->getDimensions().x * 0.5f + mAttackBox.z * 0.5f &&
+			if (player->getPosition().x < mAttackBox.x + player->getDimensions().x * 0.5f + mAttackBox.z * 0.5f &&
 				player->getPosition().x + player->getDimensions().x * 0.5f + mAttackBox.z * 0.5f > mAttackBox.x &&
 				player->getPosition().y < mAttackBox.y + player->getDimensions().y * 0.5f + mAttackBox.w * 0.5f &&
 				player->getPosition().y + player->getDimensions().y * 0.5f + mAttackBox.w * 0.5f > mAttackBox.y)
@@ -331,28 +295,30 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//Calculate whether hit by projectile
 	for each (Projectile* p in player->getProjectileEntities())
 	{
-		//Calculate direction to apply force
-		int hitDirection = 1;
-		if (mPosition.x > p->getPosition().x)
+		if (p->getActive())
 		{
-			hitDirection = -1;
-		}
-
-		if (p->getPosition().x < mPosition.x + mDimensions.x * 0.5f &&
-			p->getPosition().x + mDimensions.x * 0.5f + p->getDimensions().x > mPosition.x &&
-			p->getPosition().y < mPosition.y + mDimensions.y * 0.5f &&
-			p->getPosition().y + mDimensions.y * 0.5f + p->getDimensions().y > mPosition.y)
-		{
-			//Set projectile delete flag so that it gets deleted in the player's update function
-			p->setDelete(true);
-			p->setVelocity(glm::vec2(0.0f, 0.0f));
-
-			mIsHurt = true;
-			mHealth -= player->getShurikenDamage();
-
-			if (mHealth > 0)
+			if (p->getPosition().x < mPosition.x + mDimensions.x * 0.5f &&
+				p->getPosition().x + mDimensions.x * 0.5f + p->getDimensions().x > mPosition.x &&
+				p->getPosition().y < mPosition.y + mDimensions.y * 0.5f &&
+				p->getPosition().y + mDimensions.y * 0.5f + p->getDimensions().y > mPosition.y)
 			{
-				mBody->ApplyForceToCenter(b2Vec2(-5000.0f * hitDirection, 700.0f), true);
+				//Set projectile delete flag so that it gets deleted in the player's update function
+				p->setDelete(true);
+				p->setActive(false);
+				p->setVelocity(glm::vec2(0.0f, 0.0f));
+
+				mIsHurt = true;
+				mHealth -= player->getShurikenDamage();
+
+				//Calculate direction to apply force
+				int hitDirection = 1;
+				if (mPosition.x < p->getPosition().x)
+				{
+					hitDirection = -1;
+				}
+					
+				mBody->ApplyForceToCenter(b2Vec2(5000.0f * hitDirection, 700.0f), true);
+
 			}
 		}
 	}
@@ -360,7 +326,17 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//Move if not hurt
 	if (!mIsHurt && !mAttacking)
 	{
-		mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
+		mBody->ApplyForceToCenter(b2Vec2(100.0f * mDirection, 0.0f), true);
+	}
+
+	if (mHealth < 0)
+	{
+		mHealth = 0;
+	}
+
+	if (mHealth <= 0)
+	{
+		mDead = true;
 	}
 }
 
@@ -445,7 +421,7 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 			}
 
 			//if moving
-			else if (abs(velocity.x) > 1.0f && ((velocity.x > 0 && mSpriteDirection > 0 || (velocity.x < 0 && mSpriteDirection < 0))))
+			else if (abs(velocity.x) > 1.0f && ((velocity.x > 0 && mDirection > 0 || (velocity.x < 0 && mDirection < 0))))
 			{
 				tileIndex = 5;
 				//scale up the animation speed depending on the player's speed
@@ -505,7 +481,7 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 		dimensions.y *= mStateMultipliers[mAnimState].y;
 		if (mAnimState != IDLE)
 		{
-			if (mSpriteDirection == -1)
+			if (mDirection == -1)
 			{
 				position.x -= dimensions.x * 0.5f;
 			}
@@ -521,7 +497,7 @@ void Enemy::add(SpriteBatch& spriteBatch, Camera& camera)
 		glm::vec4 texCoords = mSpriteSheets[mAnimState].getTexCoords(tileIndex);
 
 		//if moving left
-		if (mSpriteDirection == -1)
+		if (mDirection == -1)
 		{
 			//flip x texCoords
 			texCoords.x += 1.0f / mSpriteSheets[mAnimState].getDimensions().x;

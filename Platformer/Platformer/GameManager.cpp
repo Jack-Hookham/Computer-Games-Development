@@ -70,7 +70,7 @@ int GameManager::init()
 
 	//Initialise the box2D world
 	mPlayer = new Player;
-	mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
+	mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
 		mMarkerEntities);
 
 	Marker* collisionBox = new Marker;
@@ -142,7 +142,7 @@ int GameManager::gameLoop()
 		manageInput();
 
 		//Update all physics
-		mPhysicsManager.updatePhysics(mWorld, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
+		mPhysicsManager.updatePhysics(mWorldManager.world, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
 			mMarkerEntities, mCollisionBoxEntities);
 
 		//Calculate fps
@@ -267,7 +267,7 @@ void GameManager::manageInput()
 		deleteEntities();
 
 		mPlayer = new Player;
-		mWorld = mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
+		mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
 			mMarkerEntities);
 
 		Marker* collisionBox = new Marker;
@@ -294,7 +294,7 @@ void GameManager::manageInput()
 		std::string textureString = "../res/textures/boxes_and_crates/obj_box" + std::to_string(textureGen(randGenerator)) + ".png";
 		Texture texture = ResourceManager::getTexture(textureString);
 
-		mWorldManager.addBoxToWorld(mBoxEntities, mWorld, worldCoords, dimensions, colour, texture);
+		mWorldManager.addBoxToWorld(mBoxEntities, mWorldManager.world, worldCoords, dimensions, colour, texture);
 
 		mPlaceBoxSound.play();
 	}
@@ -308,7 +308,7 @@ void GameManager::manageInput()
 		Colour colour(255, 255, 255, 255);
 		Texture texture = ResourceManager::getTexture("../res/textures/platformerArt/png/ground.png");
 
-		mWorldManager.addGroundToWorld(mGroundEntities, mWorld, worldCoords, dimensions, colour, texture);
+		mWorldManager.addGroundToWorld(mGroundEntities, mWorldManager.world, worldCoords, dimensions, colour, texture);
 
 		mPlaceGroundSound.play();
 	}

@@ -18,14 +18,17 @@ public:
 
 	inline Timer getLifeTimer() const { return mLifeTimer; }
 	inline const bool getDelete() const { return mDelete; }
+	inline const bool getActive() const { return mActive; }
 
 	inline void setVelocity(const glm::vec2 velocity) { mVelocity = velocity; }
 	inline void setDelete(const bool value) { mDelete = value; }
+	inline void setActive(const bool value) { mActive = value; }
 
 private:
 	glm::vec2 mVelocity;
 	Timer mLifeTimer;
 
+	bool mActive = true;
 	bool mDelete = false;
 };
 

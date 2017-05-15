@@ -8,14 +8,11 @@ WorldManager::~WorldManager()
 {
 }
 
-std::unique_ptr<b2World> WorldManager::generateWorld(const std::string levelPath, AudioManager& audioManager, 
+void WorldManager::generateWorld(const std::string levelPath, AudioManager& audioManager, 
 	Player* player, std::vector<Ground*>& groundEntities, std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities,
 	std::vector<Marker*>& markerEntities)
 {
 	log("Generating world");
-
-	//The box2D world
-	std::unique_ptr<b2World> world;
 
 	//Box2D world setup
 	b2Vec2 gravity(0.0f, -20.0f);
@@ -24,8 +21,6 @@ std::unique_ptr<b2World> WorldManager::generateWorld(const std::string levelPath
 	LevelManager::loadLevel(levelPath, world, audioManager, player, groundEntities, boxEntities, enemyEntities, markerEntities);
 
 	log("World generated");
-
-	return world;
 }
 
 //Used to ground to the world after the level has been loaded (currently on right click)
