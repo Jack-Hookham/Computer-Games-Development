@@ -17,6 +17,8 @@ public:
 	void update();
 
 	inline Timer getLifeTimer() const { return mLifeTimer; }
+	
+	inline void setVelocity(const glm::vec2 velocity) { mVelocity = velocity; }
 
 private:
 	glm::vec2 mVelocity;

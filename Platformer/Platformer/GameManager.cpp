@@ -142,7 +142,8 @@ int GameManager::gameLoop()
 		manageInput();
 
 		//Update all physics
-		mPhysicsManager.updatePhysics(mWorld, mPlayer, mEnemyEntities, mMarkerEntities, mCollisionBoxEntities);
+		mPhysicsManager.updatePhysics(mWorld, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
+			mMarkerEntities, mCollisionBoxEntities);
 
 		//Calculate fps
 		int tickCount = mFPSTimer.getTicks();
@@ -157,7 +158,8 @@ int GameManager::gameLoop()
 		frameCount++;
 
 		//Update all graphics
-		mGraphicsManager.updateGraphics(fps, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities, mMarkerEntities, mCollisionBoxEntities);
+		mGraphicsManager.updateGraphics(fps, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
+			mMarkerEntities, mCollisionBoxEntities);
 
 		//If frame finished early cap the frame rate
 		int frameTicks = mFrameTimer.getTicks();
@@ -189,27 +191,27 @@ void GameManager::manageInput()
 		//Key press
 		else if (e.type == SDL_KEYDOWN)
 		{
-			mInputManager.pressKey(e.key.keysym.sym);
+			mInputManager.updateKeyboard()->pressKey(e.key.keysym.sym);
 		}
 		//Key release
 		else if (e.type == SDL_KEYUP)
 		{
-			mInputManager.releaseKey(e.key.keysym.sym);
+			mInputManager.updateKeyboard()->releaseKey(e.key.keysym.sym);
 		}
 		//Mouse motion
 		else if (e.type == SDL_MOUSEMOTION)
 		{
-			mInputManager.setMouseCoords((float)e.motion.x, (float)e.motion.y);
+			mInputManager.updateMouse()->setMouseCoords((float)e.motion.x, (float)e.motion.y);
 		}
 		//Mouse button down
 		else if (e.type == SDL_MOUSEBUTTONDOWN)
 		{
-			mInputManager.pressKey(e.button.button);
+			mInputManager.updateMouse()->pressButton(e.button.button);
 		}
 		//Mouse button up
 		else if (e.type == SDL_MOUSEBUTTONUP)
 		{
-			mInputManager.releaseKey(e.button.button);
+			mInputManager.updateMouse()->pressButton(e.button.button);
 		}
 
 		//Controller left right movement
@@ -224,17 +226,17 @@ void GameManager::manageInput()
 					//Left of dead zone
 					if (e.jaxis.value < -JOYSTICK_DEAD_ZONE)
 					{
-						mInputManager.setLeftStickDirection(-1);
+						mInputManager.updateController()->setLeftStickDirection(-1);
 					}
 					//Right of dead zone
 					else if (e.jaxis.value > JOYSTICK_DEAD_ZONE)
 					{
-						mInputManager.setLeftStickDirection(1);
+						mInputManager.updateController()->setLeftStickDirection(1);
 					}
 					//In dead zone
 					else if (e.jaxis.value > -JOYSTICK_DEAD_ZONE && e.jaxis.value < JOYSTICK_DEAD_ZONE)
 					{
-						mInputManager.setLeftStickDirection(0);
+						mInputManager.updateController()->setLeftStickDirection(0);
 					}
 				}
 			}
@@ -243,24 +245,24 @@ void GameManager::manageInput()
 		//Controller button press
 		else if (e.type == SDL_CONTROLLERBUTTONDOWN)
 		{
-			mInputManager.pressKey(e.cbutton.button);
+			mInputManager.updateController()->pressButton(e.cbutton.button);
 		}
 		//Controller button release
 		else if (e.type == SDL_CONTROLLERBUTTONUP)
 		{
-			mInputManager.releaseKey(e.cbutton.button);
+			mInputManager.updateController()->pressButton(e.cbutton.button);
 		}	
 	}
 
 	//***Process input***
 	//Quit if escape pressed
-	if (mInputManager.isKeyPressed(SDLK_ESCAPE))
+	if (mInputManager.getKeyboard()->isKeyPressed(SDLK_ESCAPE))
 	{
 		mGameState = QUIT;
 	}
 
 	//Reload level if r pressed
-	if (mInputManager.isKeyPressed(SDLK_r))
+	if (mInputManager.getKeyboard()->isKeyPressed(SDLK_r))
 	{
 		deleteEntities();
 
@@ -275,10 +277,10 @@ void GameManager::manageInput()
 	}
 
 	//Mouse buttons
-	if (mInputManager.isKeyPressed(SDL_BUTTON_LEFT))
+	if (mInputManager.getMouse()->isButtonPressed(SDL_BUTTON_LEFT))
 	{
 		//Create a box at the mouse position when LMB is pressed
-		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
+		glm::vec2 mouseCoords = mInputManager.getMouse()->getMouseCoords();
 		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
 		glm::vec2 dimensions = glm::vec2(2.0f);
 
@@ -297,10 +299,10 @@ void GameManager::manageInput()
 		mPlaceBoxSound.play();
 	}
 
-	if (mInputManager.isKeyPressed(SDL_BUTTON_RIGHT))
+	if (mInputManager.getMouse()->isButtonPressed(SDL_BUTTON_RIGHT))
 	{
 		//Create ground at the mouse position when RMB is pressed
-		glm::vec2 mouseCoords = mInputManager.getMouseCoords();
+		glm::vec2 mouseCoords = mInputManager.getMouse()->getMouseCoords();
 		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
 		glm::vec2 dimensions = glm::vec2(1.0f);
 		Colour colour(255, 255, 255, 255);
@@ -314,18 +316,20 @@ void GameManager::manageInput()
 	//Manage input for the player
 	mPlayer->input(mInputManager);
 
-	if (mInputManager.isKeyDown(SDLK_COMMA) || mInputManager.isKeyDown(SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
+	if (mInputManager.getKeyboard()->isKeyDown(SDLK_COMMA) ||
+		mInputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
 	{
 		//Zoom in
 		mGraphicsManager.setCameraScale(SCALE_SPEED);
 	}
-	if (mInputManager.isKeyDown(SDLK_PERIOD) || mInputManager.isKeyDown(SDL_CONTROLLER_BUTTON_RIGHTSHOULDER))
+	if (mInputManager.getKeyboard()->isKeyDown(SDLK_PERIOD) ||
+		mInputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_RIGHTSHOULDER))
 	{
 		//Zoom out
 		mGraphicsManager.setCameraScale(-SCALE_SPEED);
 	}	
 
-	//Update the input manager - copies current input map to previous input map
+	//Update the input manager - copies current input maps to previous input maps
 	mInputManager.update();
 }
 

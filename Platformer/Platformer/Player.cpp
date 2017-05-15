@@ -408,12 +408,14 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 void Player::input(InputManager& inputManager)
 {
 	//Left and right movement
-	if ((inputManager.isKeyDown(SDLK_a) || inputManager.getLeftStickDirection() < 0) && mAnimState != PLAYER_ATTACK && mAnimState != PLAYER_THROW)
+	if ((inputManager.getKeyboard()->isKeyDown(SDLK_a) || inputManager.getController()->getLeftStickDirection() < 0) &&
+		mAnimState != PLAYER_ATTACK && mAnimState != PLAYER_THROW)
 	{
 		mBody->ApplyForceToCenter(b2Vec2(-100.0f, 0.0f), true);
 		mDirection = -1;
 	}
-	else if ((inputManager.isKeyDown(SDLK_d) || inputManager.getLeftStickDirection() > 0) && mAnimState != PLAYER_ATTACK && mAnimState != PLAYER_THROW)
+	else if ((inputManager.getKeyboard()->isKeyDown(SDLK_d) || inputManager.getController()->getLeftStickDirection() > 0) &&
+		mAnimState != PLAYER_ATTACK && mAnimState != PLAYER_THROW)
 	{
 		mDirection = 1;
 		mBody->ApplyForceToCenter(b2Vec2(100.0f, 0.0f), true);
@@ -451,7 +453,7 @@ void Player::input(InputManager& inputManager)
 			if (!mInAir)
 			{
 				//Can jump
-				if (inputManager.isKeyPressed(SDLK_w) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_A))
+				if (inputManager.getKeyboard()->isKeyPressed(SDLK_w) || inputManager.getKeyboard()->isKeyPressed(SDL_CONTROLLER_BUTTON_A))
 				{
 					//Jump
 					mBody->ApplyLinearImpulse(b2Vec2(0.0f, 50.0f), b2Vec2(0.0f, 0.0f), true);
@@ -464,20 +466,21 @@ void Player::input(InputManager& inputManager)
 	}
 
 	//Attack
-	if (!mAttacking && (inputManager.isKeyPressed(SDLK_SPACE) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_X)))
+	if (!mAttacking && (inputManager.getKeyboard()->isKeyPressed(SDLK_SPACE) ||
+		inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_X)))
 	{
 		mSounds[PLAYER_ATTACK_SOUND].play();
 		mAttacking = true;
 	}
 
 	if (!mThrowing && (
-		inputManager.isKeyPressed(SDLK_q) || inputManager.isKeyPressed(SDLK_e) || 
-		inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_Y) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_B)))
+		inputManager.getKeyboard()->isKeyPressed(SDLK_q) || inputManager.getKeyboard()->isKeyPressed(SDLK_e) ||
+		inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_Y) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B)))
 	{
 		mSounds[PLAYER_THROW_SOUND].play();
 		mThrowing = true;
 
-		if (inputManager.isKeyPressed(SDLK_q) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_Y))
+		if (inputManager.getKeyboard()->isKeyPressed(SDLK_q) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_Y))
 		{
 			Projectile* projectile = new Projectile;
 
@@ -504,7 +507,7 @@ void Player::input(InputManager& inputManager)
 			mLineProjectiles++;
 		}
 
-		if (inputManager.isKeyPressed(SDLK_e) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_B))
+		if (inputManager.getKeyboard()->isKeyPressed(SDLK_e) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B))
 		{
 			Projectile* projectile = new Projectile;
 
