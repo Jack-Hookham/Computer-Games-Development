@@ -67,7 +67,8 @@ public:
 	inline const int getDirection() const { return mDirection; }
 	inline const glm::vec4 getAttackBox() const { return mAttackBox; }
 	inline const int getSwordDamage() const { return SWORD_DAMAGE; }
-	inline  std::vector<Projectile*> getProjectileEntities() const { return mProjectileEntities; }
+	inline const int getShurikenDamage() const { return SHURIKEN_DAMAGE; }
+	inline const std::vector<Projectile*> getProjectileEntities() const { return mProjectileEntities; }
 
 	inline std::vector<Projectile*> updateProjectileEntities() const { return mProjectileEntities; }
 
@@ -123,7 +124,8 @@ private:
 	//Box in front of the player representing melee attack area
 	glm::vec4 mAttackBox;
 
-	const int SWORD_DAMAGE = 100;
+	const int SWORD_DAMAGE = 50;
+	const int SHURIKEN_DAMAGE = 10;
 
 	SoundEffect mSounds[PLAYER_NUM_SOUNDS];
 

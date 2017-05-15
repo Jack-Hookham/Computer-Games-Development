@@ -40,7 +40,7 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 
 	//Initialise the cameras
 	mWorldCamera.initCamera(mScreenWidth, mScreenHeight);
-	mWorldCamera.setScale(32.0f);
+	mWorldCamera.setScale(8.0f);
 	mHUDCamera.initCamera(mScreenWidth, mScreenHeight);
 
 	//Offset the hud camera to align 0, 0 with the bottom left corner

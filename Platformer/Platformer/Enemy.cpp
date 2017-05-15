@@ -239,8 +239,8 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 
 	//*****Calculate whether enemy has been hit by player*****
 
-	collisionBoxEntities[0]->setPosition(player->getAttackBox().x, player->getAttackBox().y);
-	collisionBoxEntities[0]->setDimensions(player->getAttackBox().z, player->getAttackBox().w);
+	//collisionBoxEntities[0]->setPosition(player->getAttackBox().x, player->getAttackBox().y);
+	//collisionBoxEntities[0]->setDimensions(player->getAttackBox().z, player->getAttackBox().w);
 
 	//if player is attacking and enemy isn't already hurt
 	if (player->getAttacking() && !mIsHurt)
@@ -248,6 +248,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 		//left of player
 		if (mPosition.x < player->getPosition().x)
 		{
+			int hitDirection = 1;
 			if (/*player->getAttacking() && !mIsHurt &&*/
 				mPosition.x < player->getAttackBox().x + mDimensions.x * 0.5f - player->getAttackBox().z * 0.5f &&
 				mPosition.x + mDimensions.x * 0.5f - player->getAttackBox().z * 0.5f > player->getAttackBox().x &&
@@ -255,18 +256,19 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				mPosition.y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f > player->getAttackBox().y)
 			{
 				mIsHurt = true;
-				//mHealth -= player->getSwordDamage();
-				mHealth--;
+				mHealth -= player->getSwordDamage();
+				//mHealth--;
 
 				if (mHealth > 0)
 				{
-					mBody->ApplyForceToCenter(b2Vec2(-20000.0f * mMoveDirection, 1000.0f), true);
+					mBody->ApplyForceToCenter(b2Vec2(-20000.0f * hitDirection, 1000.0f), true);
 				}
 			}
 		}
 		//right of player
 		else
 		{
+			int hitDirection = -1;
 			if (/*player->getAttacking() && !mIsHurt &&*/
 				mPosition.x < player->getAttackBox().x + mDimensions.x * 0.5f + player->getAttackBox().z * 0.5f &&
 				mPosition.x + mDimensions.x * 0.5f + player->getAttackBox().z * 0.5f > player->getAttackBox().x &&
@@ -274,12 +276,12 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				mPosition.y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f > player->getAttackBox().y)
 			{
 				mIsHurt = true;
-				//mHealth -= player->getSwordDamage();
-				mHealth--;
+				mHealth -= player->getSwordDamage();
+				//mHealth;
 
 				if (mHealth > 0)
 				{
-					mBody->ApplyForceToCenter(b2Vec2(-20000.0f * mMoveDirection, 1000.0f), true);
+					mBody->ApplyForceToCenter(b2Vec2(-20000.0f * hitDirection, 1000.0f), true);
 				}
 			}
 		}
@@ -329,21 +331,28 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//Calculate whether hit by projectile
 	for each (Projectile* p in player->getProjectileEntities())
 	{
-		if (p->getPosition().x < mPosition.x + mDimensions.x &&
-			p->getPosition().x + mDimensions.x + p->getDimensions().x > mPosition.x &&
-			p->getPosition().y < mPosition.y + mDimensions.y &&
-			p->getPosition().y + mDimensions.y + p->getDimensions().y > mPosition.y)
+		//Calculate direction to apply force
+		int hitDirection = 1;
+		if (mPosition.x > p->getPosition().x)
 		{
+			hitDirection = -1;
+		}
+
+		if (p->getPosition().x < mPosition.x + mDimensions.x * 0.5f &&
+			p->getPosition().x + mDimensions.x * 0.5f + p->getDimensions().x > mPosition.x &&
+			p->getPosition().y < mPosition.y + mDimensions.y * 0.5f &&
+			p->getPosition().y + mDimensions.y * 0.5f + p->getDimensions().y > mPosition.y)
+		{
+			//Set projectile delete flag so that it gets deleted in the player's update function
 			p->setDelete(true);
 			p->setVelocity(glm::vec2(0.0f, 0.0f));
 
 			mIsHurt = true;
-			//mHealth -= player->getShurikenDamage();
-			mHealth -= 10;
+			mHealth -= player->getShurikenDamage();
 
 			if (mHealth > 0)
 			{
-				mBody->ApplyForceToCenter(b2Vec2(-5000.0f * mMoveDirection, 700.0f), true);
+				mBody->ApplyForceToCenter(b2Vec2(-5000.0f * hitDirection, 700.0f), true);
 			}
 		}
 	}
@@ -351,7 +360,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//Move if not hurt
 	if (!mIsHurt && !mAttacking)
 	{
-		//mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
+		mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
 	}
 }
 
