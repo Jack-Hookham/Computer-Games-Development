@@ -135,7 +135,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="ImageManager.cpp" />
-    <ClCompile Include="Kunai.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Marker.cpp" />
     <ClCompile Include="Music.cpp" />
@@ -166,7 +166,7 @@
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Ground.h" />
-    <ClInclude Include="Kunai.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Marker.h" />
     <ClInclude Include="Sprite.h" />

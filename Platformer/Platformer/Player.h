@@ -4,7 +4,7 @@
 #include "InputManager.h"
 #include "SpriteSheet.h"
 #include "AudioManager.h"
-#include "Kunai.h"
+#include "Projectile.h"
 
 /*
 * Player class
@@ -67,6 +67,7 @@ public:
 	inline const int getDirection() const { return mDirection; }
 	inline const glm::vec4 getAttackBox() const { return mAttackBox; }
 	inline const int getSwordDamage() const { return SWORD_DAMAGE; }
+	inline std::vector<Projectile*> getProjectileEntities() const { return mProjectileEntities; }
 
 	//non const version of getBody so that the body can be updated
 	inline b2Body* updateBody() const { return mBody; }
@@ -124,14 +125,22 @@ private:
 
 	SoundEffect mSounds[PLAYER_NUM_SOUNDS];
 
-	std::vector<Kunai*> mKunaiEntities;
-	const Texture mKunaiTexture = ResourceManager::getTexture("../res/textures/ninja_adventure/player/png/Kunai.png");
+	std::vector<Projectile*> mProjectileEntities;
+	const Texture mProjectileTexture = ResourceManager::getTexture("../res/textures/ninja_adventure/player/png/shuriken.png");
 
-	const int KUNAI_LIFE_SPAN = 10000;
+	const int PROJECTILE_LIFE_SPAN = 10000;
 
-	//Timing stuff for spawning multiple kunai in a line
-	const int KUNAI_SPAWN_TIME = 100;
-	Timer mKunaiSpawnTimer;
-	int mSpawnedKunai = 0;
+	glm::vec2 mShurikenDims = glm::vec2(0.5f, 0.5f);
+
+	//Timing stuff for staggering multiple projectile spawns in a line
+	const int LINE_SPAWN_TIME = 100;
+	Timer mLineSpawnTimer;
+	int mLineProjectiles = 0;
+
+	//Timing stuff for staggering multiple projectile spawns in a spread
+	const int SPREAD_SPAWN_TIME = 100;
+	Timer mSpreadSpawnTimer;
+	int mSpreadProjectiles = 0;
+	float mSpreadYMultiplier = -1.0f;
 };
 

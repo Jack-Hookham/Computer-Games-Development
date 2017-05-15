@@ -12,7 +12,7 @@
 
 class EntityBox2D;
 class Marker;
-class Kunai;
+class Projectile;
 
 class Entity
 {

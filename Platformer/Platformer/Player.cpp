@@ -6,7 +6,7 @@ Player::Player()
 
 Player::~Player()
 {
-	for each (Kunai* k in mKunaiEntities)
+	for each (Projectile* k in mProjectileEntities)
 	{
 		delete k;
 	}
@@ -91,19 +91,19 @@ void Player::update()
 		mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED, mBody->GetLinearVelocity().y));
 	}
 
-	for each (Kunai* k in mKunaiEntities)
+	for each (Projectile* k in mProjectileEntities)
 	{
 		k->update();
 	}
 
 
-	//Delete kunai after period of time
-	for (auto it = mKunaiEntities.begin(); it != mKunaiEntities.end();)
+	//Delete projectile after period of time
+	for (auto it = mProjectileEntities.begin(); it != mProjectileEntities.end();)
 	{
-		if ((*it)->getLifeTimer().getTicks() > KUNAI_LIFE_SPAN)
+		if ((*it)->getLifeTimer().getTicks() > PROJECTILE_LIFE_SPAN)
 		{
 			delete *it;
-			it = mKunaiEntities.erase(it);
+			it = mProjectileEntities.erase(it);
 		}
 		else
 		{
@@ -111,38 +111,75 @@ void Player::update()
 		}
 	}
 
-	if (mKunaiSpawnTimer.getTicks() > KUNAI_SPAWN_TIME)
+	if (mLineSpawnTimer.getTicks() > LINE_SPAWN_TIME)
 	{
-		Kunai* kunai = new Kunai;
+		Projectile* projectile = new Projectile;
 
-		glm::vec2 kunaiPos = glm::vec2(
+		glm::vec2 projectilePos = glm::vec2(
 			mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection,
 			mPosition.y - mDimensions.y * 0.2f);
-		glm::vec2 kunaiDims = glm::vec2(1.0f, 0.2f);
-		Colour kunaiColour = { 255, 255, 255, 255 };
-		glm::vec4 kunaiTexCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
+		glm::vec2 projectileDims = mShurikenDims;
+		Colour projectileColour = { 255, 255, 255, 255 };
+		glm::vec4 projectileTexCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 		//if moving left
 		if (mDirection == -1)
 		{
 			//flip texCoords
-			kunaiTexCoords.x += 1.0f / kunaiDims.x;
-			kunaiTexCoords.z *= -1.0f;
+			projectileTexCoords.x += 1.0f / projectileDims.x;
+			projectileTexCoords.z *= -1.0f;
 		}
 
-		glm::vec2 kunaiVel = glm::vec2(0.5f * mDirection, 0.0f);
+		glm::vec2 projectileVel = glm::vec2(0.5f * mDirection, 0.0f);
 
-		kunai->init(kunaiPos, kunaiDims, kunaiColour, mKunaiTexture, kunaiVel, kunaiTexCoords);
-		mKunaiEntities.emplace_back(kunai);
+		projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
+		mProjectileEntities.emplace_back(projectile);
 
-		mKunaiSpawnTimer.restart();
-		mSpawnedKunai++;
+		mLineSpawnTimer.restart();
+		mLineProjectiles++;
 	}
 	
-	if (mSpawnedKunai >= 3)
+	if (mLineProjectiles >= 3)
 	{
-		mKunaiSpawnTimer.stop();
-		mSpawnedKunai = 0;
+		mLineSpawnTimer.stop();
+		mLineProjectiles = 0;
+	}
+
+	if (mSpreadSpawnTimer.getTicks() > SPREAD_SPAWN_TIME)
+	{
+		Projectile* projectile = new Projectile;
+
+		glm::vec2 projectilePos = glm::vec2(
+			mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection,
+			mPosition.y - mDimensions.y * 0.2f);
+		glm::vec2 projectileDims = mShurikenDims;
+		Colour projectileColour = { 255, 255, 255, 255 };
+		glm::vec4 projectileTexCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
+
+		//if moving left
+		if (mDirection == -1)
+		{
+			//flip texCoords
+			projectileTexCoords.x += 1.0f / projectileDims.x;
+			projectileTexCoords.z *= -1.0f;
+		}
+
+		float xSpeed = 0.5f;
+		glm::vec2 projectileVel = glm::vec2(xSpeed * mDirection, xSpeed * 0.5f * mSpreadYMultiplier);
+
+		projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
+		mProjectileEntities.emplace_back(projectile);
+
+		mSpreadSpawnTimer.restart();
+		mSpreadProjectiles++;
+		mSpreadYMultiplier++;
+	}
+
+	if (mSpreadProjectiles >= 3)
+	{
+		mSpreadSpawnTimer.stop();
+		mSpreadProjectiles = 0;
+		mSpreadYMultiplier = -1.0f;
 	}
 }
 
@@ -363,7 +400,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			0.0f, mColour, mBody->GetAngle());
 	}
 
-	for each (Kunai* k in mKunaiEntities)
+	for each (Projectile* k in mProjectileEntities)
 	{
 		k->add(spriteBatch, camera);
 	}
@@ -435,7 +472,7 @@ void Player::input(InputManager& inputManager)
 	}
 
 	if (!mThrowing && (
-		inputManager.isKeyPressed(SDLK_q) || inputManager.isKeyPressed(SDLK_q) || 
+		inputManager.isKeyPressed(SDLK_q) || inputManager.isKeyPressed(SDLK_e) || 
 		inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_Y) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_B)))
 	{
 		mSounds[PLAYER_THROW_SOUND].play();
@@ -443,30 +480,58 @@ void Player::input(InputManager& inputManager)
 
 		if (inputManager.isKeyPressed(SDLK_q) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_Y))
 		{
+			Projectile* projectile = new Projectile;
 
-			Kunai* kunai = new Kunai;
-
-			glm::vec2 kunaiPos = glm::vec2(
+			glm::vec2 projectilePos = glm::vec2(
 				mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection, 
 				mPosition.y - mDimensions.y * 0.2f);
-			glm::vec2 kunaiDims = glm::vec2(1.0f, 0.2f);
-			Colour kunaiColour = { 255, 255, 255, 255 };
-			glm::vec4 kunaiTexCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
+			glm::vec2 projectileDims = mShurikenDims;
+			Colour projectileColour = { 255, 255, 255, 255 };
+			glm::vec4 projectileTexCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 			//if moving left
 			if (mDirection == -1)
 			{
 				//flip texCoords
-				kunaiTexCoords.x += 1.0f / kunaiDims.x;
-				kunaiTexCoords.z *= -1.0f;
+				projectileTexCoords.x += 1.0f / projectileDims.x;
+				projectileTexCoords.z *= -1.0f;
 			}
 
-			glm::vec2 kunaiVel = glm::vec2(0.5f * mDirection, 0.0f);
+			glm::vec2 projectileVel = glm::vec2(0.5f * mDirection, 0.0f);
 
-			kunai->init(kunaiPos, kunaiDims, kunaiColour, mKunaiTexture, kunaiVel, kunaiTexCoords);
-			mKunaiEntities.emplace_back(kunai);
-			mKunaiSpawnTimer.start();
-			mSpawnedKunai++;
+			projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
+			mProjectileEntities.emplace_back(projectile);
+			mLineSpawnTimer.start();
+			mLineProjectiles++;
+		}
+
+		if (inputManager.isKeyPressed(SDLK_e) || inputManager.isKeyPressed(SDL_CONTROLLER_BUTTON_B))
+		{
+			Projectile* projectile = new Projectile;
+
+			glm::vec2 projectilePos = glm::vec2(
+				mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection,
+				mPosition.y - mDimensions.y * 0.2f);
+			glm::vec2 projectileDims = mShurikenDims;
+			Colour projectileColour = { 255, 255, 255, 255 };
+			glm::vec4 projectileTexCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
+
+			//if moving left
+			if (mDirection == -1)
+			{
+				//flip texCoords
+				projectileTexCoords.x += 1.0f / projectileDims.x;
+				projectileTexCoords.z *= -1.0f;
+			}
+
+			float xSpeed = 0.5f;
+			glm::vec2 projectileVel = glm::vec2(xSpeed * mDirection, xSpeed * 0.5f * mSpreadYMultiplier);
+
+			projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
+			mProjectileEntities.emplace_back(projectile);
+			mSpreadSpawnTimer.start();
+			mSpreadProjectiles++;
+			mSpreadYMultiplier++;
 		}
 	}
 }

@@ -120,7 +120,7 @@
     <ClCompile Include="EntityBox2D.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="Kunai.cpp">
+    <ClCompile Include="Projectile.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
@@ -215,7 +215,7 @@
     <ClInclude Include="EntityBox2D.h">
       <Filter>Header Files\Enitities</Filter>
     </ClInclude>
-    <ClInclude Include="Kunai.h">
+    <ClInclude Include="Projectile.h">
       <Filter>Header Files\Enitities</Filter>
     </ClInclude>
   </ItemGroup>
