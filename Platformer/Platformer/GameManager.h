@@ -90,6 +90,7 @@ private:
 
 	const std::string mTestLevelPath = "../res/levels/test_level.txt";
 	const std::string mMainLevelPath = "../res/levels/main_level.txt";
+	const std::string mTestLevel2Path = "../res/levels/test_level2.txt";
 
 	//Audio stuff
 	AudioManager mAudioManager;
@@ -113,12 +114,18 @@ private:
 
 	std::vector<glm::vec2> mEnemySpawnPositions;
 
-	const int MAX_ENEMIES = 10;
+	const int MAX_ENEMIES = 50;
 
 	//Analog joystick dead zone
 	const int JOYSTICK_DEAD_ZONE = 8000;
 
 	//Game Controller handler
 	SDL_GameController* mGameController = NULL;
+
+	//Values for spawned enemies not loaded from file
+	glm::vec2 mEnemyDims = glm::vec2(1.0f, 2.0f);
+	Colour mEnemyColour = { 255, 255, 255, 255 };
+	Texture mEnemyTextures[Enemy::NUM_STATES];
+	SoundEffect mEnemySounds[Enemy::NUM_SOUNDS];
 };
 

@@ -70,8 +70,8 @@ int GameManager::init()
 
 	//Initialise the box2D world
 	mPlayer = new Player;
-	mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
-		mMarkerEntities);
+	mWorldManager.generateWorld(mTestLevel2Path, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
+		mMarkerEntities, mEnemySpawnPositions);
 
 	Marker* collisionBox = new Marker;
 	Texture collisionTexture = ResourceManager::getTexture("../res/textures/other/collisionDebug.png");
@@ -119,6 +119,17 @@ int GameManager::init()
 		}
 	}
 
+	//Load default enemy textures
+	mEnemyTextures[0] = ResourceManager::getTexture("../res/textures/ninja_adventure/enemy/spritesheet/idle.png");
+	mEnemyTextures[1] = ResourceManager::getTexture("../res/textures/ninja_adventure/enemy/spritesheet/run.png");
+	mEnemyTextures[2] = ResourceManager::getTexture("../res/textures/ninja_adventure/enemy/spritesheet/jump.png");
+	mEnemyTextures[3] = ResourceManager::getTexture("../res/textures/ninja_adventure/enemy/spritesheet/jump.png");
+	mEnemyTextures[4] = ResourceManager::getTexture("../res/textures/ninja_adventure/enemy/spritesheet/attack.png");
+	mEnemyTextures[5] = ResourceManager::getTexture("../res/textures/ninja_adventure/enemy/spritesheet/jump_attack.png");
+	//Load defualt enemy sounds
+	mEnemySounds[0] = mAudioManager.loadSoundEffect("../res/sound/platformer_jumping/jump_01.wav");
+	mEnemySounds[1] = mAudioManager.loadSoundEffect("../res/sound/melee_sounds/sword_sound.wav");
+
 	return failedInits;
 }
 
@@ -137,6 +148,14 @@ int GameManager::gameLoop()
 	{
 		//Start cap timer at the start of each frame (each loop)
 		mFrameTimer.start();
+
+		//Spawn enemies if below enemy limit
+		if (mEnemyEntities.size() < MAX_ENEMIES)
+		{
+			Enemy* enemy = new Enemy;
+			enemy->init(mWorldManager.world.get(), mEnemySpawnPositions[0], mEnemyDims, mEnemyColour, mEnemyTextures, mEnemySounds);
+			mEnemyEntities.emplace_back(enemy);
+		}
 
 		//Manage the user input, check the players
 		manageInput();
@@ -278,7 +297,7 @@ void GameManager::manageInput()
 
 		mPlayer = new Player;
 		mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
-			mMarkerEntities);
+			mMarkerEntities, mEnemySpawnPositions);
 
 		Marker* collisionBox = new Marker;
 		Texture collisionTexture = ResourceManager::getTexture("../res/textures/other/collisionDebug.png");

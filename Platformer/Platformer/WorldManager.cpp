@@ -10,7 +10,7 @@ WorldManager::~WorldManager()
 
 void WorldManager::generateWorld(const std::string levelPath, AudioManager& audioManager, 
 	Player* player, std::vector<Ground*>& groundEntities, std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities,
-	std::vector<Marker*>& markerEntities)
+	std::vector<Marker*>& markerEntities, std::vector<glm::vec2>& enemySpawnPositions)
 {
 	log("Generating world");
 
@@ -18,7 +18,7 @@ void WorldManager::generateWorld(const std::string levelPath, AudioManager& audi
 	b2Vec2 gravity(0.0f, -20.0f);
 	world = std::make_unique<b2World>(gravity);
 
-	LevelManager::loadLevel(levelPath, world, audioManager, player, groundEntities, boxEntities, enemyEntities, markerEntities);
+	LevelManager::loadLevel(levelPath, world, audioManager, player, groundEntities, boxEntities, enemyEntities, markerEntities, enemySpawnPositions);
 
 	log("World generated");
 }

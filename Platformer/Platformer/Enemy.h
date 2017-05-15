@@ -36,7 +36,7 @@ public:
 	//Override entity init to add capsule collision to the player
 	virtual void init(b2World* world, const glm::vec2& position,
 		const glm::vec2& dimensions, const Colour& colour, const Texture textures[],
-		const SoundEffect sounds[], int id, const bool fixedRotation = true);
+		const SoundEffect sounds[], const bool fixedRotation = true);
 
 	void update(Player* player, std::vector<Marker*>& markerEntities, std::vector<Marker*>& collisionBoxEntities);
 
@@ -49,8 +49,6 @@ public:
 	inline const void setHealth(const int health) { mHealth = health; }
 
 private:
-	int mID;
-
 	AnimState mAnimState = IDLE;
 
 	//Enemy has 3 fixtures - middle square and a circle on the top and bottom

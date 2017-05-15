@@ -40,7 +40,8 @@ public:
 	//Load the level
 	static bool loadLevel(const std::string filePath, std::unique_ptr<b2World>& world, 
 		AudioManager& audioManager, Player* player, std::vector<Ground*>& groundEntities,
-		std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities);
+		std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities,
+		std::vector<glm::vec2>& enemySpawnPositions);
 
 private:
 	static void log(const std::string text);
@@ -50,8 +51,9 @@ private:
 	static void loadGround(std::unique_ptr<b2World>& world, std::vector<Ground*>& groundEntities, const std::string line);
 	static void loadBox(std::unique_ptr<b2World>& world, std::vector<Box*>& boxEntities, const std::string line);
 	static void loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*>& enemyEntities, AudioManager& audioManager,
-		const std::string line, int id);
-	static void loadMarker(std::vector<Marker*>& markerEntities, const std::string line, int id);
+		const std::string line);
+	static void loadMarker(std::vector<Marker*>& markerEntities, const std::string line);
+	static void addSpawnPos(std::vector<glm::vec2>& enemySpawnPositions, const std::string line);
 
 	//Used to generate random data for box entities which can then be put in a level file
 	static void generateBoxeData(int n);

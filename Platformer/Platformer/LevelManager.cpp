@@ -2,7 +2,8 @@
 
 bool LevelManager::loadLevel(const std::string filePath, std::unique_ptr<b2World>& world, 
 	AudioManager& audioManager, Player* player, std::vector<Ground*>& groundEntities,
-	std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities)
+	std::vector<Box*>& boxEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, 
+	std::vector<glm::vec2>& enemySpawnPositions)
 {
 	bool success = true;
 
@@ -81,32 +82,43 @@ bool LevelManager::loadLevel(const std::string filePath, std::unique_ptr<b2World
 
 		else if (line == "STARTENEMY")
 		{
-			int id = 0;
 			//Get the next line
 			std::getline(file, line);
-			//Load the box entities
+			//Load the enemy entities
 			log("Loading enemies");
 			while (line != "ENDENEMY")
 			{
-				loadEnemy(world, enemyEntities, audioManager, line, id);
+				loadEnemy(world, enemyEntities, audioManager, line);
 				std::getline(file, line);
-				id++;
 			}
 			log("Enemies loaded");
 		}
 
+		//Markers used for enemy AI
 		else if (line == "STARTMARKER")
 		{
-			int id = 0;
 			//Get the next line
 			std::getline(file, line);
-			//Load the box entities
+			//Load the marker entities
 			log("Loading markers");
 			while (line != "ENDMARKER")
 			{
-				loadMarker(markerEntities, line, id);
+				loadMarker(markerEntities, line);
 				std::getline(file, line);
-				id++;
+			}
+			log("Markers loaded");
+		}
+
+		else if (line == "STARTSPAWNPOS")
+		{
+			//Get the next line
+			std::getline(file, line);
+			//Load the spawn positions
+			log("Loading enemy spawn points");
+			while (line != "ENDSPAWNPOS")
+			{
+				addSpawnPos(enemySpawnPositions, line);
+				std::getline(file, line);
 			}
 			log("Markers loaded");
 		}
@@ -219,7 +231,7 @@ void LevelManager::loadBox(std::unique_ptr<b2World>& world, std::vector<Box*>& b
 }
 
 void LevelManager::loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*>& enemyEntities, AudioManager& audioManager, 
-	const std::string line, int id)
+	const std::string line)
 {
 	Enemy* enemy = new Enemy;
 
@@ -256,11 +268,11 @@ void LevelManager::loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*
 	}
 
 	//Initialise enemy instance
-	enemy->init(world.get(), position, dimensions, colour, enemyTextures, enemySounds, id, true);
+	enemy->init(world.get(), position, dimensions, colour, enemyTextures, enemySounds, true);
 	enemyEntities.emplace_back(enemy);
 }
 
-void LevelManager::loadMarker(std::vector<Marker*>& markerEntities, const std::string line, int id)
+void LevelManager::loadMarker(std::vector<Marker*>& markerEntities, const std::string line)
 {
 	//Box params
 	glm::vec2 position;
@@ -286,6 +298,13 @@ void LevelManager::loadMarker(std::vector<Marker*>& markerEntities, const std::s
 	markerEntities.emplace_back(marker);
 }
 
+void LevelManager::addSpawnPos(std::vector<glm::vec2>& enemySpawnPositions, const std::string line)
+{
+	glm::vec2 position;
+	std::istringstream iss(line);
+	iss >> position.x, position.y;
+	enemySpawnPositions.emplace_back(position);
+}
 
 //Quickly generates random box data and writes it to a file
 //Used for generating random boxes for the level, not actually used in the engine

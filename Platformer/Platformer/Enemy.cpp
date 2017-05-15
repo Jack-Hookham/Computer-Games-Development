@@ -9,11 +9,9 @@ Enemy::~Enemy()
 }
 
 void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, const Colour& colour, 
-	const Texture textures[], const SoundEffect sounds[], int id, const bool fixedRotation)
+	const Texture textures[], const SoundEffect sounds[], const bool fixedRotation)
 {
 	//Initialise the enemy's variables
-	mID = id;
-
 	mPosition = position;
 	mDimensions = dimensions;
 	mColour = colour;
