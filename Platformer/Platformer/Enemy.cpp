@@ -254,7 +254,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				mPosition.y < player->getAttackBox().y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f &&
 				mPosition.y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f > player->getAttackBox().y)
 			{
-				std::cout << "hit\n";
 				mIsHurt = true;
 				//mHealth -= player->getSwordDamage();
 				mHealth--;
@@ -274,7 +273,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				mPosition.y < player->getAttackBox().y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f &&
 				mPosition.y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f > player->getAttackBox().y)
 			{
-				std::cout << "hit\n";
 				mIsHurt = true;
 				//mHealth -= player->getSwordDamage();
 				mHealth--;
@@ -309,7 +307,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			{
 				mSounds[PLAYER_ATTACK_SOUND].play();
 				mAttacking = true;
-				std::cout << "enemy hit\n";
 				player->setHealth(player->getHealth() - SWORD_DAMAGE);
 			}
 		}
@@ -324,8 +321,29 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			{
 				mSounds[PLAYER_ATTACK_SOUND].play();
 				mAttacking = true;
-				std::cout << "enemy hit\n";
 				player->setHealth(player->getHealth() - SWORD_DAMAGE);
+			}
+		}
+	}
+
+	//Calculate whether hit by projectile
+	for each (Projectile* p in player->getProjectileEntities())
+	{
+		if (p->getPosition().x < mPosition.x + mDimensions.x &&
+			p->getPosition().x + mDimensions.x + p->getDimensions().x > mPosition.x &&
+			p->getPosition().y < mPosition.y + mDimensions.y &&
+			p->getPosition().y + mDimensions.y + p->getDimensions().y > mPosition.y)
+		{
+			p->setDelete(true);
+			p->setVelocity(glm::vec2(0.0f, 0.0f));
+
+			mIsHurt = true;
+			//mHealth -= player->getShurikenDamage();
+			mHealth -= 10;
+
+			if (mHealth > 0)
+			{
+				mBody->ApplyForceToCenter(b2Vec2(-5000.0f * mMoveDirection, 700.0f), true);
 			}
 		}
 	}
@@ -333,7 +351,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//Move if not hurt
 	if (!mIsHurt && !mAttacking)
 	{
-		mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
+		//mBody->ApplyForceToCenter(b2Vec2(100.0f * mMoveDirection, 0.0f), true);
 	}
 }
 

@@ -10,5 +10,10 @@ class Box : public EntityBox2D
 public:
 	Box();
 	~Box();
+
+	void update();
+
+private:
+	float mAngle;
 };
 

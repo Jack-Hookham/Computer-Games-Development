@@ -39,7 +39,7 @@ void EntityBox2D::update()
 	mPosition.y = mBody->GetPosition().y;
 }
 
-void EntityBox2D::add(SpriteBatch & spriteBatch, Camera & camera)
+void EntityBox2D::add(SpriteBatch& spriteBatch, Camera& camera)
 {
 	glm::vec2 position = glm::vec2(mBody->GetPosition().x - mDimensions.x * 0.5f, mBody->GetPosition().y - mDimensions.y * 0.5f);
 

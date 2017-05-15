@@ -180,6 +180,19 @@ void Player::update()
 		mSpreadProjectiles = 0;
 		mSpreadMultiplierY = -1.0f;
 	}
+
+	for (auto it = mProjectileEntities.begin(); it != mProjectileEntities.end();)
+	{
+		if ((*it)->getDelete())
+		{
+			delete *it;
+			it = mProjectileEntities.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
 }
 
 void Player::add(SpriteBatch& spriteBatch, Camera& camera)
