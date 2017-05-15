@@ -211,7 +211,7 @@ void GameManager::manageInput()
 		//Mouse button up
 		else if (e.type == SDL_MOUSEBUTTONUP)
 		{
-			mInputManager.updateMouse()->pressButton(e.button.button);
+			mInputManager.updateMouse()->releaseButton(e.button.button);
 		}
 
 		//Controller left right movement
