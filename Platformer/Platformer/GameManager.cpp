@@ -261,6 +261,16 @@ void GameManager::manageInput()
 		mGameState = QUIT;
 	}
 
+	if (mInputManager.getKeyboard()->isKeyPressed(SDLK_q))
+	{
+		log(std::to_string(mPlayer->getProjectileEntities().size()));
+	}
+
+	if (mInputManager.getKeyboard()->isKeyPressed(SDLK_e))
+	{
+		log(std::to_string(mPlayer->getProjectileEntities().size()));
+	}
+
 	//Reload level if r pressed
 	if (mInputManager.getKeyboard()->isKeyPressed(SDLK_r))
 	{

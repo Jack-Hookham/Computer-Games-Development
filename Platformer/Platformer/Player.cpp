@@ -516,9 +516,10 @@ void Player::input(InputManager& inputManager)
 			projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
 			mProjectileEntities.emplace_back(projectile);
 
-			log(mProjectileEntities.size());
 			mLineSpawnTimer.start();
 			mLineProjectiles++;
+
+			log(std::to_string(mProjectileEntities.size()));
 		}
 
 		else if (inputManager.getKeyboard()->isKeyPressed(SDLK_e) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B))
@@ -553,4 +554,9 @@ void Player::input(InputManager& inputManager)
 			mSpreadMultiplierY++;
 		}
 	}
+}
+
+void Player::log(const std::string text)
+{
+	std::cout << "[Player] " << text << std::endl;
 }

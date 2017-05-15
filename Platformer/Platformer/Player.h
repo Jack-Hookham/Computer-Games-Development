@@ -79,6 +79,8 @@ public:
 	inline const void setHealth(const int health) { mHealth = health; }
 
 private:
+	void log(const std::string text);
+
 	AnimState mAnimState = IDLE;
 
 	//Player has 3 fixtures - middle square and a circle on the top and bottom
