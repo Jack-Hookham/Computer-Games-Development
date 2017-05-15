@@ -65,8 +65,8 @@ void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, Player* play
 			//check whether the squares are colliding
 			if (p->getPosition().x < g->getPosition().x + g->getDimensions().x &&
 				p->getPosition().x + g->getDimensions().x > g->getPosition().x &&
-				p->getPosition().y < g->getPosition().y + g->getDimensions().y / 2 + p->getDimensions().y / 2 &&
-				p->getPosition().y + g->getDimensions().y / 2 + p->getDimensions().y / 2 > g->getPosition().y)
+				p->getPosition().y < g->getPosition().y + g->getDimensions().y &&
+				p->getPosition().y + g->getDimensions().y > g->getPosition().y)
 			{
 				p->setVelocity(glm::vec2(0.0f, 0.0f));
 			}

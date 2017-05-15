@@ -453,7 +453,8 @@ void Player::input(InputManager& inputManager)
 			if (!mInAir)
 			{
 				//Can jump
-				if (inputManager.getKeyboard()->isKeyPressed(SDLK_w) || inputManager.getKeyboard()->isKeyPressed(SDL_CONTROLLER_BUTTON_A))
+				if (inputManager.getKeyboard()->isKeyPressed(SDLK_w) || 
+					inputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_A))
 				{
 					//Jump
 					mBody->ApplyLinearImpulse(b2Vec2(0.0f, 50.0f), b2Vec2(0.0f, 0.0f), true);

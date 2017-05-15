@@ -250,7 +250,7 @@ void GameManager::manageInput()
 		//Controller button release
 		else if (e.type == SDL_CONTROLLERBUTTONUP)
 		{
-			mInputManager.updateController()->pressButton(e.cbutton.button);
+			mInputManager.updateController()->releaseButton(e.cbutton.button);
 		}	
 	}
 
