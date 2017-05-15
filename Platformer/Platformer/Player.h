@@ -128,9 +128,11 @@ private:
 	std::vector<Projectile*> mProjectileEntities;
 	const Texture mProjectileTexture = ResourceManager::getTexture("../res/textures/ninja_adventure/player/png/shuriken.png");
 
+	//Projectile stuff
 	const int PROJECTILE_LIFE_SPAN = 10000;
 
 	glm::vec2 mShurikenDims = glm::vec2(0.5f, 0.5f);
+	float mShurikenSpeed = 0.3f;
 
 	//Timing stuff for staggering multiple projectile spawns in a line
 	const int LINE_SPAWN_TIME = 100;
@@ -138,9 +140,9 @@ private:
 	int mLineProjectiles = 0;
 
 	//Timing stuff for staggering multiple projectile spawns in a spread
-	const int SPREAD_SPAWN_TIME = 100;
+	const int SPREAD_SPAWN_TIME = 1;
 	Timer mSpreadSpawnTimer;
 	int mSpreadProjectiles = 0;
-	float mSpreadYMultiplier = -1.0f;
+	float mSpreadMultiplierY = -1.0f;
 };
 

@@ -130,7 +130,7 @@ void Player::update()
 			projectileTexCoords.z *= -1.0f;
 		}
 
-		glm::vec2 projectileVel = glm::vec2(0.5f * mDirection, 0.0f);
+		glm::vec2 projectileVel = glm::vec2(mShurikenSpeed * mDirection, 0.0f);
 
 		projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
 		mProjectileEntities.emplace_back(projectile);
@@ -164,22 +164,21 @@ void Player::update()
 			projectileTexCoords.z *= -1.0f;
 		}
 
-		float xSpeed = 0.5f;
-		glm::vec2 projectileVel = glm::vec2(xSpeed * mDirection, xSpeed * 0.5f * mSpreadYMultiplier);
+		glm::vec2 projectileVel = glm::normalize(glm::vec2(mDirection, 0.5f * mSpreadMultiplierY)) * mShurikenSpeed;
 
 		projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
 		mProjectileEntities.emplace_back(projectile);
 
 		mSpreadSpawnTimer.restart();
 		mSpreadProjectiles++;
-		mSpreadYMultiplier++;
+		mSpreadMultiplierY++;
 	}
 
 	if (mSpreadProjectiles >= 3)
 	{
 		mSpreadSpawnTimer.stop();
 		mSpreadProjectiles = 0;
-		mSpreadYMultiplier = -1.0f;
+		mSpreadMultiplierY = -1.0f;
 	}
 }
 
@@ -497,7 +496,7 @@ void Player::input(InputManager& inputManager)
 				projectileTexCoords.z *= -1.0f;
 			}
 
-			glm::vec2 projectileVel = glm::vec2(0.5f * mDirection, 0.0f);
+			glm::vec2 projectileVel = glm::vec2(mShurikenSpeed * mDirection, 0.0f);
 
 			projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
 			mProjectileEntities.emplace_back(projectile);
@@ -524,14 +523,13 @@ void Player::input(InputManager& inputManager)
 				projectileTexCoords.z *= -1.0f;
 			}
 
-			float xSpeed = 0.5f;
-			glm::vec2 projectileVel = glm::vec2(xSpeed * mDirection, xSpeed * 0.5f * mSpreadYMultiplier);
+			glm::vec2 projectileVel = glm::normalize(glm::vec2(mDirection, 0.5f * mSpreadMultiplierY)) * mShurikenSpeed;
 
 			projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
 			mProjectileEntities.emplace_back(projectile);
 			mSpreadSpawnTimer.start();
 			mSpreadProjectiles++;
-			mSpreadYMultiplier++;
+			mSpreadMultiplierY++;
 		}
 	}
 }
