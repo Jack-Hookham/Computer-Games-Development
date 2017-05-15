@@ -40,7 +40,8 @@ public:
 
 	//Update the graphics for the current frame
 	void updateGraphics(const float fps, Player* player, std::vector<Box*>& boxEntities, 
-		std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, std::vector<Marker*>& collisionBoxEntities);
+		std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, 
+		std::vector<Marker*>& collisionBoxEntities);
 
 	void translateCamera(const glm::vec2 translation);
 	void setCameraScale(const float scale);

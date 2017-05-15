@@ -16,6 +16,7 @@ public:
 
 	void update();
 
+	inline const glm::vec2 getVelocity() const { return mVelocity; }
 	inline Timer getLifeTimer() const { return mLifeTimer; }
 	inline const bool getDelete() const { return mDelete; }
 	inline const bool getActive() const { return mActive; }

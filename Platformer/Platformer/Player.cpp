@@ -232,7 +232,7 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 			}	
 			
 			//if throwing
-			if (mThrowing)
+			else if (mThrowing)
 			{
 				tileIndex = 5;
 				animationSpeed = 0.4f;
@@ -487,15 +487,13 @@ void Player::input(InputManager& inputManager)
 		mAttacking = true;
 	}
 
-	if (!mThrowing && (
-		inputManager.getKeyboard()->isKeyPressed(SDLK_q) || inputManager.getKeyboard()->isKeyPressed(SDLK_e) ||
-		inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_Y) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B)))
+	if (!mThrowing)
 	{
-		mSounds[THROW_SOUND].play();
-		mThrowing = true;
-
 		if (inputManager.getKeyboard()->isKeyPressed(SDLK_q) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_Y))
 		{
+			mSounds[THROW_SOUND].play();
+			mThrowing = true;
+
 			Projectile* projectile = new Projectile;
 
 			glm::vec2 projectilePos = glm::vec2(
@@ -517,12 +515,17 @@ void Player::input(InputManager& inputManager)
 
 			projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
 			mProjectileEntities.emplace_back(projectile);
+
+			log(mProjectileEntities.size());
 			mLineSpawnTimer.start();
 			mLineProjectiles++;
 		}
 
-		if (inputManager.getKeyboard()->isKeyPressed(SDLK_e) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B))
+		else if (inputManager.getKeyboard()->isKeyPressed(SDLK_e) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B))
 		{
+			mSounds[THROW_SOUND].play();
+			mThrowing = true;
+
 			Projectile* projectile = new Projectile;
 
 			glm::vec2 projectilePos = glm::vec2(
@@ -544,6 +547,7 @@ void Player::input(InputManager& inputManager)
 
 			projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
 			mProjectileEntities.emplace_back(projectile);
+
 			mSpreadSpawnTimer.start();
 			mSpreadProjectiles++;
 			mSpreadMultiplierY++;

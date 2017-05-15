@@ -302,6 +302,13 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				p->getPosition().y < mPosition.y + mDimensions.y * 0.5f &&
 				p->getPosition().y + mDimensions.y * 0.5f + p->getDimensions().y > mPosition.y)
 			{
+				//Calculate direction to apply force
+				int hitDirection = 1;
+				if (p->getVelocity().x < 0)
+				{
+					hitDirection = -1;
+				}
+
 				//Set projectile delete flag so that it gets deleted in the player's update function
 				p->setDelete(true);
 				p->setActive(false);
@@ -309,13 +316,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 
 				mIsHurt = true;
 				mHealth -= player->getShurikenDamage();
-
-				//Calculate direction to apply force
-				int hitDirection = 1;
-				if (mPosition.x < p->getPosition().x)
-				{
-					hitDirection = -1;
-				}
 					
 				mBody->ApplyForceToCenter(b2Vec2(5000.0f * hitDirection, 700.0f), true);
 

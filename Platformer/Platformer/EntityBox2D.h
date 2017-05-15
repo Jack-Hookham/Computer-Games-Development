@@ -8,7 +8,6 @@ class Box;
 class Ground;
 class Player;
 class Enemy;
-class Marker;
 
 class EntityBox2D : public Entity
 {

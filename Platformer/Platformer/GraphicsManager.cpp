@@ -40,7 +40,7 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 
 	//Initialise the cameras
 	mWorldCamera.initCamera(mScreenWidth, mScreenHeight);
-	mWorldCamera.setScale(8.0f);
+	mWorldCamera.setScale(20.0f);
 	mHUDCamera.initCamera(mScreenWidth, mScreenHeight);
 
 	//Offset the hud camera to align 0, 0 with the bottom left corner
@@ -138,7 +138,8 @@ void GraphicsManager::drawHUD(const float fps, const Player* player, const std::
 }
 
 void GraphicsManager::updateGraphics(const float fps, Player* player, std::vector<Box*>& boxEntities,
-	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, std::vector<Marker*>& collisionBoxEntities)
+	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, 
+	std::vector<Marker*>& collisionBoxEntities)
 {
 	//Update cameras
 	const glm::vec2 worldCameraPos = glm::vec2(player->getBody()->GetPosition().x, player->getBody()->GetPosition().y);

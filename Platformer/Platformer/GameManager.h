@@ -111,6 +111,10 @@ private:
 	std::vector<Marker*> mMarkerEntities;
 	std::vector<Marker*> mCollisionBoxEntities;
 
+	std::vector<glm::vec2> mEnemySpawnPositions;
+
+	const int MAX_ENEMIES = 10;
+
 	//Analog joystick dead zone
 	const int JOYSTICK_DEAD_ZONE = 8000;
 

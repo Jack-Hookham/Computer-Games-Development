@@ -327,7 +327,7 @@ void GameManager::manageInput()
 	{
 		//Zoom out
 		mGraphicsManager.setCameraScale(-SCALE_SPEED);
-	}	
+	}
 
 	//Update the input manager - copies current input maps to previous input maps
 	mInputManager.update();

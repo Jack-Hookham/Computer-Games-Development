@@ -69,9 +69,9 @@ public:
 	inline const glm::vec4 getAttackBox() const { return mAttackBox; }
 	inline const int getSwordDamage() const { return SWORD_DAMAGE; }
 	inline const int getShurikenDamage() const { return SHURIKEN_DAMAGE; }
-	inline const std::vector<Projectile*> getProjectileEntities() const { return mProjectileEntities; }
+	inline const std::vector<Projectile*>& getProjectileEntities() const { return mProjectileEntities; }
 
-	inline std::vector<Projectile*> updateProjectileEntities() const { return mProjectileEntities; }
+	inline std::vector<Projectile*>& updateProjectileEntities() { return mProjectileEntities; }
 
 	//non const version of getBody so that the body can be updated
 	inline b2Body* updateBody() const { return mBody; }
