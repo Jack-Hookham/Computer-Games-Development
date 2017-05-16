@@ -39,7 +39,7 @@ public:
 	bool initGraphics(const int screenWidth, const int screenHeight);
 
 	//Update the graphics for the current frame
-	void updateGraphics(const float fps, Player* player, std::vector<Box*>& boxEntities, 
+	void updateGraphics(const float fps, const float roundTime, Player* player, std::vector<Box*>& boxEntities,
 		std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, 
 		std::vector<Marker*>& collisionBoxEntities);
 
@@ -56,7 +56,7 @@ private:
 	void initShaders();
 
 	//Draw the HUD
-	void drawHUD(const float fps, const Player* player);
+	void drawHUD(const float fps, const float roundTime, const Player* player);
 
 	//Screen dimensions
 	int mScreenWidth;

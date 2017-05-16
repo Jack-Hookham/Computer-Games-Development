@@ -35,6 +35,27 @@ void EntityBox2D::init(b2World* world, const glm::vec2& position, const glm::vec
 
 void EntityBox2D::update()
 {
+	//if the player goes out of the level bounds wrap around
+	//x
+	if (mBody->GetPosition().x < worldMinX)
+	{
+		mBody->SetTransform(b2Vec2(worldMaxX, mBody->GetPosition().y), mBody->GetAngle());
+	}
+	else if (mBody->GetPosition().x > worldMaxX)
+	{
+		mBody->SetTransform(b2Vec2(worldMinX, mBody->GetPosition().y), mBody->GetAngle());
+	}
+
+	//y
+	if (mBody->GetPosition().y < worldMinY)
+	{
+		mBody->SetTransform(b2Vec2(mBody->GetPosition().x, worldMaxY), mBody->GetAngle());
+	}
+	else if (mBody->GetPosition().y > worldMaxY)
+	{
+		mBody->SetTransform(b2Vec2(mBody->GetPosition().x, worldMinY), mBody->GetAngle());
+	}
+
 	mPosition.x = mBody->GetPosition().x;
 	mPosition.y = mBody->GetPosition().y;
 }

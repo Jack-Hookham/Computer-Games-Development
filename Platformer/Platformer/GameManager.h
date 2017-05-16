@@ -106,6 +106,9 @@ private:
 	//Timer for each frame
 	Timer mFrameTimer;
 
+	//Time each round
+	Timer mRoundTimer;
+
 	//Entities
 	Player* mPlayer;
 	std::vector<Box*> mBoxEntities;

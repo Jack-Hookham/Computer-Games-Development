@@ -151,5 +151,7 @@ private:
 	Timer mSpreadSpawnTimer;
 	int mSpreadProjectiles = 0;
 	float mSpreadMultiplierY = -1.0f;
+
+	float JUMP_IMPULSE = 70.0f;
 };
 

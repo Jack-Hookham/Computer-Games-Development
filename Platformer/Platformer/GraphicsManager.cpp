@@ -101,7 +101,7 @@ void GraphicsManager::initShaders()
 }
 
 //Draw the HUD using the HUD camera - currently just shows fps
-void GraphicsManager::drawHUD(const float fps, const Player* player)
+void GraphicsManager::drawHUD(const float fps, const float roundTime, const Player* player)
 {
 	char buffer[128];
 
@@ -111,18 +111,25 @@ void GraphicsManager::drawHUD(const float fps, const Player* player)
 
 	mHUDSpriteBatch.begin();
 
-	//Add the fps to the HUD buffer
-	sprintf_s(buffer, "FPS: %.1f", fps);
-
-	//Add the buffer to the HUD
-	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10, mScreenHeight - 30.0f), 
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
-
 	//Add player health to the HUD buffer
 	sprintf_s(buffer, "Player HP: %d", player->getHealth());
-
-	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10, mScreenHeight - 50.0f),
+	//Add the buffer to the HUD
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10.0f, mScreenHeight - 30.0f),
 		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	//Add time to the HUD buffer
+	sprintf_s(buffer, "Time: %.0f", roundTime);
+	//Add the buffer to the HUD
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10.0f, mScreenHeight - 50.0f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	//Add the fps to the HUD buffer
+	sprintf_s(buffer, "FPS: %.1f", fps);
+	//Add the buffer to the HUD
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(mScreenWidth - 100.0f, mScreenHeight - 30.0f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+
 
 	//Sort the sprite batch and create render batches
 	mHUDSpriteBatch.end();
@@ -131,7 +138,7 @@ void GraphicsManager::drawHUD(const float fps, const Player* player)
 	mHUDSpriteBatch.renderBatches();
 }
 
-void GraphicsManager::updateGraphics(const float fps, Player* player, std::vector<Box*>& boxEntities,
+void GraphicsManager::updateGraphics(const float fps, const float roundTime, Player* player, std::vector<Box*>& boxEntities,
 	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, 
 	std::vector<Marker*>& collisionBoxEntities)
 {
@@ -200,7 +207,7 @@ void GraphicsManager::updateGraphics(const float fps, Player* player, std::vecto
 	mEntitySpriteBatch.renderBatches();
 
 	//Draw the HUD
-	drawHUD(fps, player);
+	drawHUD(fps, roundTime, player);
 
 	//Undbind texture
 	glBindTexture(GL_TEXTURE_2D, 0);

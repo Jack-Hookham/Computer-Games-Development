@@ -471,7 +471,7 @@ void Player::input(InputManager& inputManager)
 					inputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_A))
 				{
 					//Jump
-					mBody->ApplyLinearImpulse(b2Vec2(0.0f, 50.0f), b2Vec2(0.0f, 0.0f), true);
+					mBody->ApplyLinearImpulse(b2Vec2(0.0f, JUMP_IMPULSE), b2Vec2(0.0f, 0.0f), true);
 					mJumping = true;
 					mSounds[JUMP_SOUND].play();
 					break;
@@ -519,8 +519,6 @@ void Player::input(InputManager& inputManager)
 
 			mLineSpawnTimer.start();
 			mLineProjectiles++;
-
-			log(std::to_string(mProjectileEntities.size()));
 		}
 
 		else if (inputManager.getKeyboard()->isKeyPressed(SDLK_e) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B))

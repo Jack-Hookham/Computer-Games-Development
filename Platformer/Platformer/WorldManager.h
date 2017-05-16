@@ -35,4 +35,6 @@ public:
 private:
 	void log(const std::string text);
 
+	b2Vec2 mGravity = b2Vec2(0.0f, -30.0f);
+
 };

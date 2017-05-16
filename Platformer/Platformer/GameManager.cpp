@@ -141,6 +141,7 @@ int GameManager::gameLoop()
 	//Count the number of frames to calculate fps
 	int frameCount = 0;
 	mFPSTimer.start();
+	mRoundTimer.start();
 
 	float fps = 0.0f;
 
@@ -168,14 +169,16 @@ int GameManager::gameLoop()
 		if (tickCount > MS_PER_SECOND)
 		{
 			fps = frameCount * MS_PER_SECOND / tickCount;
-			mFPSTimer.start();
+			mFPSTimer.restart();
 			frameCount = 0;
 		}
 		//Increment the frame counter
 		frameCount++;
 
+		float roundTime = mRoundTimer.getTicks() / MS_PER_SECOND;
+
 		//Update all graphics
-		mGraphicsManager.updateGraphics(fps, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
+		mGraphicsManager.updateGraphics(fps, roundTime, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
 			mMarkerEntities, mCollisionBoxEntities);
 
 		//If frame finished early cap the frame rate
@@ -309,19 +312,10 @@ void GameManager::manageInput()
 		mGameState = QUIT;
 	}
 
-	if (mInputManager.getKeyboard()->isKeyPressed(SDLK_q))
-	{
-		log(std::to_string(mPlayer->getProjectileEntities().size()));
-	}
-
-	if (mInputManager.getKeyboard()->isKeyPressed(SDLK_e))
-	{
-		log(std::to_string(mPlayer->getProjectileEntities().size()));
-	}
-
 	//Reload level if r pressed
 	if (mInputManager.getKeyboard()->isKeyPressed(SDLK_r))
 	{
+		mRoundTimer.restart();
 		deleteEntities();
 
 		mPlayer = new Player;

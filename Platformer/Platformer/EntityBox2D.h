@@ -33,5 +33,11 @@ protected:
 	//box2D stuff
 	b2Body* mBody = NULL;
 	b2Fixture* mFixture = NULL;
+
+	//World boundaries for wrapping around
+	const float worldMinX = -100.0f;
+	const float worldMaxX = 100.0f;
+	const float worldMinY = -100.0f;
+	const float worldMaxY = 100.0f;
 };
 

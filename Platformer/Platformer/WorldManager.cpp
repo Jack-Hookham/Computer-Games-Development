@@ -15,8 +15,7 @@ void WorldManager::generateWorld(const std::string levelPath, AudioManager& audi
 	log("Generating world");
 
 	//Box2D world setup
-	b2Vec2 gravity(0.0f, -20.0f);
-	world = std::make_unique<b2World>(gravity);
+	world = std::make_unique<b2World>(mGravity);
 
 	LevelManager::loadLevel(levelPath, world, audioManager, player, groundEntities, boxEntities, enemyEntities, markerEntities, enemySpawnPositions);
 
