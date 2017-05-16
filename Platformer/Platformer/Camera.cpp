@@ -23,6 +23,9 @@ void Camera::updateCamera()
 {
 	if (mUpdateMatrix)
 	{
+		//Update the orthographic matrix
+		mOrthographicMatrix = glm::ortho(0.0f, (float)mScreenWidth, 0.0f, (float)mScreenHeight);
+
 		//Translate the camera
 		//glm::vec3 translate(-mPosition.x, -mPosition.y, 0.0f);
 		glm::vec3 translate(-mPosition.x + mScreenWidth / 2, -mPosition.y + mScreenHeight / 2, 0.0f);

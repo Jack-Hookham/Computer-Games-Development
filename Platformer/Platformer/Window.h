@@ -18,6 +18,7 @@ public:
 
 	inline const int getWidth() const { return mWindowWidth; }
 	inline const int getHeight() const { return mWindowHeight; }
+	inline SDL_Window* getSDLWindow() const { return mSDLwindow; }
 
 	inline void setWidth(const int width) { mWindowWidth = width; }
 	inline void setHeight(const int height) { mWindowHeight = height; }

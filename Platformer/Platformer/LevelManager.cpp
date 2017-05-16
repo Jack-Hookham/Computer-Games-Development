@@ -278,18 +278,15 @@ void LevelManager::loadMarker(std::vector<Marker*>& markerEntities, const std::s
 	glm::vec2 position;
 	glm::vec2 dimensions;
 	Colour colour;
-	glm::vec4 colourVec;
-	std::string texturePath;
 	Texture texture;
 
 	std::istringstream iss(line);
 
 	//Populate params from string stream
-	iss >> position.x >> position.y >> dimensions.x >> dimensions.y >> colourVec.x >> colourVec.y >>
-		colourVec.z >> colourVec.w >> texturePath;
+	iss >> position.x >> position.y >> dimensions.x >> dimensions.y;
 
-	colour = Colour(colourVec);
-	texture = ResourceManager::getTexture(texturePath);
+	colour = Colour(255, 255, 255, 255);
+	texture = ResourceManager::getTexture("../res/textures/other/marker.png");
 	glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 	//Create the box entity

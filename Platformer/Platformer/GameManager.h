@@ -66,8 +66,8 @@ private:
 	//Current game state
 	GameState mGameState = PLAY;
 
-	int mScreenWidth = 1280;
-	int mScreenHeight= 720;
+	int mScreenWidth = 1920;
+	int mScreenHeight= 1010;
 
 	//Desired fps for the game
 	int mDesiredFPS = 60;
@@ -119,7 +119,7 @@ private:
 
 	std::vector<glm::vec2> mEnemySpawnPositions;
 
-	const int MAX_ENEMIES = 0;
+	const int MAX_ENEMIES = 50;
 
 	//Analog joystick dead zone
 	const int JOYSTICK_DEAD_ZONE = 8000;

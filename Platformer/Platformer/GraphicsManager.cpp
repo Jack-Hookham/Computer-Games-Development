@@ -140,6 +140,9 @@ void GraphicsManager::updateGraphics(const float fps, const float roundTime, Pla
 	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, 
 	std::vector<Marker*>& collisionBoxEntities, std::vector<glm::vec2>& enemySpawnPositions)
 {
+	mScreenWidth = SDL_GetWindowSurface(mWindow.getSDLWindow())->w; 
+	mScreenHeight = SDL_GetWindowSurface(mWindow.getSDLWindow())->h;
+
 	//Update cameras
 	const glm::vec2 worldCameraPos = glm::vec2(player->getBody()->GetPosition().x, player->getBody()->GetPosition().y);
 	mWorldCamera.setPosition(worldCameraPos);
