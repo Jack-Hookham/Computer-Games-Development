@@ -129,8 +129,6 @@ void GraphicsManager::drawHUD(const float fps, const float roundTime, const Play
 	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(mScreenWidth - 100.0f, mScreenHeight - 30.0f),
 		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
 
-
-
 	//Sort the sprite batch and create render batches
 	mHUDSpriteBatch.end();
 
@@ -140,7 +138,7 @@ void GraphicsManager::drawHUD(const float fps, const float roundTime, const Play
 
 void GraphicsManager::updateGraphics(const float fps, const float roundTime, Player* player, std::vector<Box*>& boxEntities,
 	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, 
-	std::vector<Marker*>& collisionBoxEntities)
+	std::vector<Marker*>& collisionBoxEntities, std::vector<glm::vec2>& enemySpawnPositions)
 {
 	//Update cameras
 	const glm::vec2 worldCameraPos = glm::vec2(player->getBody()->GetPosition().x, player->getBody()->GetPosition().y);
@@ -195,6 +193,11 @@ void GraphicsManager::updateGraphics(const float fps, const float roundTime, Pla
 	for each (Marker* m in collisionBoxEntities)
 	{
 		m->add(mEntitySpriteBatch, mWorldCamera);
+	}
+
+	for each (glm::vec2 pos in enemySpawnPositions)
+	{
+		mEntitySpriteBatch.addSprite(pos, glm::vec2(1.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), collisionBoxEntities[0]->getTexture().id, 0.0f, Colour(255, 255, 255, 255));
 	}
 
 	//Add the player the entity sprite batch

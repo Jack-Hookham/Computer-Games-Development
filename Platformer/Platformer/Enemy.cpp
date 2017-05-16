@@ -16,6 +16,19 @@ void Enemy::init(b2World* world, const glm::vec2& position, const glm::vec2& dim
 	mDimensions = dimensions;
 	mColour = colour;
 
+	//Random direction 1 or -1
+	std::mt19937 randGenerator(std::rand());
+	std::uniform_real_distribution<float> indexGen(-1.0f, 1.0f);
+	float direction = indexGen(randGenerator);
+	if (direction > 0)
+	{
+		mDirection = 1;
+	}
+	else
+	{
+		mDirection = -1;
+	}
+
 	mAttackRange = glm::vec2(1.2f + mDimensions.x * 0.5f, 1.0f + mDimensions.y * 0.5f);
 	mAttackBox = glm::vec4(mPosition.x + mDimensions.x * 0.1f, mPosition.y + mDimensions.y * 0.5f - mAttackRange.y,
 		mAttackRange.x * mDirection, mAttackRange.y);

@@ -179,7 +179,7 @@ int GameManager::gameLoop()
 
 		//Update all graphics
 		mGraphicsManager.updateGraphics(fps, roundTime, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
-			mMarkerEntities, mCollisionBoxEntities);
+			mMarkerEntities, mCollisionBoxEntities, mEnemySpawnPositions);
 
 		//If frame finished early cap the frame rate
 		int frameTicks = mFrameTimer.getTicks();
@@ -198,14 +198,14 @@ int GameManager::gameLoop()
 //Spawn an enemy at one of the spawn positions off screen
 void GameManager::spawnEnemy()
 {
-	//Find a spawn position off screen
+	//Vector of off screen spawn positions
 	std::vector<glm::vec2> possibleSpawnPositions;
 
-	//Create vector of all off screen positions
+	//Fill vector of off screen positions
 	for each (glm::vec2 position in mEnemySpawnPositions)
 	{
 		//if the spawn position is off the camera add it to the vector
-		if (!mGraphicsManager.getCamera().isOnCamera(position, mEnemyDims))
+		if (mGraphicsManager.getCamera().isOnCamera(position, mEnemyDims))
 		{
 			possibleSpawnPositions.emplace_back(position);
 		}
