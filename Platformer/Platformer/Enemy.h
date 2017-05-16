@@ -91,7 +91,8 @@ private:
 	float mJumpTimer = 0.0f;
 	float mAttackTimer = 0.0f;
 
-	const int DIRECTION_TIMER_CAP = 100;
+	//Timing stuff for changing direction
+	const int DIRECTION_TIMER_CAP = 400;
 	int mDirectionTimer;
 
 	const float AGGRO_RANGE = 20.0f;
@@ -107,5 +108,7 @@ private:
 	glm::vec4 mAttackBox;
 
 	const int SWORD_DAMAGE = 20;
+
+	float JUMP_IMPULSE = 70.0f;
 };
 

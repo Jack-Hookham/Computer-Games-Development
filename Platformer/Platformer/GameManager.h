@@ -67,7 +67,7 @@ private:
 	GameState mGameState = PLAY;
 
 	int mScreenWidth = 1920;
-	int mScreenHeight= 1010;
+	int mScreenHeight= 1017;
 
 	//Desired fps for the game
 	int mDesiredFPS = 60;

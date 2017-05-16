@@ -156,20 +156,29 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 		{
 			for each (Marker* m in markerEntities)
 			{
-				//Turn around if marker hit
-				//if (mBody->GetPosition().x < m->getPosition().x + m->getDimensions().x &&
-				//	mBody->GetPosition().x + mDimensions.x > m->getPosition().x &&
-				//	mBody->GetPosition().y < m->getPosition().y + m->getDimensions().y &&
-				//	mBody->GetPosition().y + mDimensions.y > m->getPosition().y)
-
-				if (mPosition.x < m->getPosition().x + mDimensions.x * 0.5f + m->getDimensions().x * 0.5f &&
+				if (mPosition.x < m->getPosition().x + mDimensions.x + m->getDimensions().x &&
 					mPosition.x + mDimensions.x * 0.5f + m->getDimensions().x * 0.5f > m->getPosition().x &&
-					mPosition.y < m->getPosition().y + mDimensions.y * 0.5f + m->getDimensions().y * 0.5f &&
+					mPosition.y < m->getPosition().y + mDimensions.y + m->getDimensions().y &&
 					mPosition.y + mDimensions.y * 0.5f + m->getDimensions().y * 0.5f > m->getPosition().y)
 				{
-					mDirection = -mDirection;
-					mDirectionTimer = 0;
-					break;
+					//1/1000 chance to jump
+					std::mt19937 randGenerator(std::rand());
+					std::uniform_real_distribution<float> jumpGen(0.0f, 5.0f);
+					if (jumpGen(randGenerator) > 4.0f && !mInAir && !mJumping)
+					{
+						//Jump
+						mBody->ApplyLinearImpulse(b2Vec2(0.0f, JUMP_IMPULSE), b2Vec2(0.0f, 0.0f), true);
+						mJumping = true;
+						//mSounds[JUMP_SOUND].play();
+						mDirectionTimer = 0;
+					}
+					else
+					{
+						//Change direction
+						mDirection = -mDirection;
+						mDirectionTimer = 0;
+						break;
+					}
 				}
 			}
 		}
@@ -205,9 +214,9 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 					if (!mInAir && !mJumping)
 					{
 						//Jump
-						mBody->ApplyLinearImpulse(b2Vec2(0.0f, 50.0f), b2Vec2(0.0f, 0.0f), true);
+						mBody->ApplyLinearImpulse(b2Vec2(0.0f, JUMP_IMPULSE), b2Vec2(0.0f, 0.0f), true);
 						mJumping = true;
-						mSounds[JUMP_SOUND].play();
+						//mSounds[JUMP_SOUND].play();
 					}
 				}
 			}

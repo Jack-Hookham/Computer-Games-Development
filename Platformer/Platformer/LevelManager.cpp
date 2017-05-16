@@ -285,7 +285,7 @@ void LevelManager::loadMarker(std::vector<Marker*>& markerEntities, const std::s
 	//Populate params from string stream
 	iss >> position.x >> position.y >> dimensions.x >> dimensions.y;
 
-	colour = Colour(255, 255, 255, 255);
+	colour = Colour(255, 255, 255, 128);
 	texture = ResourceManager::getTexture("../res/textures/other/marker.png");
 	glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
 
