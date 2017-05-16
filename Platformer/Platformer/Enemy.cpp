@@ -185,6 +185,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	}
 	else
 	{
+		//Change direction after 10 frames
 		if (mDirectionTimer > 10)
 		{
 			//face the player
@@ -300,7 +301,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 		//left of player
 		else
 		{
-			if (player->getPosition().x < mAttackBox.x + player->getDimensions().x * 0.5f + mAttackBox.z * 0.5f &&
+			if (player->getPosition().x < mAttackBox.x + player->getDimensions().x * 0.5f + mAttackBox.z * 0.3f &&
 				player->getPosition().x + player->getDimensions().x * 0.5f + mAttackBox.z * 0.5f > mAttackBox.x &&
 				player->getPosition().y < mAttackBox.y + player->getDimensions().y * 0.5f + mAttackBox.w * 0.5f &&
 				player->getPosition().y + player->getDimensions().y * 0.5f + mAttackBox.w * 0.5f > mAttackBox.y)

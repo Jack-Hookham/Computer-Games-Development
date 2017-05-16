@@ -83,5 +83,7 @@ private:
 
 	//Shader for the engine
 	Shader mTextureShader;
+
+	const float DEFAULT_CAMERA_SCALE = 20.0f;
 };
 

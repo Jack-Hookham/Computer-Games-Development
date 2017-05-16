@@ -205,7 +205,7 @@ void GameManager::spawnEnemy()
 	for each (glm::vec2 position in mEnemySpawnPositions)
 	{
 		//if the spawn position is off the camera add it to the vector
-		if (mGraphicsManager.getCamera().isOnCamera(position, mEnemyDims))
+		if (!mGraphicsManager.getCamera().isOnCamera(position, mEnemyDims))
 		{
 			possibleSpawnPositions.emplace_back(position);
 		}
