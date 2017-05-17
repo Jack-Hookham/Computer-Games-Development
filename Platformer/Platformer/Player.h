@@ -64,6 +64,7 @@ public:
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
 	inline const bool getAttacking() const { return mAttacking; }
+	inline const bool getDead() const { return mDead; }
 	inline const int getHealth() const { return mHealth; }
 	inline const int getDirection() const { return mDirection; }
 	inline const glm::vec4 getAttackBox() const { return mAttackBox; }
@@ -77,6 +78,8 @@ public:
 	inline b2Body* updateBody() const { return mBody; }
 
 	inline const void setHealth(const int health) { mHealth = health; }
+	inline const void setPosition(const glm::vec2 position) { mPosition = position; }
+	const void setDead(const bool dead);
 
 private:
 	void log(const std::string text);
@@ -118,6 +121,7 @@ private:
 	bool mJumping = false;
 	bool mAttacking = false;
 	bool mThrowing = false;
+	bool mDead = false;
 
 	float mJumpTimer = 0.0f;
 	float mAttackTimer = 0.0f;

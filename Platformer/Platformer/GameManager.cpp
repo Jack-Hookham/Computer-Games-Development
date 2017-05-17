@@ -126,6 +126,11 @@ int GameManager::init()
 	mMenuTexture = ResourceManager::getTexture("../res/textures/menu/MenuImage.png");
 	mGameOverTexture = ResourceManager::getTexture("../res/textures/menu/GameOverImage.png");
 
+	//Difficulty modifiers
+	mDifficultyMods[EASY] = 1.0f;
+	mDifficultyMods[NORMAL] = 1.25f;
+	mDifficultyMods[HARD] = 1.5f;
+
 	return failedInits;
 }
 
@@ -178,10 +183,27 @@ void GameManager::menuLoop()
 		mGraphicsManager.drawMenu(mMenuTexture);
 		mGraphicsManager.swapBuffers();
 
-		//Play game if space press
-		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_SPACE) || 
+		//Select difficulty
+		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_1) || 
 			mInputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_A))
 		{
+			mDifficulty = EASY;
+			mGameState = PLAY;
+		}		
+		
+		//Play game if space press
+		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_2) ||
+			mInputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_X))
+		{
+			mDifficulty = NORMAL;
+			mGameState = PLAY;
+		}		
+		
+		//Play game if space press
+		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_3) ||
+			mInputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_B))
+		{
+			mDifficulty = HARD;
 			mGameState = PLAY;
 		}
 
@@ -198,16 +220,46 @@ void GameManager::menuLoop()
 
 void GameManager::gameOverLoop()
 {
-	SDL_Delay(1000);
-	deleteEntities();
+	//Move the player away from the world
+	//Enemies will continue to move around the world while the game over screen shows
+	mPlayer->updateBody()->SetTransform(b2Vec2(1000.0f, 1000.0f), mPlayer->getBody()->GetAngle());
+	mPlayer->setDead(true);
+
+	//Count the number of frames to calculate fps
+	int frameCount = 0;
 
 	while (mGameState == GAMEOVER)
 	{
+		//Calculate the score
+		float aggression = -1;
+		//Ensure no divide by 0
+		if (mRoundTime != 0)
+		{
+			(float)mKills / (float)mRoundTime * 5.0f;
+		}
+
+		int score = (int)(mRoundTime * aggression * mDifficultyMods[mDifficulty]);
+
 		manageInput();
+
+		//Start cap timer at the start of each frame (each loop)
+		mFrameTimer.start();
+
+		//Spawn enemies if below enemy limit
+		if (mEnemyEntities.size() < MAX_ENEMIES)
+		{
+			spawnEnemy();
+		}
+
+		//Update physics
+		mPhysicsManager.updatePhysics(mWorldManager.world, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
+			mMarkerEntities, mCollisionBoxEntities, mKills);
 
 		//Update graphics
 		mGraphicsManager.clearBuffers();
-		mGraphicsManager.drawGameOver(mGameOverTexture, mRoundTime, mKills);
+		mGraphicsManager.drawGame(mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
+			mMarkerEntities, mCollisionBoxEntities, mEnemySpawnPositions);
+		mGraphicsManager.drawGameOver(mGameOverTexture, mRoundTime, mKills, aggression, score);
 		mGraphicsManager.swapBuffers();
 
 		//Go to menu if escape pressed
@@ -217,7 +269,16 @@ void GameManager::gameOverLoop()
 		}
 
 		mInputManager.update();
+
+		//If frame finished early cap the frame rate
+		int frameTicks = mFrameTimer.getTicks();
+		if (frameTicks < mScreenTicksPerFrame)
+		{
+			//Wait remaining time
+			SDL_Delay(mScreenTicksPerFrame - (float)frameTicks);
+		}
 	}
+	deleteEntities();
 }
 
 void GameManager::playLoop()
@@ -226,8 +287,8 @@ void GameManager::playLoop()
 
 	//Count the number of frames to calculate fps
 	int frameCount = 0;
-	mFPSTimer.start();
-	mRoundTimer.start();
+	mFPSTimer.restart();
+	mRoundTimer.restart();
 
 	//Set variables
 	float fps = 0.0f;
@@ -238,7 +299,7 @@ void GameManager::playLoop()
 	while (mGameState == PLAY)
 	{
 		//Start cap timer at the start of each frame (each loop)
-		mFrameTimer.start();
+		mFrameTimer.restart();
 
 		//Spawn enemies if below enemy limit
 		if (mEnemyEntities.size() < MAX_ENEMIES)
@@ -250,7 +311,7 @@ void GameManager::playLoop()
 		manageInput();
 		processInput();
 
-		//Update all physics
+		//Update physics
 		mPhysicsManager.updatePhysics(mWorldManager.world, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
 			mMarkerEntities, mCollisionBoxEntities, mKills);
 

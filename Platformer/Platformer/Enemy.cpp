@@ -156,7 +156,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//std::cout << glm::length(playerDistance) << std::endl;
 
 	//Player within range?
-	if (glm::length(playerDistance) < AGGRO_RANGE)
+	if (glm::length(playerDistance) < AGGRO_RANGE && player->getHealth() > 0)
 	{
 		mSearching = false;
 	}
@@ -253,7 +253,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 
 	//*****Calculate whether enemy has been hit by player*****
 	//if player is attacking and enemy isn't already hurt
-	if (player->getAttacking() && !mIsHurt)
+	if (player->getAttacking() && !mIsHurt && !player->getDead())
 	{
 		//left of player
 		if (mPosition.x < player->getPosition().x)
@@ -287,12 +287,12 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	}
 	
 	//*****Calculate whether to attack*****
-	//Update the attack box
-	mAttackBox = glm::vec4(mPosition.x + mDimensions.x * 0.1f, mPosition.y + mDimensions.y * 0.5f - mAttackRange.y,
-		mAttackRange.x * mDirection, mAttackRange.y);
 
-	if (!mAttacking)
+	if (!mAttacking && !mSearching)
 	{
+		//Update the attack box
+		mAttackBox = glm::vec4(mPosition.x + mDimensions.x * 0.1f, mPosition.y + mDimensions.y * 0.5f - mAttackRange.y,
+			mAttackRange.x * mDirection, mAttackRange.y);
 		//right of player
 		if (mPosition.x > player->getPosition().x)
 		{

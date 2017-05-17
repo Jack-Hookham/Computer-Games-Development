@@ -149,9 +149,114 @@ void GraphicsManager::drawMenu(Texture& menuTexture)
 
 	mGameOverSpriteBatch.end();
 	mGameOverSpriteBatch.renderBatches();
+
+	char buffer[128];
+	
+	mGameOverTextBatch.begin();
+	
+	//Menu text
+		sprintf_s(buffer, "Menu");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.8f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+	
+		sprintf_s(buffer, "Choose a difficulty");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.7f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	sprintf_s(buffer, "1 / A - Easy");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.65f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	sprintf_s(buffer, "2 / X - Normal");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.65f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+
+	sprintf_s(buffer, "3 / B - Hard");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.65f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+	
+		sprintf_s(buffer, "Controls");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.55f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+	
+		sprintf_s(buffer, "Keyboard");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.5f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+	
+		sprintf_s(buffer, "Controller");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.5f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+	
+		sprintf_s(buffer, "A & D -");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.45f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+	
+		sprintf_s(buffer, "Left & Right Movement");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.45f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+	
+		sprintf_s(buffer, "- Left Stick");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.45f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+	
+		sprintf_s(buffer, "W -");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.4f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+	
+		sprintf_s(buffer, "Jump");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.4f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+	
+		sprintf_s(buffer, "- A");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.4f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+	
+		sprintf_s(buffer, "Space -");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.35f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+	
+		sprintf_s(buffer, "Sword Attack");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.35f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+	
+		sprintf_s(buffer, "- X");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.35f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+	
+		sprintf_s(buffer, "LMB -");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.3f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+	
+		sprintf_s(buffer, "Ranged Attack 1");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.3f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+	
+		sprintf_s(buffer, "- B");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.3f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+	
+		sprintf_s(buffer, "RMB -");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.25f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+	
+		sprintf_s(buffer, "Ranged Attack 2");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.25f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+	
+		sprintf_s(buffer, "- Y");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.25f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+
+
+	sprintf_s(buffer, "Esc - Quit");
+	mHUDFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.2f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+	
+		mGameOverTextBatch.end();
+		mGameOverTextBatch.renderBatches();
 }
 
-void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime, const int kills)
+void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime, const int kills, const float aggression, const int score)
 {
 	//Reuse HUD camera for game over screen
 	mHUDCamera.updateCamera();
@@ -187,8 +292,7 @@ void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.8f),
 		glm::vec2(1.0f), 0.0f, defaultColour, Justification::LEFT);
 
-	int time = 60;
-	sprintf_s(buffer, "%d seconds", time);
+	sprintf_s(buffer, "%d seconds", roundTime);
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.8f),
 		glm::vec2(1.0f), 0.0f, timeColour, Justification::RIGHT);
 
@@ -196,8 +300,7 @@ void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.75f),
 		glm::vec2(1.0f), 0.0f, defaultColour, Justification::LEFT);
 
-	int fkills = 20;
-	sprintf_s(buffer, "%d ninjas", fkills);
+	sprintf_s(buffer, "%d ninjas", kills);
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.75f),
 		glm::vec2(1.0f), 0.0f, killsColour, Justification::RIGHT);
 
@@ -205,7 +308,6 @@ void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.7f),
 		glm::vec2(1.0f), 0.0f, defaultColour, Justification::LEFT);
 
-	float aggression = (float)fkills / (float)time * 5.0f;
 	sprintf_s(buffer, "%.2f Kills / 5 seconds", aggression);
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.7f),
 		glm::vec2(1.0f), 0.0f, aggressionColour, Justification::RIGHT);
@@ -230,7 +332,6 @@ void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.67f, mScreenHeight * 0.65f),
 		glm::vec2(1.0f), 0.0f, defaultColour, Justification::RIGHT);
 
-	int score = (int)(time * aggression);
 	sprintf_s(buffer, "%d", score);
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.65f),
 		glm::vec2(1.0f), 0.0f, scoreColour, Justification::RIGHT);
@@ -288,9 +389,13 @@ void GraphicsManager::drawGame(Player* player, std::vector<Box*>& boxEntities,
 	std::vector<Marker*>& collisionBoxEntities, std::vector<glm::vec2>& enemySpawnPositions)
 {
 	//Update cameras
-	const glm::vec2 worldCameraPos = glm::vec2(player->getBody()->GetPosition().x, player->getBody()->GetPosition().y);
-	mWorldCamera.setPosition(worldCameraPos);
-	mWorldCamera.updateCamera();
+	glm::vec2 worldCameraPos;
+	if (player->getHealth() > 0)
+	{
+		worldCameraPos = glm::vec2(player->getBody()->GetPosition().x, player->getBody()->GetPosition().y);
+		mWorldCamera.setPosition(worldCameraPos);
+		mWorldCamera.updateCamera();
+	}
 
 	const glm::mat4 cameraMatrix = mWorldCamera.getCamerMatrix();
 	GLuint projMatrixLocation = mTextureShader.getUniformLocation("projMatrix");

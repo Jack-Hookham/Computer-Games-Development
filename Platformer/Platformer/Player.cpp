@@ -77,7 +77,10 @@ void Player::init(b2World* world, const glm::vec2& position,
 
 void Player::update()
 {
-	EntityBox2D::update();
+	if (mHealth > 0)
+	{
+		EntityBox2D::update();
+	}
 
 	mAttackBox = glm::vec4(mPosition.x + mDimensions.x * 0.1f, mPosition.y + mDimensions.y * 0.5f - mAttackRange.y,
 		mAttackRange.x * mDirection, mAttackRange.y);
@@ -175,6 +178,7 @@ void Player::update()
 		mSpreadMultiplierY++;
 	}
 
+	//Stop spawning projectiles and reset variables once max reached
 	if (mSpreadProjectiles >= 3)
 	{
 		mSpreadSpawnTimer.stop();
@@ -182,6 +186,7 @@ void Player::update()
 		mSpreadMultiplierY = -1.0f;
 	}
 
+	//Delete projectiles that need deleting
 	for (auto it = mProjectileEntities.begin(); it != mProjectileEntities.end();)
 	{
 		if ((*it)->getDelete())
@@ -198,7 +203,7 @@ void Player::update()
 	if (mHealth < 0)
 	{
 		mHealth = 0;
-	}
+	}	
 }
 
 void Player::add(SpriteBatch& spriteBatch, Camera& camera)
@@ -558,6 +563,11 @@ void Player::input(InputManager& inputManager)
 			mSpreadMultiplierY++;
 		}
 	}
+}
+
+const void Player::setDead(const bool dead)
+{
+	mDead = dead;
 }
 
 void Player::log(const std::string text)

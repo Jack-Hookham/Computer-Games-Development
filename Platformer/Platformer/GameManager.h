@@ -23,21 +23,25 @@
 #include "Timer.h"
 
 //Manager for the whole engine
-//Left clicking on the screen will create a box at the mouse position
-//Right clicking on the screen will create ground at the mouse position
-//Q and E control zoom
 
-enum GameState
+enum Difficulty
 {
-	MENU,
-	PLAY,
-	GAMEOVER,
-	QUIT
+	EASY,
+	NORMAL,
+	HARD
 };
 
 class GameManager
 {
 public:
+	enum GameState
+	{
+		MENU,
+		PLAY,
+		GAMEOVER,
+		QUIT
+	};
+
 	GameManager();
 	~GameManager();
 
@@ -81,7 +85,7 @@ private:
 	void processInput();
 
 	//Current game state
-	GameState mGameState = GAMEOVER;
+	GameState mGameState = MENU;
 
 	int mScreenWidth = 1920;
 	int mScreenHeight= 1017;
@@ -95,10 +99,6 @@ private:
 	//Store this to save multiple divides
 	float mScreenTicksPerFrame = MS_PER_SECOND / mDesiredFPS;
 
-	//Physics step limiter
-	const int MAX_PHYSICS_STEPS = 6;
-	const float MAX_TIME_STEP = 1.0f;
-
 	const float CAMERA_SPEED = 1.0f;
 	const float SCALE_SPEED = 0.1f;
 
@@ -107,16 +107,16 @@ private:
 	InputManager mInputManager;
 	WorldManager mWorldManager;
 
-	const std::string mMainLevelPath = "../res/levels/main_level.txt";
-
-	Texture mMenuTexture;
-	Texture mGameOverTexture;
-
 	//Audio stuff
 	AudioManager mAudioManager;
 	Music mMusic;
 	SoundEffect mPlaceBoxSound;
 	SoundEffect mPlaceGroundSound;
+
+	const std::string mMainLevelPath = "../res/levels/main_level.txt";
+
+	Texture mMenuTexture;
+	Texture mGameOverTexture;
 
 	//FPS timer
 	Timer mFPSTimer;
@@ -131,6 +131,9 @@ private:
 	//Scoring stuff
 	int mScore = 0;
 	int mKills = 0;
+
+	float mDifficultyMods[3];
+	Difficulty mDifficulty = EASY;
 
 	//Entities
 	Player* mPlayer;

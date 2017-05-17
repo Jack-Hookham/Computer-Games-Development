@@ -49,7 +49,7 @@ public:
 	void drawHUD(const float fps, const float roundTime, const int kills, const Player* player);
 
 	void drawMenu(Texture& menuTexture);
-	void drawGameOver(Texture& gameOverTexture, const int roundTime, const int kills);
+	void drawGameOver(Texture& gameOverTexture, const int roundTime, const int kills, const float aggression, const int score);
 
 	void translateCamera(const glm::vec2 translation);
 	void setCameraScale(const float scale);
@@ -94,6 +94,6 @@ private:
 	//Shader for the engine
 	Shader mTextureShader;
 
-	const float DEFAULT_CAMERA_SCALE = 20.0f;
+	const float DEFAULT_CAMERA_SCALE = 32.0f;
 };
 

@@ -35,13 +35,15 @@ void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, Player* play
 	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities,
 	std::vector<Marker*>& collisionBoxEntities, int& kills)
 {
-	player->update();
+	if (player->getHealth() > 0)
+	{
+		player->update();
+	}
 
 	//Enemy logic update
 	for each (Enemy* e in enemyEntities)
 	{
 		e->update(player, markerEntities, collisionBoxEntities);
-
 	}
 
 	for (auto it = enemyEntities.begin(); it != enemyEntities.end();)
