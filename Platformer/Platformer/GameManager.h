@@ -21,6 +21,7 @@
 #include "WorldManager.h"
 #include "AudioManager.h"
 #include "Timer.h"
+#include "Highscores.h"
 
 //Manager for the whole engine
 

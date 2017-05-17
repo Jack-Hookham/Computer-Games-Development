@@ -226,20 +226,22 @@ void GameManager::gameOverLoop()
 	//Count the number of frames to calculate fps
 	int frameCount = 0;
 
+	//Calculate the score
+	float aggression = -1.0f;
+	//Ensure no divide by 0
+	if (mRoundTime != 0)
+	{
+		aggression = (float)mKills / (float)mRoundTime * 5.0f;
+	}
+	int score = (int)(mRoundTime * aggression * mScoreMods[mDifficulty]);
+
+	//Highscores stuff
+	Highscores highscores = Highscores();
+	highscores.addScore(score);
+	highscores.writeScores();
+
 	while (mGameState == GAMEOVER)
 	{
-		//Calculate the score
-		float aggression = -1;
-		//Ensure no divide by 0
-		if (mRoundTime != 0)
-		{
-			aggression = (float)mKills / (float)mRoundTime * 5.0f;
-		}
-
-		int score = (int)(mRoundTime * aggression * mScoreMods[mDifficulty]);
-
-		manageInput();
-
 		//Start cap timer at the start of each frame (each loop)
 		mFrameTimer.start();
 
@@ -253,11 +255,12 @@ void GameManager::gameOverLoop()
 		mPhysicsManager.updatePhysics(mWorldManager.world, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
 			mMarkerEntities, mCollisionBoxEntities, mKills);
 
+		manageInput();
+
 		//Update graphics
 		mGraphicsManager.clearBuffers();
-		mGraphicsManager.drawGame(mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
-			mMarkerEntities, mCollisionBoxEntities, mEnemySpawnPositions);
-		mGraphicsManager.drawGameOver(mGameOverTexture, mRoundTime, mKills, aggression, mScoreMods[mDifficulty], score);
+		mGraphicsManager.drawGame(mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities);
+		mGraphicsManager.drawGameOver(mGameOverTexture, mRoundTime, mKills, aggression, mScoreMods[mDifficulty], score, highscores);
 		mGraphicsManager.swapBuffers();
 
 		//Go to menu if escape pressed
@@ -337,8 +340,7 @@ void GameManager::playLoop()
 		//Update graphics
 		mGraphicsManager.clearBuffers();
 
-		mGraphicsManager.drawGame(mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
-			mMarkerEntities, mCollisionBoxEntities, mEnemySpawnPositions);
+		mGraphicsManager.drawGame(mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities);
 		mGraphicsManager.drawHUD(fps, mRoundTime, mKills, mPlayer);
 
 		mGraphicsManager.swapBuffers();

@@ -27,6 +27,7 @@
 #include "Ground.h"
 #include "Enemy.h"
 #include "Marker.h"
+#include "Highscores.h"
 
 class GraphicsManager
 {
@@ -43,14 +44,13 @@ public:
 
 	//Update the graphics for the current frame
 	void drawGame(Player* player, std::vector<Box*>& boxEntities,
-		std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities,
-		std::vector<Marker*>& collisionBoxEntities, std::vector<glm::vec2>& enemySpawnPositions);
+		std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities);
 
 	void drawHUD(const float fps, const float roundTime, const int kills, const Player* player);
 
 	void drawMenu(Texture& menuTexture);
 	void drawGameOver(Texture& gameOverTexture, const int roundTime, const int kills, const float aggression,
-		const float difficulty, const int score);
+		const float difficulty, const int score, Highscores& highscores);
 
 	void translateCamera(const glm::vec2 translation);
 	void setCameraScale(const float scale);

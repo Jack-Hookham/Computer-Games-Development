@@ -257,7 +257,7 @@ void GraphicsManager::drawMenu(Texture& menuTexture)
 }
 
 void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime, const int kills, const float aggression, 
-	const float difficulty, const int score)
+	const float difficulty, const int score, Highscores& highscores)
 {
 	//Reuse HUD camera for game over screen
 	mHUDCamera.updateCamera();
@@ -403,8 +403,7 @@ void GraphicsManager::drawHUD(const float fps, const float roundTime, const int 
 }
 
 void GraphicsManager::drawGame(Player* player, std::vector<Box*>& boxEntities,
-	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, 
-	std::vector<Marker*>& collisionBoxEntities, std::vector<glm::vec2>& enemySpawnPositions)
+	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities)
 {
 	//Update cameras
 	glm::vec2 worldCameraPos;
@@ -439,22 +438,6 @@ void GraphicsManager::drawGame(Player* player, std::vector<Box*>& boxEntities,
 	for each (Enemy* e in enemyEntities)
 	{
 		e->add(mEntitySpriteBatch, mWorldCamera);
-	}	
-	
-	//Add the markers to the entity sprite batch
-	for each (Marker* m in markerEntities)
-	{
-		m->add(mEntitySpriteBatch, mWorldCamera);
-	}
-
-	for each (Marker* m in collisionBoxEntities)
-	{
-		m->add(mEntitySpriteBatch, mWorldCamera);
-	}
-
-	for each (glm::vec2 pos in enemySpawnPositions)
-	{
-		mEntitySpriteBatch.addSprite(pos, glm::vec2(1.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), markerEntities[0]->getTexture().id, 0.0f, Colour(255, 255, 255, 255));
 	}
 
 	//Add the player the entity sprite batch

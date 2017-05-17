@@ -135,6 +135,7 @@
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Highscores.cpp" />
     <ClCompile Include="ImageManager.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Mouse.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="Highscores.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Projectile.h" />
