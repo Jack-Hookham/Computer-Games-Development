@@ -92,11 +92,11 @@ void Player::update()
 		mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED, mBody->GetLinearVelocity().y));
 	}
 
+	//Update each projectile
 	for each (Projectile* k in mProjectileEntities)
 	{
 		k->update();
 	}
-
 
 	//Delete projectile after period of time
 	for (auto it = mProjectileEntities.begin(); it != mProjectileEntities.end();)
@@ -193,6 +193,11 @@ void Player::update()
 		{
 			it++;
 		}
+	}
+
+	if (mHealth < 0)
+	{
+		mHealth = 0;
 	}
 }
 

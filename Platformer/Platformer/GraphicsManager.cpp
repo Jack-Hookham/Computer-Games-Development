@@ -61,8 +61,8 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 	//Generate VBO and VAO to initialise the sprite batch
 	mEntitySpriteBatch.bufferData();
 	mHUDSpriteBatch.bufferData();
-	mMenuSpriteBatch.bufferData();
-	mMenuTextBatch.bufferData();
+	mGameOverSpriteBatch.bufferData();
+	mGameOverTextBatch.bufferData();
 
 	//Load the HUD front
 	mHUDFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 24);
@@ -82,6 +82,9 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 
 void GraphicsManager::clearBuffers()
 {
+	mScreenWidth = SDL_GetWindowSurface(mWindow.getSDLWindow())->w;
+	mScreenHeight = SDL_GetWindowSurface(mWindow.getSDLWindow())->h;
+
 	//Set depth to 1.0
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -130,6 +133,112 @@ void GraphicsManager::initShaders()
 	log("Shaders successfully initialised");
 }
 
+void GraphicsManager::drawMenu(Texture& menuTexture)
+{
+	//Reuse HUD camera for menu
+	mHUDCamera.updateCamera();
+
+	glm::mat4 cameraMatrix = mHUDCamera.getCamerMatrix();
+	GLuint projMatrixLocation = mTextureShader.getUniformLocation("projMatrix");
+	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+	mGameOverSpriteBatch.begin();
+
+	mGameOverSpriteBatch.addSprite(glm::vec2(0.0f, 0.0f), glm::vec2(mScreenWidth, mScreenHeight), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), menuTexture.id,
+		0.0f, Colour(255, 255, 255, 255));
+
+	mGameOverSpriteBatch.end();
+	mGameOverSpriteBatch.renderBatches();
+}
+
+void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime, const int kills)
+{
+	//Reuse HUD camera for game over screen
+	mHUDCamera.updateCamera();
+
+	glm::mat4 cameraMatrix = mHUDCamera.getCamerMatrix();
+	GLuint projMatrixLocation = mTextureShader.getUniformLocation("projMatrix");
+	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+	mGameOverSpriteBatch.begin();
+
+	mGameOverSpriteBatch.addSprite(glm::vec2(0.0f, 0.0f), glm::vec2(mScreenWidth, mScreenHeight), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), gameOverTexture.id,
+		0.0f, Colour(255, 255, 255, 255));
+
+	mGameOverSpriteBatch.end();
+	mGameOverSpriteBatch.renderBatches();
+
+	char buffer[128];
+
+	mGameOverTextBatch.begin();
+
+	Colour defaultColour(255, 255, 255, 255);
+	Colour timeColour(68, 158, 255, 255);
+	Colour killsColour(72, 181, 0, 255);
+	Colour aggressionColour(255, 0, 0, 255);
+	Colour scoreColour(255, 255, 0, 255);
+
+	//Game Over text formatting
+	sprintf_s(buffer, "Game Over");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.85f),
+		glm::vec2(1.0f), 0.0f, defaultColour, Justification::MIDDLE);
+
+	sprintf_s(buffer, "Time: ");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.8f),
+		glm::vec2(1.0f), 0.0f, defaultColour, Justification::LEFT);
+
+	int time = 60;
+	sprintf_s(buffer, "%d seconds", time);
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.8f),
+		glm::vec2(1.0f), 0.0f, timeColour, Justification::RIGHT);
+
+	sprintf_s(buffer, "Kills: ");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.75f),
+		glm::vec2(1.0f), 0.0f, defaultColour, Justification::LEFT);
+
+	int fkills = 20;
+	sprintf_s(buffer, "%d ninjas", fkills);
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.75f),
+		glm::vec2(1.0f), 0.0f, killsColour, Justification::RIGHT);
+
+	sprintf_s(buffer, "Aggression: ");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.7f),
+		glm::vec2(1.0f), 0.0f, defaultColour, Justification::LEFT);
+
+	float aggression = (float)fkills / (float)time * 5.0f;
+	sprintf_s(buffer, "%.2f Kills / 5 seconds", aggression);
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.7f),
+		glm::vec2(1.0f), 0.0f, aggressionColour, Justification::RIGHT);
+
+	sprintf_s(buffer, "Final Score: ");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.65f),
+		glm::vec2(1.0f), 0.0f, defaultColour, Justification::LEFT);
+
+	sprintf_s(buffer, "%d", time);
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.58f, mScreenHeight * 0.65f),
+		glm::vec2(1.0f), 0.0f, timeColour, Justification::RIGHT);
+
+	sprintf_s(buffer, "x");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.61f, mScreenHeight * 0.65f),
+		glm::vec2(1.0f), 0.0f, defaultColour, Justification::RIGHT);
+
+	sprintf_s(buffer, "%.2f", aggression);
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.64f, mScreenHeight * 0.65f),
+		glm::vec2(1.0f), 0.0f, aggressionColour, Justification::RIGHT);
+
+	sprintf_s(buffer, "=");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.67f, mScreenHeight * 0.65f),
+		glm::vec2(1.0f), 0.0f, defaultColour, Justification::RIGHT);
+
+	int score = (int)(time * aggression);
+	sprintf_s(buffer, "%d", score);
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.65f),
+		glm::vec2(1.0f), 0.0f, scoreColour, Justification::RIGHT);
+
+	mGameOverTextBatch.end();
+	mGameOverTextBatch.renderBatches();
+}
+
 //Draw the HUD using the HUD camera - currently just shows fps
 void GraphicsManager::drawHUD(const float fps, const float roundTime, const int kills, const Player* player)
 {
@@ -144,7 +253,7 @@ void GraphicsManager::drawHUD(const float fps, const float roundTime, const int 
 	mHUDSpriteBatch.begin();
 
 	//Add player health to the HUD buffer
-	sprintf_s(buffer, "Player HP: %d", player->getHealth());
+	sprintf_s(buffer, "HP: %d", player->getHealth());
 	//Add the buffer to the HUD
 	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10.0f, mScreenHeight - 30.0f),
 		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
@@ -153,13 +262,19 @@ void GraphicsManager::drawHUD(const float fps, const float roundTime, const int 
 	sprintf_s(buffer, "Time: %.0f", roundTime);
 	//Add the buffer to the HUD
 	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10.0f, mScreenHeight - 50.0f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));	//Add time to the HUD buffer
+
+	//Add number of kills to the HUD buffer
+	sprintf_s(buffer, "Kills: %d", kills);
+	//Add the buffer to the HUD
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10.0f, mScreenHeight - 70.0f),
 		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
 
 	//Add the fps to the HUD buffer
 	sprintf_s(buffer, "FPS: %.1f", fps);
 	//Add the buffer to the HUD
-	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(mScreenWidth - 100.0f, mScreenHeight - 30.0f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(mScreenWidth - 10.0f, mScreenHeight * 0.97f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
 
 	//Sort the sprite batch and create render batches
 	mHUDSpriteBatch.end();
@@ -168,13 +283,10 @@ void GraphicsManager::drawHUD(const float fps, const float roundTime, const int 
 	mHUDSpriteBatch.renderBatches();
 }
 
-void GraphicsManager::updateGraphics(Player* player, std::vector<Box*>& boxEntities,
+void GraphicsManager::drawGame(Player* player, std::vector<Box*>& boxEntities,
 	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities, 
 	std::vector<Marker*>& collisionBoxEntities, std::vector<glm::vec2>& enemySpawnPositions)
 {
-	mScreenWidth = SDL_GetWindowSurface(mWindow.getSDLWindow())->w; 
-	mScreenHeight = SDL_GetWindowSurface(mWindow.getSDLWindow())->h;
-
 	//Update cameras
 	const glm::vec2 worldCameraPos = glm::vec2(player->getBody()->GetPosition().x, player->getBody()->GetPosition().y);
 	mWorldCamera.setPosition(worldCameraPos);
@@ -219,7 +331,7 @@ void GraphicsManager::updateGraphics(Player* player, std::vector<Box*>& boxEntit
 
 	for each (glm::vec2 pos in enemySpawnPositions)
 	{
-		mEntitySpriteBatch.addSprite(pos, glm::vec2(1.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), collisionBoxEntities[0]->getTexture().id, 0.0f, Colour(255, 255, 255, 255));
+		mEntitySpriteBatch.addSprite(pos, glm::vec2(1.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), markerEntities[0]->getTexture().id, 0.0f, Colour(255, 255, 255, 255));
 	}
 
 	//Add the player the entity sprite batch
@@ -230,27 +342,6 @@ void GraphicsManager::updateGraphics(Player* player, std::vector<Box*>& boxEntit
 
 	//Render the batches
 	mEntitySpriteBatch.renderBatches();
-}
-
-void GraphicsManager::drawMenu(Texture& menuTexture)
-{
-	mScreenWidth = SDL_GetWindowSurface(mWindow.getSDLWindow())->w;
-	mScreenHeight = SDL_GetWindowSurface(mWindow.getSDLWindow())->h;
-
-	//Reuse HUD camera for menu
-	mHUDCamera.updateCamera();
-
-	glm::mat4 cameraMatrix = mHUDCamera.getCamerMatrix();
-	GLuint projMatrixLocation = mTextureShader.getUniformLocation("projMatrix");
-	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
-
-	mMenuSpriteBatch.begin();
-
-	mMenuSpriteBatch.addSprite(glm::vec2(0.0f, 0.0f), glm::vec2(mScreenWidth, mScreenHeight), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), menuTexture.id,
-		0.0f, Colour(255, 255, 255, 255));
-
-	mMenuSpriteBatch.end();
-	mMenuSpriteBatch.renderBatches();
 }
 
 void GraphicsManager::translateCamera(const glm::vec2 translation)

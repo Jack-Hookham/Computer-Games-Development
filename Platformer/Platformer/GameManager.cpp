@@ -68,15 +68,8 @@ int GameManager::init()
 		failedInits++;
 	}
 
-	//Initialise the box2D world
-	mPlayer = new Player;
-	mWorldManager.generateWorld(mTestLevel2Path, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
-		mMarkerEntities, mEnemySpawnPositions);
-
-	Marker* collisionBox = new Marker;
-	Texture collisionTexture = ResourceManager::getTexture("../res/textures/other/collisionDebug.png");
-	collisionBox->init(mPlayer->getPosition(), mPlayer->getDimensions(), Colour(255.0f, 255.0f, 255.0f, 64.0f), collisionTexture);
-	mCollisionBoxEntities.emplace_back(collisionBox);
+	//Initialise the Box2D world and entities
+	initWorld();
 
 	//Initialise physics
 	if (mPhysicsManager.initPhysics(mDesiredFPS))
@@ -131,8 +124,22 @@ int GameManager::init()
 	mEnemySounds[1] = mAudioManager.loadSoundEffect("../res/sound/melee_sounds/sword_sound.wav");
 
 	mMenuTexture = ResourceManager::getTexture("../res/textures/menu/MenuImage.png");
+	mGameOverTexture = ResourceManager::getTexture("../res/textures/menu/GameOverImage.png");
 
 	return failedInits;
+}
+
+void GameManager::initWorld()
+{
+	if (!mWorldInitialised)
+	{
+		//Set up the world
+		mPlayer = new Player;
+		mWorldManager.generateWorld(mMainLevelPath, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
+			mMarkerEntities, mEnemySpawnPositions);
+
+		mWorldInitialised = true;
+	}
 }
 
 int GameManager::gameLoop()
@@ -162,7 +169,6 @@ int GameManager::gameLoop()
 
 void GameManager::menuLoop()
 {
-
 	while (mGameState == MENU)
 	{
 		manageInput();
@@ -173,7 +179,8 @@ void GameManager::menuLoop()
 		mGraphicsManager.swapBuffers();
 
 		//Play game if space press
-		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_SPACE))
+		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_SPACE) || 
+			mInputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_A))
 		{
 			mGameState = PLAY;
 		}
@@ -182,6 +189,7 @@ void GameManager::menuLoop()
 		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_ESCAPE))
 		{
 			mGameState = QUIT;
+			break;
 		}
 
 		mInputManager.update();
@@ -190,17 +198,42 @@ void GameManager::menuLoop()
 
 void GameManager::gameOverLoop()
 {
+	SDL_Delay(1000);
+	deleteEntities();
 
+	while (mGameState == GAMEOVER)
+	{
+		manageInput();
+
+		//Update graphics
+		mGraphicsManager.clearBuffers();
+		mGraphicsManager.drawGameOver(mGameOverTexture, mRoundTime, mKills);
+		mGraphicsManager.swapBuffers();
+
+		//Go to menu if escape pressed
+		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_ESCAPE))
+		{
+			mGameState = MENU;
+		}
+
+		mInputManager.update();
+	}
 }
 
 void GameManager::playLoop()
 {
+	initWorld();
+
 	//Count the number of frames to calculate fps
 	int frameCount = 0;
 	mFPSTimer.start();
 	mRoundTimer.start();
 
+	//Set variables
 	float fps = 0.0f;
+	mScore = 0;
+	mKills = 0;
+	mRoundTimer.restart();
 
 	while (mGameState == PLAY)
 	{
@@ -221,6 +254,11 @@ void GameManager::playLoop()
 		mPhysicsManager.updatePhysics(mWorldManager.world, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
 			mMarkerEntities, mCollisionBoxEntities, mKills);
 
+		if (mPlayer->getHealth() <= 0)
+		{
+			mGameState = GAMEOVER;
+		}
+
 		//Calculate fps
 		int tickCount = mFPSTimer.getTicks();
 		//if over 1 second has passed
@@ -233,14 +271,14 @@ void GameManager::playLoop()
 		//Increment the frame counter
 		frameCount++;
 
-		float roundTime = mRoundTimer.getTicks() / MS_PER_SECOND;
+		mRoundTime = mRoundTimer.getTicks() / MS_PER_SECOND;
 
 		//Update graphics
 		mGraphicsManager.clearBuffers();
 
-		mGraphicsManager.updateGraphics(mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
+		mGraphicsManager.drawGame(mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
 			mMarkerEntities, mCollisionBoxEntities, mEnemySpawnPositions);
-		mGraphicsManager.drawHUD(fps, roundTime, mKills, mPlayer);
+		mGraphicsManager.drawHUD(fps, mRoundTime, mKills, mPlayer);
 
 		mGraphicsManager.swapBuffers();
 
@@ -374,22 +412,6 @@ void GameManager::processInput()
 		mGameState = MENU;
 	}
 
-	//Reload level if r pressed
-	if (mInputManager.getKeyboard()->isKeyPressed(SDLK_r))
-	{
-		mRoundTimer.restart();
-		deleteEntities();
-
-		mPlayer = new Player;
-		mWorldManager.generateWorld(mTestLevel2Path, mAudioManager, mPlayer, mGroundEntities, mBoxEntities, mEnemyEntities,
-			mMarkerEntities, mEnemySpawnPositions);
-
-		Marker* collisionBox = new Marker;
-		Texture collisionTexture = ResourceManager::getTexture("../res/textures/other/collisionDebug.png");
-		collisionBox->init(mPlayer->getPosition(), mPlayer->getDimensions(), Colour(255.0f, 255.0f, 255.0f, 64.0f), collisionTexture);
-		mCollisionBoxEntities.emplace_back(collisionBox);
-	}
-
 	//Manage input for the player
 	mPlayer->input(mInputManager);
 
@@ -410,39 +432,44 @@ void GameManager::processInput()
 
 void GameManager::deleteEntities()
 {
-	for each (Box* b in mBoxEntities)
+	if (mWorldInitialised)
 	{
-		delete b;
+		for each (Box* b in mBoxEntities)
+		{
+			delete b;
+		}
+		mBoxEntities.clear();
+
+		for each (Ground* g in mGroundEntities)
+		{
+			delete g;
+		}
+		mGroundEntities.clear();
+
+		for each (Enemy* e in mEnemyEntities)
+		{
+			delete e;
+		}
+		mEnemyEntities.clear();
+
+		for each (Marker* m in mMarkerEntities)
+		{
+			delete m;
+		}
+		mMarkerEntities.clear();
+
+		for each (Marker* m in mCollisionBoxEntities)
+		{
+			delete m;
+		}
+		mCollisionBoxEntities.clear();
+
+		mEnemySpawnPositions.clear();
+
+		delete mPlayer;
+
+		mWorldInitialised = false;
 	}
-	mBoxEntities.clear();
-
-	for each (Ground* g in mGroundEntities)
-	{
-		delete g;
-	}
-	mGroundEntities.clear();
-
-	for each (Enemy* e in mEnemyEntities)
-	{
-		delete e;
-	}
-	mEnemyEntities.clear();
-
-	for each (Marker* m in mMarkerEntities)
-	{
-		delete m;
-	}
-	mMarkerEntities.clear();
-
-	for each (Marker* m in mCollisionBoxEntities)
-	{
-		delete m;
-	}
-	mCollisionBoxEntities.clear();
-
-	mEnemySpawnPositions.clear();
-
-	delete mPlayer;
 }
 
 //Delete entity pointers, close SDL controller stuff

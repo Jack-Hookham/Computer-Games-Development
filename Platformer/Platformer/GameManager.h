@@ -48,6 +48,9 @@ private:
 	//Start up SDL and create window
 	int init();
 
+	//Initialise the game world
+	void initWorld();
+
 	//Main loop for the game
 	int gameLoop();	
 
@@ -78,7 +81,7 @@ private:
 	void processInput();
 
 	//Current game state
-	GameState mGameState = MENU;
+	GameState mGameState = GAMEOVER;
 
 	int mScreenWidth = 1920;
 	int mScreenHeight= 1017;
@@ -104,11 +107,10 @@ private:
 	InputManager mInputManager;
 	WorldManager mWorldManager;
 
-	const std::string mTestLevelPath = "../res/levels/test_level.txt";
 	const std::string mMainLevelPath = "../res/levels/main_level.txt";
-	const std::string mTestLevel2Path = "../res/levels/test_level2.txt";
 
 	Texture mMenuTexture;
+	Texture mGameOverTexture;
 
 	//Audio stuff
 	AudioManager mAudioManager;
@@ -124,6 +126,7 @@ private:
 
 	//Time each round
 	Timer mRoundTimer;
+	int mRoundTime = 0;
 
 	//Scoring stuff
 	int mScore = 0;
@@ -152,5 +155,7 @@ private:
 	Colour mEnemyColour = { 255, 255, 255, 255 };
 	Texture mEnemyTextures[Enemy::NUM_STATES];
 	SoundEffect mEnemySounds[Enemy::NUM_SOUNDS];
+
+	bool mWorldInitialised = false;
 };
 

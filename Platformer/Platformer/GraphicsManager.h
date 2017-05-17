@@ -42,13 +42,14 @@ public:
 	void swapBuffers();
 
 	//Update the graphics for the current frame
-	void updateGraphics(Player* player, std::vector<Box*>& boxEntities,
+	void drawGame(Player* player, std::vector<Box*>& boxEntities,
 		std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities,
 		std::vector<Marker*>& collisionBoxEntities, std::vector<glm::vec2>& enemySpawnPositions);
 
 	void drawHUD(const float fps, const float roundTime, const int kills, const Player* player);
 
 	void drawMenu(Texture& menuTexture);
+	void drawGameOver(Texture& gameOverTexture, const int roundTime, const int kills);
 
 	void translateCamera(const glm::vec2 translation);
 	void setCameraScale(const float scale);
@@ -83,8 +84,8 @@ private:
 	SpriteBatch mHUDSpriteBatch;
 
 	//Menu sprite batches
-	SpriteBatch mMenuSpriteBatch;
-	SpriteBatch mMenuTextBatch;
+	SpriteBatch mGameOverSpriteBatch;
+	SpriteBatch mGameOverTextBatch;
 
 	//Fonts
 	SpriteFont* mHUDFont;

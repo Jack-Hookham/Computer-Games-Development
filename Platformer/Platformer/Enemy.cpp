@@ -89,13 +89,30 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	EntityBox2D::update();
 
 	//Cap the speed
-	if (mBody->GetLinearVelocity().x > MAX_SPEED)
+	//Jog if searching
+	if (mSearching)
 	{
-		mBody->SetLinearVelocity(b2Vec2(MAX_SPEED, mBody->GetLinearVelocity().y));
+		if (mBody->GetLinearVelocity().x > MAX_SPEED * 0.6f)
+		{
+			mBody->SetLinearVelocity(b2Vec2(MAX_SPEED * 0.6f, mBody->GetLinearVelocity().y));
+		}
+		else if (mBody->GetLinearVelocity().x < -MAX_SPEED * 0.6f)
+		{
+			mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED * 0.6f, mBody->GetLinearVelocity().y));
+		}
 	}
-	else if (mBody->GetLinearVelocity().x < -MAX_SPEED)
+	//Sprint if found
+	else
 	{
-		mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED, mBody->GetLinearVelocity().y));
+		if (mBody->GetLinearVelocity().x > MAX_SPEED)
+		{
+			mBody->SetLinearVelocity(b2Vec2(MAX_SPEED, mBody->GetLinearVelocity().y));
+		}
+		else if (mBody->GetLinearVelocity().x < -MAX_SPEED)
+		{
+			mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED, mBody->GetLinearVelocity().y));
+		}
+
 	}
 
 	//Check if in air
@@ -286,7 +303,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			{
 				mSounds[ATTACK_SOUND].play();
 				mAttacking = true;
-				player->setHealth(player->getHealth() - SWORD_DAMAGE);
 			}
 		}
 		//left of player
@@ -299,7 +315,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			{
 				mSounds[ATTACK_SOUND].play();
 				mAttacking = true;
-				player->setHealth(player->getHealth() - SWORD_DAMAGE);
 			}
 		}
 	}
@@ -334,7 +349,13 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 		}
 	}
 
-	//Move if not hurt
+	//Damage the player at the end of the attack animation
+	if (mAttacking && mAttackTimer >= mNumSprites[mAnimState])
+	{
+		player->setHealth(player->getHealth() - SWORD_DAMAGE);
+	}
+
+	//Move if not hurt or attacking
 	if (!mIsHurt && !mAttacking)
 	{
 		mBody->ApplyForceToCenter(b2Vec2(100.0f * mDirection, 0.0f), true);
