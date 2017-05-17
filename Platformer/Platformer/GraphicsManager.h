@@ -43,6 +43,8 @@ public:
 		std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities,
 		std::vector<Marker*>& collisionBoxEntities, std::vector<glm::vec2>& enemySpawnPositions);
 
+	void drawMenu(Texture& menuTexture);
+
 	void translateCamera(const glm::vec2 translation);
 	void setCameraScale(const float scale);
 
@@ -78,8 +80,13 @@ private:
 	//HUD sprite batch
 	SpriteBatch mHUDSpriteBatch;
 
-	//HUD font
+	//Menu sprite batches
+	SpriteBatch mMenuSpriteBatch;
+	SpriteBatch mMenuTextBatch;
+
+	//Fonts
 	SpriteFont* mHUDFont;
+	SpriteFont* mMenuFont;
 
 	//Shader for the engine
 	Shader mTextureShader;

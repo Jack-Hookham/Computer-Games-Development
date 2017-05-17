@@ -130,6 +130,8 @@ int GameManager::init()
 	mEnemySounds[0] = mAudioManager.loadSoundEffect("../res/sound/platformer_jumping/jump_01.wav");
 	mEnemySounds[1] = mAudioManager.loadSoundEffect("../res/sound/melee_sounds/sword_sound.wav");
 
+	mMenuTexture = ResourceManager::getTexture("../res/textures/menu/MenuImage.png");
+
 	return failedInits;
 }
 
@@ -138,6 +140,47 @@ int GameManager::gameLoop()
 	//Play the background music file
 	//mMusic.play(-1);
 
+	while (mGameState != QUIT)
+	{
+		switch (mGameState)
+		{
+		case MENU:
+			menuLoop();
+		case PLAY:
+			playLoop();
+		}
+	}
+
+	quit();
+
+	return 0;
+}
+
+void GameManager::menuLoop()
+{
+
+	while (mGameState == MENU)
+	{
+		manageInput();
+		mGraphicsManager.drawMenu(mMenuTexture);
+
+		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_SPACE))
+		{
+			mGameState = PLAY;
+		}
+
+		//Go to menu if escape pressed
+		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_ESCAPE))
+		{
+			mGameState = QUIT;
+		}
+
+		mInputManager.update();
+	}
+}
+
+void GameManager::playLoop()
+{
 	//Count the number of frames to calculate fps
 	int frameCount = 0;
 	mFPSTimer.start();
@@ -145,7 +188,7 @@ int GameManager::gameLoop()
 
 	float fps = 0.0f;
 
-	while (mGameState != QUIT)
+	while (mGameState == PLAY)
 	{
 		//Start cap timer at the start of each frame (each loop)
 		mFrameTimer.start();
@@ -156,8 +199,9 @@ int GameManager::gameLoop()
 			spawnEnemy();
 		}
 
-		//Manage the user input, check the players
+		//Manage the user input
 		manageInput();
+		processInput();
 
 		//Update all physics
 		mPhysicsManager.updatePhysics(mWorldManager.world, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
@@ -189,10 +233,6 @@ int GameManager::gameLoop()
 			SDL_Delay(mScreenTicksPerFrame - (float)frameTicks);
 		}
 	}
-
-	quit();
-
-	return 0;
 }
 
 //Spawn an enemy at one of the spawn positions off screen
@@ -302,14 +342,17 @@ void GameManager::manageInput()
 		else if (e.type == SDL_CONTROLLERBUTTONUP)
 		{
 			mInputManager.updateController()->releaseButton(e.cbutton.button);
-		}	
+		}
 	}
+}
 
-	//***Process input***
-	//Quit if escape pressed
+//Input processing for the play loop
+void GameManager::processInput()
+{
+	//Go to menu if escape pressed
 	if (mInputManager.getKeyboard()->isKeyPressed(SDLK_ESCAPE))
 	{
-		mGameState = QUIT;
+		mGameState = MENU;
 	}
 
 	//Reload level if r pressed
@@ -328,54 +371,15 @@ void GameManager::manageInput()
 		mCollisionBoxEntities.emplace_back(collisionBox);
 	}
 
-	//Mouse buttons
-	if (mInputManager.getMouse()->isButtonPressed(SDL_BUTTON_LEFT))
-	{
-		//Create a box at the mouse position when LMB is pressed
-		glm::vec2 mouseCoords = mInputManager.getMouse()->getMouseCoords();
-		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
-		glm::vec2 dimensions = glm::vec2(2.0f);
-
-		//Random colours and texture
-		std::mt19937 randGenerator(time(0));
-
-		std::uniform_int_distribution<int> colourGen(200, 255);
-		std::uniform_int_distribution<int> textureGen(1, 10);
-
-		glm::vec4 colour(colourGen(randGenerator), colourGen(randGenerator), colourGen(randGenerator), 255);
-		std::string textureString = "../res/textures/boxes_and_crates/obj_box" + std::to_string(textureGen(randGenerator)) + ".png";
-		Texture texture = ResourceManager::getTexture(textureString);
-
-		mWorldManager.addBoxToWorld(mBoxEntities, mWorldManager.world, worldCoords, dimensions, colour, texture);
-
-		mPlaceBoxSound.play();
-	}
-
-	if (mInputManager.getMouse()->isButtonPressed(SDL_BUTTON_RIGHT))
-	{
-		//Create ground at the mouse position when RMB is pressed
-		glm::vec2 mouseCoords = mInputManager.getMouse()->getMouseCoords();
-		glm::vec2 worldCoords = mGraphicsManager.getCamera().screenToWorld(mouseCoords);
-		glm::vec2 dimensions = glm::vec2(1.0f);
-		Colour colour(255, 255, 255, 255);
-		Texture texture = ResourceManager::getTexture("../res/textures/platformerArt/png/ground.png");
-
-		mWorldManager.addGroundToWorld(mGroundEntities, mWorldManager.world, worldCoords, dimensions, colour, texture);
-
-		mPlaceGroundSound.play();
-	}
-
 	//Manage input for the player
 	mPlayer->input(mInputManager);
 
-	if (mInputManager.getKeyboard()->isKeyDown(SDLK_COMMA) ||
-		mInputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
+	if (mInputManager.getKeyboard()->isKeyDown(SDLK_COMMA))
 	{
 		//Zoom in
 		mGraphicsManager.setCameraScale(SCALE_SPEED);
 	}
-	if (mInputManager.getKeyboard()->isKeyDown(SDLK_PERIOD) ||
-		mInputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_RIGHTSHOULDER))
+	if (mInputManager.getKeyboard()->isKeyDown(SDLK_PERIOD))
 	{
 		//Zoom out
 		mGraphicsManager.setCameraScale(-SCALE_SPEED);

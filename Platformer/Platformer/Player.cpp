@@ -490,7 +490,7 @@ void Player::input(InputManager& inputManager)
 
 	if (!mThrowing)
 	{
-		if (inputManager.getKeyboard()->isKeyPressed(SDLK_q) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_Y))
+		if (inputManager.getMouse()->isButtonPressed(SDL_BUTTON_LEFT) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B))
 		{
 			mSounds[THROW_SOUND].play();
 			mThrowing = true;
@@ -521,7 +521,7 @@ void Player::input(InputManager& inputManager)
 			mLineProjectiles++;
 		}
 
-		else if (inputManager.getKeyboard()->isKeyPressed(SDLK_e) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B))
+		else if (inputManager.getMouse()->isButtonPressed(SDL_BUTTON_RIGHT) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_Y))
 		{
 			mSounds[THROW_SOUND].play();
 			mThrowing = true;

@@ -29,7 +29,9 @@
 
 enum GameState
 {
+	MENU,
 	PLAY,
+	GAMEOVER,
 	QUIT
 };
 
@@ -49,6 +51,12 @@ private:
 	//Main loop for the game
 	int gameLoop();	
 
+	//Menu loop
+	void menuLoop();
+
+	//Loop for playing the game
+	void playLoop();
+
 	void spawnEnemy();
 
 	//Delete entities
@@ -63,8 +71,11 @@ private:
 	//Manage user input
 	void manageInput();
 
+	//Process input when playing the game
+	void processInput();
+
 	//Current game state
-	GameState mGameState = PLAY;
+	GameState mGameState = MENU;
 
 	int mScreenWidth = 1920;
 	int mScreenHeight= 1017;
@@ -93,6 +104,8 @@ private:
 	const std::string mTestLevelPath = "../res/levels/test_level.txt";
 	const std::string mMainLevelPath = "../res/levels/main_level.txt";
 	const std::string mTestLevel2Path = "../res/levels/test_level2.txt";
+
+	Texture mMenuTexture;
 
 	//Audio stuff
 	AudioManager mAudioManager;

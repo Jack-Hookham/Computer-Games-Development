@@ -7,6 +7,7 @@ GraphicsManager::GraphicsManager()
 GraphicsManager::~GraphicsManager()
 {
 	delete mHUDFont;
+	delete mMenuFont;
 
 	//Quit SDL subsystems
 	TTF_Quit();
@@ -60,9 +61,12 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 	//Generate VBO and VAO to initialise the sprite batch
 	mEntitySpriteBatch.bufferData();
 	mHUDSpriteBatch.bufferData();
+	mMenuSpriteBatch.bufferData();
+	mMenuTextBatch.bufferData();
 
 	//Load the HUD front
 	mHUDFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 24);
+	mMenuFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 36);
 
 	if (success)
 	{
@@ -214,6 +218,141 @@ void GraphicsManager::updateGraphics(const float fps, const float roundTime, Pla
 
 	//Draw the HUD
 	drawHUD(fps, roundTime, player);
+
+	//Undbind texture
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//Disable the shader attributes
+	mTextureShader.disableAttributes();
+
+	//Swap buffer and draw everything
+	mWindow.swapWindow();
+}
+
+void GraphicsManager::drawMenu(Texture& menuTexture)
+{
+	mScreenWidth = SDL_GetWindowSurface(mWindow.getSDLWindow())->w;
+	mScreenHeight = SDL_GetWindowSurface(mWindow.getSDLWindow())->h;
+
+	//Reuse HUD camera for menu
+	mHUDCamera.updateCamera();
+
+	glClearDepth(1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//Enable the shader attributes
+	mTextureShader.enableAttributes();
+	glActiveTexture(GL_TEXTURE0);
+
+	GLuint textureLocation = mTextureShader.getUniformLocation("sampler");
+	glUniform1i(textureLocation, 0);
+
+	glm::mat4 cameraMatrix = mHUDCamera.getCamerMatrix();
+	GLuint projMatrixLocation = mTextureShader.getUniformLocation("projMatrix");
+	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+	mMenuSpriteBatch.begin();
+
+	mMenuSpriteBatch.addSprite(glm::vec2(0.0f, 0.0f), glm::vec2(mScreenWidth, mScreenHeight), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), menuTexture.id,
+		0.0f, Colour(255, 255, 255, 255));
+
+	mMenuSpriteBatch.end();
+	mMenuSpriteBatch.renderBatches();	
+
+	char buffer[128];
+
+	mMenuTextBatch.begin();
+
+	//Menu text
+	sprintf_s(buffer, "Menu");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.8f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+
+	sprintf_s(buffer, "Space / A - Play");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.75f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	sprintf_s(buffer, "Esc - Quit");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.7f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	sprintf_s(buffer, "Controls");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.6f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+
+	sprintf_s(buffer, "Keyboard");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.55f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	sprintf_s(buffer, "Controller");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.55f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+
+	sprintf_s(buffer, "A & D -");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.5f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	sprintf_s(buffer, "Left & Right Movement");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.5f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+
+	sprintf_s(buffer, "- Left Stick");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.5f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+
+	sprintf_s(buffer, "W -");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.45f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	sprintf_s(buffer, "Jump");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.45f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+
+	sprintf_s(buffer, "- A");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.45f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+
+	sprintf_s(buffer, "Space -");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.4f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	sprintf_s(buffer, "Sword Attack");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.4f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+
+	sprintf_s(buffer, "- X");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.4f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+
+	sprintf_s(buffer, "LMB -");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.35f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	sprintf_s(buffer, "Ranged Attack 1");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.35f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+
+	sprintf_s(buffer, "- B");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.35f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+
+	sprintf_s(buffer, "RMB -");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.3f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+
+	sprintf_s(buffer, "Ranged Attack 2");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.3f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
+
+	sprintf_s(buffer, "- Y");
+	mMenuFont->draw(mMenuTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.3f),
+		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+
+	//Sort the sprite batch and create render batches
+	mMenuTextBatch.end();
+
+	//Render the HUD
+	//mMenuTextBatch.renderBatches();
 
 	//Undbind texture
 	glBindTexture(GL_TEXTURE_2D, 0);

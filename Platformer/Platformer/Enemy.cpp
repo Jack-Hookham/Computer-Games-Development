@@ -149,7 +149,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	}
 
 	//Search for player
-	//While searching enemy moves along x axis and changes direction when it hits a marker
+	//While searching enemy moves along x axis and changes direction or jumps when it hits a marker
 	if (mSearching)
 	{
 		if (mDirectionTimer > 50)
@@ -161,7 +161,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 					mPosition.y < m->getPosition().y + mDimensions.y + m->getDimensions().y &&
 					mPosition.y + mDimensions.y * 0.5f + m->getDimensions().y * 0.5f > m->getPosition().y)
 				{
-					//1/1000 chance to jump
+					//Chance to jump
 					std::mt19937 randGenerator(std::rand());
 					std::uniform_real_distribution<float> jumpGen(0.0f, 5.0f);
 					if (jumpGen(randGenerator) > 4.0f && !mInAir && !mJumping)
@@ -235,10 +235,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	}
 
 	//*****Calculate whether enemy has been hit by player*****
-
-	//collisionBoxEntities[0]->setPosition(player->getAttackBox().x, player->getAttackBox().y);
-	//collisionBoxEntities[0]->setDimensions(player->getAttackBox().z, player->getAttackBox().w);
-
 	//if player is attacking and enemy isn't already hurt
 	if (player->getAttacking() && !mIsHurt)
 	{
@@ -261,8 +257,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 		else
 		{
 			int hitDirection = -1;
-			if (/*player->getAttacking() && !mIsHurt &&*/
-				mPosition.x < player->getAttackBox().x + mDimensions.x * 0.5f + player->getAttackBox().z * 0.5f &&
+			if (mPosition.x < player->getAttackBox().x + mDimensions.x * 0.5f + player->getAttackBox().z * 0.5f &&
 				mPosition.x + mDimensions.x * 0.5f + player->getAttackBox().z * 0.5f > player->getAttackBox().x &&
 				mPosition.y < player->getAttackBox().y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f &&
 				mPosition.y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f > player->getAttackBox().y)
@@ -278,10 +273,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//Update the attack box
 	mAttackBox = glm::vec4(mPosition.x + mDimensions.x * 0.1f, mPosition.y + mDimensions.y * 0.5f - mAttackRange.y,
 		mAttackRange.x * mDirection, mAttackRange.y);
-
-	//Draw the attack box (debugging)
-	collisionBoxEntities[0]->setPosition(mAttackBox.x, mAttackBox.y);
-	collisionBoxEntities[0]->setDimensions(mAttackBox.z, mAttackBox.w);
 
 	if (!mAttacking)
 	{
@@ -339,7 +330,6 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				mHealth -= player->getShurikenDamage();
 					
 				mBody->ApplyForceToCenter(b2Vec2(5000.0f * hitDirection, 700.0f), true);
-
 			}
 		}
 	}
