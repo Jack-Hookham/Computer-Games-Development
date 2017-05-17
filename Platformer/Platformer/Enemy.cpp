@@ -329,7 +329,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				mIsHurt = true;
 				mHealth -= player->getShurikenDamage();
 					
-				mBody->ApplyForceToCenter(b2Vec2(5000.0f * hitDirection, 700.0f), true);
+				mBody->ApplyForceToCenter(b2Vec2(2000.0f * hitDirection, 700.0f), true);
 			}
 		}
 	}

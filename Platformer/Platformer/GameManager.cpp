@@ -146,8 +146,12 @@ int GameManager::gameLoop()
 		{
 		case MENU:
 			menuLoop();
+
 		case PLAY:
 			playLoop();
+
+		case GAMEOVER:
+			gameOverLoop();
 		}
 	}
 
@@ -162,14 +166,19 @@ void GameManager::menuLoop()
 	while (mGameState == MENU)
 	{
 		manageInput();
-		mGraphicsManager.drawMenu(mMenuTexture);
 
+		//Update graphics
+		mGraphicsManager.clearBuffers();
+		mGraphicsManager.drawMenu(mMenuTexture);
+		mGraphicsManager.swapBuffers();
+
+		//Play game if space press
 		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_SPACE))
 		{
 			mGameState = PLAY;
 		}
 
-		//Go to menu if escape pressed
+		//Quit game if escape pressed
 		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_ESCAPE))
 		{
 			mGameState = QUIT;
@@ -177,6 +186,11 @@ void GameManager::menuLoop()
 
 		mInputManager.update();
 	}
+}
+
+void GameManager::gameOverLoop()
+{
+
 }
 
 void GameManager::playLoop()
@@ -205,7 +219,7 @@ void GameManager::playLoop()
 
 		//Update all physics
 		mPhysicsManager.updatePhysics(mWorldManager.world, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
-			mMarkerEntities, mCollisionBoxEntities);
+			mMarkerEntities, mCollisionBoxEntities, mKills);
 
 		//Calculate fps
 		int tickCount = mFPSTimer.getTicks();
@@ -221,9 +235,14 @@ void GameManager::playLoop()
 
 		float roundTime = mRoundTimer.getTicks() / MS_PER_SECOND;
 
-		//Update all graphics
-		mGraphicsManager.updateGraphics(fps, roundTime, mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
+		//Update graphics
+		mGraphicsManager.clearBuffers();
+
+		mGraphicsManager.updateGraphics(mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
 			mMarkerEntities, mCollisionBoxEntities, mEnemySpawnPositions);
+		mGraphicsManager.drawHUD(fps, roundTime, mKills, mPlayer);
+
+		mGraphicsManager.swapBuffers();
 
 		//If frame finished early cap the frame rate
 		int frameTicks = mFrameTimer.getTicks();

@@ -54,6 +54,9 @@ private:
 	//Menu loop
 	void menuLoop();
 
+	//Show score, highscores etc
+	void gameOverLoop();
+
 	//Loop for playing the game
 	void playLoop();
 
@@ -121,6 +124,10 @@ private:
 
 	//Time each round
 	Timer mRoundTimer;
+
+	//Scoring stuff
+	int mScore = 0;
+	int mKills = 0;
 
 	//Entities
 	Player* mPlayer;

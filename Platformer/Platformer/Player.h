@@ -139,7 +139,7 @@ private:
 	const int PROJECTILE_LIFE_SPAN = 10000;
 
 	glm::vec2 mShurikenDims = glm::vec2(0.5f, 0.5f);
-	float mShurikenSpeed = 0.3f;
+	float mShurikenSpeed = 0.5f;
 
 	//Timing stuff for staggering multiple projectile spawns in a line
 	const int LINE_SPAWN_TIME = 100;

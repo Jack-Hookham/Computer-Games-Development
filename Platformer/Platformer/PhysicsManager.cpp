@@ -33,7 +33,7 @@ bool PhysicsManager::initPhysics(const int desiredFPS)
 //Update the world
 void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, Player* player, std::vector<Box*>& boxEntities, 
 	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities,
-	std::vector<Marker*>& collisionBoxEntities)
+	std::vector<Marker*>& collisionBoxEntities, int& kills)
 {
 	player->update();
 
@@ -50,6 +50,7 @@ void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, Player* play
 		{
 			delete *it;
 			it = enemyEntities.erase(it);
+			kills++;
 		}
 		else
 		{

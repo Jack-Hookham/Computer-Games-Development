@@ -38,10 +38,15 @@ public:
 	//Initialise SDL and create the game window
 	bool initGraphics(const int screenWidth, const int screenHeight);
 
+	void clearBuffers();
+	void swapBuffers();
+
 	//Update the graphics for the current frame
-	void updateGraphics(const float fps, const float roundTime, Player* player, std::vector<Box*>& boxEntities,
+	void updateGraphics(Player* player, std::vector<Box*>& boxEntities,
 		std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities, std::vector<Marker*>& markerEntities,
 		std::vector<Marker*>& collisionBoxEntities, std::vector<glm::vec2>& enemySpawnPositions);
+
+	void drawHUD(const float fps, const float roundTime, const int kills, const Player* player);
 
 	void drawMenu(Texture& menuTexture);
 
@@ -57,9 +62,6 @@ private:
 
 	//Initialise the shaders
 	void initShaders();
-
-	//Draw the HUD
-	void drawHUD(const float fps, const float roundTime, const Player* player);
 
 	//Screen dimensions
 	int mScreenWidth;
