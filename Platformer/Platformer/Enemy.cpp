@@ -92,25 +92,25 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//Jog if searching
 	if (mSearching)
 	{
-		if (mBody->GetLinearVelocity().x > MAX_SPEED * 0.6f)
+		if (mBody->GetLinearVelocity().x > MAX_SPEED * 0.6f * mSpeedMods[player->getDifficulty()])
 		{
-			mBody->SetLinearVelocity(b2Vec2(MAX_SPEED * 0.6f, mBody->GetLinearVelocity().y));
+			mBody->SetLinearVelocity(b2Vec2(MAX_SPEED * 0.6f * mSpeedMods[player->getDifficulty()], mBody->GetLinearVelocity().y));
 		}
-		else if (mBody->GetLinearVelocity().x < -MAX_SPEED * 0.6f)
+		else if (mBody->GetLinearVelocity().x < -MAX_SPEED * 0.6f * mSpeedMods[player->getDifficulty()])
 		{
-			mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED * 0.6f, mBody->GetLinearVelocity().y));
+			mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED * 0.6f * mSpeedMods[player->getDifficulty()], mBody->GetLinearVelocity().y));
 		}
 	}
 	//Sprint if found
 	else
 	{
-		if (mBody->GetLinearVelocity().x > MAX_SPEED)
+		if (mBody->GetLinearVelocity().x > MAX_SPEED * mSpeedMods[player->getDifficulty()])
 		{
-			mBody->SetLinearVelocity(b2Vec2(MAX_SPEED, mBody->GetLinearVelocity().y));
+			mBody->SetLinearVelocity(b2Vec2(MAX_SPEED * mSpeedMods[player->getDifficulty()], mBody->GetLinearVelocity().y));
 		}
-		else if (mBody->GetLinearVelocity().x < -MAX_SPEED)
+		else if (mBody->GetLinearVelocity().x < -MAX_SPEED * mSpeedMods[player->getDifficulty()])
 		{
-			mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED, mBody->GetLinearVelocity().y));
+			mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED * mSpeedMods[player->getDifficulty()], mBody->GetLinearVelocity().y));
 		}
 
 	}
@@ -156,7 +156,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//std::cout << glm::length(playerDistance) << std::endl;
 
 	//Player within range?
-	if (glm::length(playerDistance) < AGGRO_RANGE && player->getHealth() > 0)
+	if (glm::length(playerDistance) < AGGRO_RANGE * mAggroRangeMods[player->getDifficulty()] && player->getHealth() > 0)
 	{
 		mSearching = false;
 	}
@@ -352,7 +352,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//Damage the player at the end of the attack animation
 	if (mAttacking && mAttackTimer >= mNumSprites[mAnimState])
 	{
-		player->setHealth(player->getHealth() - SWORD_DAMAGE);
+		player->setHealth(player->getHealth() - SWORD_DAMAGE * mDamageMods[player->getDifficulty()]);
 	}
 
 	//Move if not hurt or attacking

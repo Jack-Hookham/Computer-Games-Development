@@ -63,22 +63,24 @@ public:
 	//Animate, cull then add Player to SpriteBatch
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
-	inline const bool getAttacking() const { return mAttacking; }
-	inline const bool getDead() const { return mDead; }
-	inline const int getHealth() const { return mHealth; }
-	inline const int getDirection() const { return mDirection; }
-	inline const glm::vec4 getAttackBox() const { return mAttackBox; }
-	inline const int getSwordDamage() const { return SWORD_DAMAGE; }
-	inline const int getShurikenDamage() const { return SHURIKEN_DAMAGE; }
-	inline const std::vector<Projectile*>& getProjectileEntities() const { return mProjectileEntities; }
+	const bool getAttacking() const { return mAttacking; }
+	const bool getDead() const { return mDead; }
+	const int getHealth() const { return mHealth; }
+	const int getDirection() const { return mDirection; }
+	const glm::vec4 getAttackBox() const { return mAttackBox; }
+	const int getSwordDamage() const { return SWORD_DAMAGE; }
+	const int getShurikenDamage() const { return SHURIKEN_DAMAGE; }
+	const std::vector<Projectile*>& getProjectileEntities() const { return mProjectileEntities; }
+	const int getDifficulty() const { return mDifficulty; }
 
 	inline std::vector<Projectile*>& updateProjectileEntities() { return mProjectileEntities; }
 
 	//non const version of getBody so that the body can be updated
-	inline b2Body* updateBody() const { return mBody; }
+	b2Body* updateBody() const { return mBody; }
 
-	inline const void setHealth(const int health) { mHealth = health; }
-	inline const void setPosition(const glm::vec2 position) { mPosition = position; }
+	const void setHealth(const int health) { mHealth = health; }
+	const void setPosition(const glm::vec2 position) { mPosition = position; }
+	const void setDifficulty(const int difficulty) { mDifficulty = difficulty; }
 	const void setDead(const bool dead);
 
 private:
@@ -157,5 +159,7 @@ private:
 	float mSpreadMultiplierY = -1.0f;
 
 	float JUMP_IMPULSE = 70.0f;
+
+	int mDifficulty = 0;
 };
 

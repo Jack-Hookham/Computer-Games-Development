@@ -256,7 +256,8 @@ void GraphicsManager::drawMenu(Texture& menuTexture)
 		mGameOverTextBatch.renderBatches();
 }
 
-void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime, const int kills, const float aggression, const int score)
+void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime, const int kills, const float aggression, 
+	const float difficulty, const int score)
 {
 	//Reuse HUD camera for game over screen
 	mHUDCamera.updateCamera();
@@ -281,6 +282,7 @@ void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime
 	Colour timeColour(68, 158, 255, 255);
 	Colour killsColour(72, 181, 0, 255);
 	Colour aggressionColour(255, 0, 0, 255);
+	Colour difficultyColour(39, 5, 112, 255);
 	Colour scoreColour(255, 255, 0, 255);
 
 	//Game Over text formatting
@@ -312,28 +314,44 @@ void GraphicsManager::drawGameOver(Texture& gameOverTexture, const int roundTime
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.7f),
 		glm::vec2(1.0f), 0.0f, aggressionColour, Justification::RIGHT);
 
-	sprintf_s(buffer, "Final Score: ");
+	sprintf_s(buffer, "Difficulty: ");
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.65f),
 		glm::vec2(1.0f), 0.0f, defaultColour, Justification::LEFT);
 
-	sprintf_s(buffer, "%d", time);
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.58f, mScreenHeight * 0.65f),
+	sprintf_s(buffer, "%.2fx", difficulty);
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.65f),
+		glm::vec2(1.0f), 0.0f, difficultyColour, Justification::RIGHT);
+
+	sprintf_s(buffer, "Final Score: ");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.6f),
+		glm::vec2(1.0f), 0.0f, defaultColour, Justification::LEFT);
+
+	sprintf_s(buffer, "%d", roundTime);
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.53f, mScreenHeight * 0.6f),
 		glm::vec2(1.0f), 0.0f, timeColour, Justification::RIGHT);
 
 	sprintf_s(buffer, "x");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.61f, mScreenHeight * 0.65f),
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.55f, mScreenHeight * 0.6f),
 		glm::vec2(1.0f), 0.0f, defaultColour, Justification::RIGHT);
 
 	sprintf_s(buffer, "%.2f", aggression);
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.64f, mScreenHeight * 0.65f),
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.59f, mScreenHeight * 0.6f),
 		glm::vec2(1.0f), 0.0f, aggressionColour, Justification::RIGHT);
 
+	sprintf_s(buffer, "x");
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.61f, mScreenHeight * 0.6f),
+		glm::vec2(1.0f), 0.0f, defaultColour, Justification::RIGHT);
+
+	sprintf_s(buffer, "%.2f", difficulty);
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.65f, mScreenHeight * 0.6f),
+		glm::vec2(1.0f), 0.0f, difficultyColour, Justification::RIGHT);
+
 	sprintf_s(buffer, "=");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.67f, mScreenHeight * 0.65f),
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.67f, mScreenHeight * 0.6f),
 		glm::vec2(1.0f), 0.0f, defaultColour, Justification::RIGHT);
 
 	sprintf_s(buffer, "%d", score);
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.65f),
+	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.6f),
 		glm::vec2(1.0f), 0.0f, scoreColour, Justification::RIGHT);
 
 	mGameOverTextBatch.end();

@@ -24,12 +24,6 @@
 
 //Manager for the whole engine
 
-enum Difficulty
-{
-	EASY,
-	NORMAL,
-	HARD
-};
 
 class GameManager
 {
@@ -40,6 +34,14 @@ public:
 		PLAY,
 		GAMEOVER,
 		QUIT
+	};
+
+	enum Difficulty
+	{
+		EASY,
+		NORMAL,
+		HARD,
+		NUM_DIFFICULTIES
 	};
 
 	GameManager();
@@ -132,7 +134,7 @@ private:
 	int mScore = 0;
 	int mKills = 0;
 
-	float mDifficultyMods[3];
+	float mScoreMods[NUM_DIFFICULTIES] = { 1.0f, 1.25f, 1.5f };
 	Difficulty mDifficulty = EASY;
 
 	//Entities
@@ -145,7 +147,7 @@ private:
 
 	std::vector<glm::vec2> mEnemySpawnPositions;
 
-	const int MAX_ENEMIES = 50;
+	const int MAX_ENEMIES = 80;
 
 	//Analog joystick dead zone
 	const int JOYSTICK_DEAD_ZONE = 8000;

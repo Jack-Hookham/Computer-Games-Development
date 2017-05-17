@@ -58,7 +58,7 @@ private:
 	b2Fixture* mFixtures[3];
 
 	//Limit the player's speed
-	const float MAX_SPEED = 9.0f;
+	const float MAX_SPEED = 8.0f;
 
 	//IDLE, RUN, JUMP, IN_AIR, ATTACK, JUMP_ATTACK
 	//Array of sprite sheets for the different states
@@ -95,7 +95,7 @@ private:
 	const int DIRECTION_TIMER_CAP = 400;
 	int mDirectionTimer;
 
-	const float AGGRO_RANGE = 20.0f;
+	const float AGGRO_RANGE = 12.0f;
 
 	int mHealth = 100;
 	bool mDead = false;
@@ -107,8 +107,13 @@ private:
 	//Box in front of the enemy representing melee attack area
 	glm::vec4 mAttackBox;
 
-	const int SWORD_DAMAGE = 20;
+	const int SWORD_DAMAGE = 10;
 
 	float JUMP_IMPULSE = 70.0f;
+
+	//Difficulty modifiers
+	float mSpeedMods[3] = { 1.0f, 1.125f, 1.25f };
+	float mDamageMods[3] = { 1.0f, 1.5f, 2.0f };
+	float mAggroRangeMods[3] = { 1.0f, 1.25f, 1.5f };
 };
 

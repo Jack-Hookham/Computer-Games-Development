@@ -126,11 +126,6 @@ int GameManager::init()
 	mMenuTexture = ResourceManager::getTexture("../res/textures/menu/MenuImage.png");
 	mGameOverTexture = ResourceManager::getTexture("../res/textures/menu/GameOverImage.png");
 
-	//Difficulty modifiers
-	mDifficultyMods[EASY] = 1.0f;
-	mDifficultyMods[NORMAL] = 1.25f;
-	mDifficultyMods[HARD] = 1.5f;
-
 	return failedInits;
 }
 
@@ -189,6 +184,7 @@ void GameManager::menuLoop()
 		{
 			mDifficulty = EASY;
 			mGameState = PLAY;
+			break;
 		}		
 		
 		//Play game if space press
@@ -197,6 +193,7 @@ void GameManager::menuLoop()
 		{
 			mDifficulty = NORMAL;
 			mGameState = PLAY;
+			break;
 		}		
 		
 		//Play game if space press
@@ -205,6 +202,7 @@ void GameManager::menuLoop()
 		{
 			mDifficulty = HARD;
 			mGameState = PLAY;
+			break;
 		}
 
 		//Quit game if escape pressed
@@ -235,10 +233,10 @@ void GameManager::gameOverLoop()
 		//Ensure no divide by 0
 		if (mRoundTime != 0)
 		{
-			(float)mKills / (float)mRoundTime * 5.0f;
+			aggression = (float)mKills / (float)mRoundTime * 5.0f;
 		}
 
-		int score = (int)(mRoundTime * aggression * mDifficultyMods[mDifficulty]);
+		int score = (int)(mRoundTime * aggression * mScoreMods[mDifficulty]);
 
 		manageInput();
 
@@ -259,7 +257,7 @@ void GameManager::gameOverLoop()
 		mGraphicsManager.clearBuffers();
 		mGraphicsManager.drawGame(mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities,
 			mMarkerEntities, mCollisionBoxEntities, mEnemySpawnPositions);
-		mGraphicsManager.drawGameOver(mGameOverTexture, mRoundTime, mKills, aggression, score);
+		mGraphicsManager.drawGameOver(mGameOverTexture, mRoundTime, mKills, aggression, mScoreMods[mDifficulty], score);
 		mGraphicsManager.swapBuffers();
 
 		//Go to menu if escape pressed
@@ -295,6 +293,8 @@ void GameManager::playLoop()
 	mScore = 0;
 	mKills = 0;
 	mRoundTimer.restart();
+
+	mPlayer->setDifficulty(mDifficulty);
 
 	while (mGameState == PLAY)
 	{
