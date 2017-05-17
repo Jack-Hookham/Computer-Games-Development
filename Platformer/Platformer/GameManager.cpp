@@ -55,10 +55,11 @@ int GameManager::init()
 		//Set initial volume (max 128)
 		mAudioManager.setVolume(30);
 
-		//Load the background music file
-		mMusic = mAudioManager.loadMusic("../res/sound/8_bit_pack/bgm_action_3.mp3");
+		//Load the background music files
+		mMenuMusic = mAudioManager.loadMusic("../res/sound/8_bit_pack/bgm_menu.mp3");
+		mGameMusic = mAudioManager.loadMusic("../res/sound/8_bit_pack/bgm_action_4.mp3");
 
-		//Load sound effect
+		//Load sound effects
 		mPlaceBoxSound = mAudioManager.loadSoundEffect("../res/sound/Menu_FX/Item1A.wav");
 		mPlaceGroundSound = mAudioManager.loadSoundEffect("../res/sound/Menu_FX/Item1B.wav");
 	}
@@ -112,6 +113,8 @@ int GameManager::init()
 		}
 	}
 
+	ShowCursor(FALSE);
+
 	//Load default enemy textures
 	mEnemyTextures[0] = ResourceManager::getTexture("../res/textures/ninja_adventure/enemy/spritesheet/idle.png");
 	mEnemyTextures[1] = ResourceManager::getTexture("../res/textures/ninja_adventure/enemy/spritesheet/run.png");
@@ -145,7 +148,7 @@ void GameManager::initWorld()
 int GameManager::gameLoop()
 {
 	//Play the background music file
-	//mMusic.play(-1);
+	mMenuMusic.play(-1);
 
 	while (mGameState != QUIT)
 	{
@@ -218,6 +221,9 @@ void GameManager::menuLoop()
 
 void GameManager::gameOverLoop()
 {
+	//Play the background music file
+	mMenuMusic.play(-1);
+
 	//Move the player away from the world
 	//Enemies will continue to move around the world while the game over screen shows
 	mPlayer->updateBody()->SetTransform(b2Vec2(1000.0f, 1000.0f), mPlayer->getBody()->GetAngle());
@@ -263,9 +269,8 @@ void GameManager::gameOverLoop()
 		mGraphicsManager.drawGameOver(mGameOverTexture, mRoundTime, mKills, aggression, mScoreMods[mDifficulty], score, highscores, rank);
 		mGraphicsManager.swapBuffers();
 
-		//Go to menu if escape pressed
+		//Go to menu if buttons pressed
 		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_ESCAPE) ||
-			mInputManager.getKeyboard()->isKeyPressed(SDLK_SPACE) ||
 			mInputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_START))
 		{
 			mGameState = MENU;
@@ -286,6 +291,9 @@ void GameManager::gameOverLoop()
 
 void GameManager::playLoop()
 {
+	//Play the background music file
+	mGameMusic.play(-1);
+
 	initWorld();
 
 	//Count the number of frames to calculate fps
@@ -479,17 +487,6 @@ void GameManager::processInput()
 
 	//Manage input for the player
 	mPlayer->input(mInputManager);
-
-	if (mInputManager.getKeyboard()->isKeyDown(SDLK_COMMA))
-	{
-		//Zoom in
-		mGraphicsManager.setCameraScale(SCALE_SPEED);
-	}
-	if (mInputManager.getKeyboard()->isKeyDown(SDLK_PERIOD))
-	{
-		//Zoom out
-		mGraphicsManager.setCameraScale(-SCALE_SPEED);
-	}
 
 	//Update the input manager - copies current input maps to previous input maps
 	mInputManager.update();

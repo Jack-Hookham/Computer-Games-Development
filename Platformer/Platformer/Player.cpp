@@ -396,11 +396,21 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 		dimensions.y *= mStateMultipliers[mAnimState].y;
 		if (mAnimState != IDLE)
 		{
-			if (mDirection == -1)
+			//Throw animation position adjustments
+			if (mAnimState == THROW)
 			{
-				position.x -= dimensions.x * 0.5f;
+				position.x -= dimensions.x * 0.2f;
+				position.y -= dimensions.y * (mStateMultipliers[mAnimState].y - mStateMultipliers[IDLE].y) * 0.7f;
 			}
-			position.y -= dimensions.y * (mStateMultipliers[mAnimState].y - mStateMultipliers[IDLE].y) * 0.7f;
+			//Other animation position adjustments
+			else
+			{
+				if (mDirection == -1)
+				{
+					position.x -= dimensions.x * 0.5f;
+				}
+				position.y -= dimensions.y * (mStateMultipliers[mAnimState].y - mStateMultipliers[IDLE].y) * 0.7f;
+			}
 		}
 
 		//Increment animation time
@@ -569,11 +579,6 @@ void Player::input(InputManager& inputManager)
 	{
 		mHealth = 0;
 	}
-}
-
-const void Player::setDead(const bool dead)
-{
-	mDead = dead;
 }
 
 void Player::log(const std::string text)

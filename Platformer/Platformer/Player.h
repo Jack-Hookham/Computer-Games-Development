@@ -81,7 +81,7 @@ public:
 	const void setHealth(const int health) { mHealth = health; }
 	const void setPosition(const glm::vec2 position) { mPosition = position; }
 	const void setDifficulty(const int difficulty) { mDifficulty = difficulty; }
-	const void setDead(const bool dead);
+	const void setDead(const bool dead) { mDead = dead; }
 
 private:
 	void log(const std::string text);

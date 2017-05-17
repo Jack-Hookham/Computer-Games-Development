@@ -1,10 +1,6 @@
 JackH Level
 
 STARTGROUND
--100 -100 1 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
-100 -100 1 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
--100 100 1 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
-100 100 1 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png
 0 0 10 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
 -30 -10 15 1 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleMid.png
 -50 -6 5 5 255 255 255 255 0.3 ../res/textures/platformerGraphicsDeluxe/Tiles/castleCenter.png

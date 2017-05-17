@@ -112,7 +112,8 @@ private:
 
 	//Audio stuff
 	AudioManager mAudioManager;
-	Music mMusic;
+	Music mGameMusic;
+	Music mMenuMusic;
 	SoundEffect mPlaceBoxSound;
 	SoundEffect mPlaceGroundSound;
 

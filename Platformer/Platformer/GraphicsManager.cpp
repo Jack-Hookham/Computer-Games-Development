@@ -33,7 +33,7 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 	}
 
 	//Create the window and error check
-	if (!mWindow.createWindow("Platformer", mScreenWidth, mScreenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL))
+	if (!mWindow.createWindow("Genji Simulator 2D", mScreenWidth, mScreenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL))
 	{
 		log("Failed to create window");
 		success = false;
@@ -149,110 +149,6 @@ void GraphicsManager::drawMenu(Texture& menuTexture)
 
 	mGameOverSpriteBatch.end();
 	mGameOverSpriteBatch.renderBatches();
-
-	char buffer[128];
-	
-	mGameOverTextBatch.begin();
-	
-	//Menu text
-		sprintf_s(buffer, "Menu");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.8f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
-	
-		sprintf_s(buffer, "Choose a difficulty");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.7f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
-
-	sprintf_s(buffer, "1 / A - Easy");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.65f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
-
-	sprintf_s(buffer, "2 / X - Normal");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.65f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
-
-	sprintf_s(buffer, "3 / B - Hard");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.65f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
-	
-		sprintf_s(buffer, "Controls");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.55f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
-	
-		sprintf_s(buffer, "Keyboard");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.5f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
-	
-		sprintf_s(buffer, "Controller");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.5f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
-	
-		sprintf_s(buffer, "A & D -");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.45f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
-	
-		sprintf_s(buffer, "Left & Right Movement");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.45f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
-	
-		sprintf_s(buffer, "- Left Stick");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.45f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
-	
-		sprintf_s(buffer, "W -");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.4f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
-	
-		sprintf_s(buffer, "Jump");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.4f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
-	
-		sprintf_s(buffer, "- A");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.4f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
-	
-		sprintf_s(buffer, "Space -");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.35f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
-	
-		sprintf_s(buffer, "Sword Attack");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.35f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
-	
-		sprintf_s(buffer, "- X");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.35f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
-	
-		sprintf_s(buffer, "LMB -");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.3f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
-	
-		sprintf_s(buffer, "Ranged Attack 1");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.3f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
-	
-		sprintf_s(buffer, "- B");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.3f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
-	
-		sprintf_s(buffer, "RMB -");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.25f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
-	
-		sprintf_s(buffer, "Ranged Attack 2");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.25f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::MIDDLE);
-	
-		sprintf_s(buffer, "- Y");
-	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.25f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
-
-	sprintf_s(buffer, "Esc - Quit");
-	mHUDFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.2f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
-	
-		mGameOverTextBatch.end();
-		mGameOverTextBatch.renderBatches();
 }
 
 //Draw the game over screen
@@ -384,7 +280,7 @@ void GraphicsManager::drawGameOver(const Texture& gameOverTexture, const int rou
 		heightMod -= 0.05f;
 	}
 
-	sprintf_s(buffer, "Space - Menu");
+	sprintf_s(buffer, "Esc - Menu");
 	mHUDFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.2f),
 		glm::vec2(1.0f), 0.0f, defaultColour);
 
