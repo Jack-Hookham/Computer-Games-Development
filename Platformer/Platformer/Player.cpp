@@ -481,14 +481,14 @@ void Player::input(InputManager& inputManager)
 	}
 
 	//Attack
-	if (!mAttacking && (inputManager.getKeyboard()->isKeyPressed(SDLK_SPACE) ||
+	if (!mAttacking && !mThrowing && (inputManager.getKeyboard()->isKeyPressed(SDLK_SPACE) ||
 		inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_X)))
 	{
 		mSounds[ATTACK_SOUND].play();
 		mAttacking = true;
 	}
 
-	if (!mThrowing)
+	if (!mThrowing && !mAttacking)
 	{
 		if (inputManager.getMouse()->isButtonPressed(SDL_BUTTON_LEFT) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B))
 		{
