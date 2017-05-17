@@ -301,6 +301,12 @@ void GraphicsManager::drawHUD(const float fps, const float roundTime, const int 
 
 	mHUDSpriteBatch.begin();
 
+	if (player->getDamaged())
+	{
+		mHUDSpriteBatch.addSprite(glm::vec2(0.0f, 0.0f), glm::vec2(mScreenWidth, mScreenHeight), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), player->getDamagedTexture().id,
+			0.0f, Colour(255, 255, 255, player->getDamagedAlpha()));
+	}
+
 	//Add player health to the HUD buffer
 	sprintf_s(buffer, "HP: %d", player->getHealth());
 	//Add the buffer to the HUD

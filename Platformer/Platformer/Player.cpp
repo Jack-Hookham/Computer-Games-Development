@@ -134,7 +134,7 @@ void Player::update()
 			projectileTexCoords.z *= -1.0f;
 		}
 
-		glm::vec2 projectileVel = glm::vec2(mShurikenSpeed * mDirection, 0.0f);
+		glm::vec2 projectileVel = glm::vec2(SHURIKEN_SPEED * mDirection, 0.0f);
 
 		projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
 		mProjectileEntities.emplace_back(projectile);
@@ -168,7 +168,7 @@ void Player::update()
 			projectileTexCoords.z *= -1.0f;
 		}
 
-		glm::vec2 projectileVel = glm::normalize(glm::vec2(mDirection, 0.5f * mSpreadMultiplierY)) * mShurikenSpeed;
+		glm::vec2 projectileVel = glm::normalize(glm::vec2(mDirection, 0.5f * mSpreadMultiplierY)) * SHURIKEN_SPEED;
 
 		projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
 		mProjectileEntities.emplace_back(projectile);
@@ -204,6 +204,28 @@ void Player::update()
 	{
 		mHealth = 0;
 	}	
+
+	//if damaged set damaged texture alpha
+	//increase then decrease to fade in and out
+	if (mDamaged)
+	{
+		if (mDamagedAlphaIncreasing)
+		{
+			mDamagedAlpha += 4;
+			if (mDamagedAlpha >= 64)
+			{
+				mDamagedAlphaIncreasing = false;
+			}
+		}
+		else
+		{
+			mDamagedAlpha -= 4;
+			if (mDamagedAlpha <= 0)
+			{
+				mDamaged = false;
+			}
+		}
+	}
 }
 
 void Player::add(SpriteBatch& spriteBatch, Camera& camera)
@@ -445,18 +467,19 @@ void Player::input(InputManager& inputManager)
 	if ((inputManager.getKeyboard()->isKeyDown(SDLK_a) || inputManager.getController()->getLeftStickDirection() < 0) &&
 		mAnimState != ATTACK && mAnimState != THROW)
 	{
-		mBody->ApplyForceToCenter(b2Vec2(-100.0f, 0.0f), true);
+		mBody->ApplyForceToCenter(b2Vec2(-MOVE_FORCE, 0.0f), true);
 		mDirection = -1;
 	}
 	else if ((inputManager.getKeyboard()->isKeyDown(SDLK_d) || inputManager.getController()->getLeftStickDirection() > 0) &&
 		mAnimState != ATTACK && mAnimState != THROW)
 	{
 		mDirection = 1;
-		mBody->ApplyForceToCenter(b2Vec2(100.0f, 0.0f), true);
+		mBody->ApplyForceToCenter(b2Vec2(MOVE_FORCE, 0.0f), true);
 	}
 	else
 	{
-		mBody->SetLinearVelocity(b2Vec2(mBody->GetLinearVelocity().x * 0.5f, mBody->GetLinearVelocity().y));
+		//Apply damping
+		mBody->SetLinearVelocity(b2Vec2(mBody->GetLinearVelocity().x * DAMPING_FACTOR, mBody->GetLinearVelocity().y));
 	}
 
 	//Check if in air
@@ -532,7 +555,7 @@ void Player::input(InputManager& inputManager)
 				projectileTexCoords.z *= -1.0f;
 			}
 
-			glm::vec2 projectileVel = glm::vec2(mShurikenSpeed * mDirection, 0.0f);
+			glm::vec2 projectileVel = glm::vec2(SHURIKEN_SPEED * mDirection, 0.0f);
 
 			projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
 			mProjectileEntities.emplace_back(projectile);
@@ -563,7 +586,7 @@ void Player::input(InputManager& inputManager)
 				projectileTexCoords.z *= -1.0f;
 			}
 
-			glm::vec2 projectileVel = glm::normalize(glm::vec2(mDirection, 0.5f * mSpreadMultiplierY)) * mShurikenSpeed;
+			glm::vec2 projectileVel = glm::normalize(glm::vec2(mDirection, 0.5f * mSpreadMultiplierY)) * SHURIKEN_SPEED;
 
 			projectile->init(projectilePos, projectileDims, projectileColour, mProjectileTexture, projectileVel, projectileTexCoords);
 			mProjectileEntities.emplace_back(projectile);

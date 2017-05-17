@@ -109,6 +109,7 @@ private:
 
 	const int SWORD_DAMAGE = 10;
 
+	float MOVE_FORCE = 100.0f;
 	float JUMP_IMPULSE = 70.0f;
 
 	//Difficulty modifiers

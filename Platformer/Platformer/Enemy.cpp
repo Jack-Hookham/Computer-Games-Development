@@ -303,6 +303,8 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			{
 				mSounds[ATTACK_SOUND].play();
 				mAttacking = true;
+				player->setDamaged(true);
+				player->setDamagedAlphaIncreasing(true);
 			}
 		}
 		//left of player
@@ -315,6 +317,8 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			{
 				mSounds[ATTACK_SOUND].play();
 				mAttacking = true;
+				player->setDamaged(true);
+				player->setDamagedAlphaIncreasing(true);
 			}
 		}
 	}
@@ -358,7 +362,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//Move if not hurt or attacking
 	if (!mIsHurt && !mAttacking)
 	{
-		mBody->ApplyForceToCenter(b2Vec2(100.0f * mDirection, 0.0f), true);
+		mBody->ApplyForceToCenter(b2Vec2(MOVE_FORCE * mDirection, 0.0f), true);
 	}
 
 	if (mHealth < 0)

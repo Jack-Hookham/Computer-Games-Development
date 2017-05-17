@@ -72,6 +72,9 @@ public:
 	const int getShurikenDamage() const { return SHURIKEN_DAMAGE; }
 	const std::vector<Projectile*>& getProjectileEntities() const { return mProjectileEntities; }
 	const int getDifficulty() const { return mDifficulty; }
+	const bool getDamaged() const { return mDamaged; }
+	const int getDamagedAlpha() const { return mDamagedAlpha; }
+	const Texture getDamagedTexture() const { return mDamagedTexture; }
 
 	inline std::vector<Projectile*>& updateProjectileEntities() { return mProjectileEntities; }
 
@@ -82,6 +85,8 @@ public:
 	const void setPosition(const glm::vec2 position) { mPosition = position; }
 	const void setDifficulty(const int difficulty) { mDifficulty = difficulty; }
 	const void setDead(const bool dead) { mDead = dead; }
+	const void setDamaged(const bool value) { mDamaged = value; }
+	const void setDamagedAlphaIncreasing(const bool value) { mDamagedAlphaIncreasing = value; }
 
 private:
 	void log(const std::string text);
@@ -130,6 +135,11 @@ private:
 	float mThrowTimer = 0.0f;
 
 	int mHealth = 100;
+	bool mDamaged = false;
+	bool mDamagedAlphaIncreasing = false;
+	int mDamagedAlpha = 0;
+	const Texture mDamagedTexture = ResourceManager::getTexture("../res/textures/other/damaged.png");
+
 	//Melee attack range
 	glm::vec2 mAttackRange;
 	//Box in front of the player representing melee attack area
@@ -145,7 +155,7 @@ private:
 	const int PROJECTILE_LIFE_SPAN = 10000;
 
 	glm::vec2 mShurikenDims = glm::vec2(0.5f, 0.5f);
-	float mShurikenSpeed = 0.5f;
+	const float SHURIKEN_SPEED = 0.5f;
 
 	//Timing stuff for staggering multiple projectile spawns in a line
 	const int LINE_SPAWN_TIME = 100;
@@ -158,7 +168,9 @@ private:
 	int mSpreadProjectiles = 0;
 	float mSpreadMultiplierY = -1.0f;
 
-	float JUMP_IMPULSE = 70.0f;
+	const float MOVE_FORCE = 100.0f;
+	const float JUMP_IMPULSE = 70.0f;
+	const float DAMPING_FACTOR = 0.9f;
 
 	int mDifficulty = 0;
 };
