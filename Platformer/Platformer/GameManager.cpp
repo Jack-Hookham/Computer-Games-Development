@@ -237,7 +237,7 @@ void GameManager::gameOverLoop()
 
 	//Highscores stuff
 	Highscores highscores = Highscores();
-	highscores.addScore(score);
+	int rank = highscores.addScore(score);
 	highscores.writeScores();
 
 	while (mGameState == GAMEOVER)
@@ -260,11 +260,13 @@ void GameManager::gameOverLoop()
 		//Update graphics
 		mGraphicsManager.clearBuffers();
 		mGraphicsManager.drawGame(mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities);
-		mGraphicsManager.drawGameOver(mGameOverTexture, mRoundTime, mKills, aggression, mScoreMods[mDifficulty], score, highscores);
+		mGraphicsManager.drawGameOver(mGameOverTexture, mRoundTime, mKills, aggression, mScoreMods[mDifficulty], score, highscores, rank);
 		mGraphicsManager.swapBuffers();
 
 		//Go to menu if escape pressed
-		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_ESCAPE))
+		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_ESCAPE) ||
+			mInputManager.getKeyboard()->isKeyPressed(SDLK_SPACE) ||
+			mInputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_START))
 		{
 			mGameState = MENU;
 		}

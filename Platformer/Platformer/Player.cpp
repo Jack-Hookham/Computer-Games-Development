@@ -477,7 +477,7 @@ void Player::input(InputManager& inputManager)
 			if (!mInAir)
 			{
 				//Can jump
-				if (inputManager.getKeyboard()->isKeyPressed(SDLK_w) || 
+				if (inputManager.getKeyboard()->isKeyPressed(SDLK_w) ||
 					inputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_A))
 				{
 					//Jump
@@ -508,7 +508,7 @@ void Player::input(InputManager& inputManager)
 			Projectile* projectile = new Projectile;
 
 			glm::vec2 projectilePos = glm::vec2(
-				mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection, 
+				mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection,
 				mPosition.y - mDimensions.y * 0.2f);
 			glm::vec2 projectileDims = mShurikenDims;
 			Colour projectileColour = { 255, 255, 255, 255 };
@@ -562,6 +562,12 @@ void Player::input(InputManager& inputManager)
 			mSpreadProjectiles++;
 			mSpreadMultiplierY++;
 		}
+	}
+
+	//k to kill self
+	if (inputManager.getKeyboard()->isKeyPressed(SDLK_k))
+	{
+		mHealth = 0;
 	}
 }
 

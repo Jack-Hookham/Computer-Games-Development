@@ -43,7 +43,8 @@ void Highscores::writeScores()
 	}
 }
 
-void Highscores::addScore(int score)
+//Add the score and return the index
+const int Highscores::addScore(const int score)
 {
 	for (int i = 0; i < NUM_SCORES; i++)
 	{
@@ -57,9 +58,10 @@ void Highscores::addScore(int score)
 
 			//Update the score
 			mScores[i] = score;
-			break;
+			return i;
 		}
 	}
+	return -1;
 }
 
 void Highscores::log(const std::string text)

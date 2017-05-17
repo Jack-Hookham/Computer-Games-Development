@@ -13,9 +13,11 @@ public:
 	~Highscores();
 
 	void writeScores();
-	//if the score is high enough add it
-	void addScore(int score);
-	const int getScore(int index) { return mScores[index]; }
+	//if the score is high enough add it and return its index
+	const int addScore(const int score);
+
+	const int getScore(int index) const { return mScores[index]; }
+	const int getNumScores() const { return NUM_SCORES; }
 
 private:
 	void log(const std::string text);

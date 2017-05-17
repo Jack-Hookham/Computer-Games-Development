@@ -218,8 +218,8 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			}
 		}
 
-		//if player is > 4m above
-		if (player->getPosition().y > mPosition.y + 4.0f)
+		//if player is > 2m above
+		if (player->getPosition().y > mPosition.y + 2.0f)
 		{
 			for each (Marker* m in markerEntities)
 			{

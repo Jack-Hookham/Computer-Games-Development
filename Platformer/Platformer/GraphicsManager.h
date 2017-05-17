@@ -49,8 +49,8 @@ public:
 	void drawHUD(const float fps, const float roundTime, const int kills, const Player* player);
 
 	void drawMenu(Texture& menuTexture);
-	void drawGameOver(Texture& gameOverTexture, const int roundTime, const int kills, const float aggression,
-		const float difficulty, const int score, Highscores& highscores);
+	void drawGameOver(const Texture& gameOverTexture, const int roundTime, const int kills, const float aggression,
+		const float difficulty, const int score, Highscores& highscores, const int rank);
 
 	void translateCamera(const glm::vec2 translation);
 	void setCameraScale(const float scale);
