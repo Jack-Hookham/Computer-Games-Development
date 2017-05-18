@@ -8,6 +8,7 @@ GraphicsManager::~GraphicsManager()
 {
 	delete mHUDFont;
 	delete mMenuFont;
+	delete mSmallFont;
 
 	//Quit SDL subsystems
 	TTF_Quit();
@@ -64,9 +65,21 @@ bool GraphicsManager::initGraphics(const int screenWidth, const int screenHeight
 	mGameOverSpriteBatch.bufferData();
 	mGameOverTextBatch.bufferData();
 
-	//Load the HUD front
-	mHUDFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 24);
+	//Load Menu Textures
+	mMenuTexture = ResourceManager::getTexture("../res/textures/menu/MenuImage.png");
+	mGameOverTexture = ResourceManager::getTexture("../res/textures/menu/GameOverImage.png");
+	mEscTexture = ResourceManager::getTexture("../res/textures/menu/Esc.png");
+	mStartTexture = ResourceManager::getTexture("../res/textures/menu/Start.png");
+
+	//Load HUD textures
+	mHealthTexture = ResourceManager::getTexture("../res/textures/HUD/heart.png");
+	mTimeTexture = ResourceManager::getTexture("../res/textures/HUD/clock.png");
+	mKillsTexture = ResourceManager::getTexture("../res/textures/HUD/dead_ninja.png");
+
+	//Load fonts
+	mHUDFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 48);
 	mMenuFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 36);
+	mSmallFont = new SpriteFont("../res/fonts/arial_narrow_7/arial_narrow_7.ttf", 24);
 
 	if (success)
 	{
@@ -133,7 +146,7 @@ void GraphicsManager::initShaders()
 	log("Shaders successfully initialised");
 }
 
-void GraphicsManager::drawMenu(Texture& menuTexture)
+void GraphicsManager::drawMenu()
 {
 	//Reuse HUD camera for menu
 	mHUDCamera.updateCamera();
@@ -144,7 +157,7 @@ void GraphicsManager::drawMenu(Texture& menuTexture)
 
 	mGameOverSpriteBatch.begin();
 
-	mGameOverSpriteBatch.addSprite(glm::vec2(0.0f, 0.0f), glm::vec2(mScreenWidth, mScreenHeight), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), menuTexture.id,
+	mGameOverSpriteBatch.addSprite(glm::vec2(0.0f, 0.0f), glm::vec2(mScreenWidth, mScreenHeight), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), mMenuTexture.id,
 		0.0f, Colour(255, 255, 255, 255));
 
 	mGameOverSpriteBatch.end();
@@ -152,39 +165,49 @@ void GraphicsManager::drawMenu(Texture& menuTexture)
 }
 
 //Draw the game over screen
-void GraphicsManager::drawGameOver(const Texture& gameOverTexture, const int roundTime, const int kills, const float aggression,
+void GraphicsManager::drawGameOver(const int roundTime, const int kills, const float aggression,
 	const float difficulty, const int score, Highscores& highscores, const int rank)
 {
-	//Reuse HUD camera for game over screen
+	//Reuse HUD camera for game over screen positioning
 	mHUDCamera.updateCamera();
 
 	glm::mat4 cameraMatrix = mHUDCamera.getCamerMatrix();
 	GLuint projMatrixLocation = mTextureShader.getUniformLocation("projMatrix");
 	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
+	//Render game over textures
 	mGameOverSpriteBatch.begin();
 
-	mGameOverSpriteBatch.addSprite(glm::vec2(0.0f, 0.0f), glm::vec2(mScreenWidth, mScreenHeight), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), gameOverTexture.id,
+	mGameOverSpriteBatch.addSprite(glm::vec2(0.0f, 0.0f), glm::vec2(mScreenWidth, mScreenHeight), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+		mGameOverTexture.id,
 		0.0f, Colour(255, 255, 255, 255));
+
+	mGameOverSpriteBatch.addSprite(glm::vec2(mScreenWidth * 0.32f, mScreenHeight * 0.2f), glm::vec2(24.0f, 24.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+		mEscTexture.id, 0.0f, Colour(255, 255, 255, 255));
+
+	mGameOverSpriteBatch.addSprite(glm::vec2(mScreenWidth * 0.342f, mScreenHeight * 0.2f), glm::vec2(30.0f, 24.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+		mStartTexture.id, 0.0f, Colour(255, 255, 255, 255));
 
 	mGameOverSpriteBatch.end();
 	mGameOverSpriteBatch.renderBatches();
 
+	//Text buffer
 	char buffer[128];
 
 	mGameOverTextBatch.begin();
 
+	//Text colours
 	Colour defaultColour(255, 255, 255, 255);
-	Colour timeColour(68, 158, 255, 255);
-	Colour killsColour(72, 181, 0, 255);
+	Colour timeColour(128, 128, 255, 255);
+	Colour killsColour(255, 160, 64, 255);
 	Colour aggressionColour(255, 0, 0, 255);
-	Colour difficultyColour(39, 5, 112, 255);
+	Colour difficultyColour(37, 226, 0, 255);
 	Colour scoreColour(255, 255, 0, 255);
 
 	//Game Over text formatting
 	sprintf_s(buffer, "Game Over");
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.85f),
-		glm::vec2(1.0f), 0.0f, defaultColour, Justification::MIDDLE);
+		glm::vec2(1.0f), 0.0f, scoreColour, Justification::MIDDLE);
 
 	sprintf_s(buffer, "Time: ");
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.8f),
@@ -255,7 +278,9 @@ void GraphicsManager::drawGameOver(const Texture& gameOverTexture, const int rou
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.5f, mScreenHeight * 0.5f),
 		glm::vec2(1.0f), 0.0f, scoreColour, Justification::MIDDLE);
 
+	float widthMod = 0.0f;
 	float heightMod = 0.45f;
+
 	for (int i = 0; i < highscores.getNumScores(); i++)
 	{
 		//Highlight your score
@@ -270,18 +295,28 @@ void GraphicsManager::drawGameOver(const Texture& gameOverTexture, const int rou
 		}
 
 		sprintf_s(buffer, "%d.", i + 1);
-		mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.4f, mScreenHeight * heightMod),
+		mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f + widthMod, mScreenHeight * heightMod),
 			glm::vec2(1.0f), 0.0f, colour, Justification::MIDDLE);
 
 		sprintf_s(buffer, "%d", highscores.getScore(i));
-		mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.6f, mScreenHeight * heightMod),
+		mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.45f + widthMod, mScreenHeight * heightMod),
 			glm::vec2(1.0f), 0.0f, colour, Justification::MIDDLE);
 
 		heightMod -= 0.05f;
+
+		if ((i + 1) % 5 == 0)
+		{
+			widthMod += mScreenWidth * 0.25f;
+			heightMod = 0.45f;
+		}
 	}
 
-	sprintf_s(buffer, "Esc - Menu");
-	mHUDFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.2f),
+	sprintf_s(buffer, "/");
+	mSmallFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.335f, mScreenHeight * 0.2f),
+		glm::vec2(1.0f), 0.0f, defaultColour);
+
+	sprintf_s(buffer, "- Menu");
+	mSmallFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.36f, mScreenHeight * 0.2f),
 		glm::vec2(1.0f), 0.0f, defaultColour);
 
 	mGameOverTextBatch.end();
@@ -299,37 +334,71 @@ void GraphicsManager::drawHUD(const float fps, const float roundTime, const int 
 	GLuint projMatrixLocation = mTextureShader.getUniformLocation("projMatrix");
 	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
+	//HUD text colours
+	Colour shadowColour(0, 0, 0, 255);
+	Colour defaultColour(255, 255, 255, 255);
+	Colour healthColour(252, 3, 3, 255);
+	Colour timeColour(128, 128, 255, 255);
+	Colour killsColour(145, 26, 36, 255);
+
 	mHUDSpriteBatch.begin();
 
 	if (player->getDamaged())
 	{
-		mHUDSpriteBatch.addSprite(glm::vec2(0.0f, 0.0f), glm::vec2(mScreenWidth, mScreenHeight), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), player->getDamagedTexture().id,
-			0.0f, Colour(255, 255, 255, player->getDamagedAlpha()));
+		mHUDSpriteBatch.addSprite(glm::vec2(0.0f, 0.0f), glm::vec2(mScreenWidth, mScreenHeight), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), 
+			player->getDamagedTexture().id, 0.0f, Colour(255, 255, 255, player->getDamagedAlpha()));
 	}
 
-	//Add player health to the HUD buffer
-	sprintf_s(buffer, "HP: %d", player->getHealth());
+	mHUDSpriteBatch.addSprite(glm::vec2(20.0f, mScreenHeight - 60.0f), glm::vec2(54.0f, 48.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+		mHealthTexture.id, 0.0f, Colour(255, 255, 255, 255));
+
+	mHUDSpriteBatch.addSprite(glm::vec2(23.0f, mScreenHeight - 110.0f), glm::vec2(48.0f, 48.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+		mTimeTexture.id, 0.0f, Colour(255, 255, 255, 255));
+
+	mHUDSpriteBatch.addSprite(glm::vec2(8.5f, mScreenHeight - 160.0f), glm::vec2(77.0f, 48.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+		mKillsTexture.id, 0.0f, Colour(255, 255, 255, 255));
+
+	//Health shadow
+	sprintf_s(buffer, "%d", player->getHealth());
 	//Add the buffer to the HUD
-	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10.0f, mScreenHeight - 30.0f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(93.0f, mScreenHeight - 63.0f),
+		glm::vec2(1.0f), 0.0f, shadowColour);
+
+	//Add player health to the HUD buffer
+	sprintf_s(buffer, "%d", player->getHealth());
+	//Add the buffer to the HUD
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(90.0f, mScreenHeight - 60.0f),
+		glm::vec2(1.0f), 0.0f, healthColour);
+
+	//Time shadow
+	sprintf_s(buffer, "%.0f", roundTime);
+	//Add the buffer to the HUD
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(93.0f, mScreenHeight - 113.0f),
+		glm::vec2(1.0f), 0.0f, shadowColour);
 
 	//Add time to the HUD buffer
-	sprintf_s(buffer, "Time: %.0f", roundTime);
+	sprintf_s(buffer, "%.0f", roundTime);
 	//Add the buffer to the HUD
-	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10.0f, mScreenHeight - 50.0f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));	//Add time to the HUD buffer
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(90.0f, mScreenHeight - 110.0f),
+		glm::vec2(1.0f), 0.0f, timeColour);
+
+	//Kills shadow
+	sprintf_s(buffer, "%d", kills);
+	//Add the buffer to the HUD
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(93.0f, mScreenHeight - 163.0f),
+		glm::vec2(1.0f), 0.0f, shadowColour);
 
 	//Add number of kills to the HUD buffer
-	sprintf_s(buffer, "Kills: %d", kills);
+	sprintf_s(buffer, "%d", kills);
 	//Add the buffer to the HUD
-	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(10.0f, mScreenHeight - 70.0f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255));
+	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(90.0f, mScreenHeight - 160.0f),
+		glm::vec2(1.0f), 0.0f, killsColour);
 
 	//Add the fps to the HUD buffer
-	sprintf_s(buffer, "FPS: %.1f", fps);
+	//sprintf_s(buffer, "FPS: %.1f", fps);
 	//Add the buffer to the HUD
-	mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(mScreenWidth - 10.0f, mScreenHeight * 0.97f),
-		glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
+	//mHUDFont->draw(mHUDSpriteBatch, buffer, glm::vec2(mScreenWidth - 10.0f, mScreenHeight * 0.97f),
+	//	glm::vec2(1.0f), 0.0f, Colour(255, 255, 255, 255), Justification::RIGHT);
 
 	//Sort the sprite batch and create render batches
 	mHUDSpriteBatch.end();

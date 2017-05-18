@@ -21,13 +21,13 @@ public:
 
 	void update();
 
-	inline const Keyboard* getKeyboard() const { return mKeyboard; }
-	inline const Mouse* getMouse() const { return mMouse; }
-	inline const Controller* getController() const { return mController; }
+	const Keyboard* getKeyboard() const { return mKeyboard; }
+	const Mouse* getMouse() const { return mMouse; }
+	const Controller* getController() const { return mController; }
 
-	inline Keyboard* updateKeyboard() const { return mKeyboard; }
-	inline Mouse* updateMouse() const { return mMouse; }
-	inline Controller* updateController() const { return mController; }
+	Keyboard* updateKeyboard() const { return mKeyboard; }
+	Mouse* updateMouse() const { return mMouse; }
+	Controller* updateController() const { return mController; }
 
 private:
 	Keyboard* mKeyboard;

@@ -16,8 +16,8 @@ public:
 	//Cull then add Entity to SpriteBatch
 	void add(SpriteBatch& spriteBatch, Camera& camera);
 
-	inline const void setPosition(const glm::vec2 position) { mPosition = position; }
-	inline const void setPosition(const float xPos, const float yPos) { mPosition.x = xPos; mPosition.y = yPos; }
-	inline const void setDimensions(const float xDim, const float yDim) { mDimensions.x = xDim; mDimensions.y = yDim; }
+	const void setPosition(const glm::vec2 position) { mPosition = position; }
+	const void setPosition(const float xPos, const float yPos) { mPosition.x = xPos; mPosition.y = yPos; }
+	const void setDimensions(const float xDim, const float yDim) { mDimensions.x = xDim; mDimensions.y = yDim; }
 };
 

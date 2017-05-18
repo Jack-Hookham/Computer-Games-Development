@@ -70,13 +70,15 @@ public:
 	const glm::vec4 getAttackBox() const { return mAttackBox; }
 	const int getSwordDamage() const { return SWORD_DAMAGE; }
 	const int getShurikenDamage() const { return SHURIKEN_DAMAGE; }
+	const glm::vec2 getMeleeForce() const { return MELEE_FORCE; }
+	const glm::vec2 getRangedForce() const { return RANGED_FORCE; }
 	const std::vector<Projectile*>& getProjectileEntities() const { return mProjectileEntities; }
 	const int getDifficulty() const { return mDifficulty; }
 	const bool getDamaged() const { return mDamaged; }
 	const int getDamagedAlpha() const { return mDamagedAlpha; }
 	const Texture getDamagedTexture() const { return mDamagedTexture; }
 
-	inline std::vector<Projectile*>& updateProjectileEntities() { return mProjectileEntities; }
+	std::vector<Projectile*>& updateProjectileEntities() { return mProjectileEntities; }
 
 	//non const version of getBody so that the body can be updated
 	b2Body* updateBody() const { return mBody; }
@@ -145,8 +147,10 @@ private:
 	//Box in front of the player representing melee attack area
 	glm::vec4 mAttackBox;
 
-	const int SWORD_DAMAGE = 40;
-	const int SHURIKEN_DAMAGE = 10;
+	const int SWORD_DAMAGE = 70;
+	const int SHURIKEN_DAMAGE = 12;
+	const glm::vec2 MELEE_FORCE = glm::vec2(20000.0f, 1000.0f);
+	const glm::vec2 RANGED_FORCE = glm::vec2(1500.0f, 500.0f);
 
 	std::vector<Projectile*> mProjectileEntities;
 	const Texture mProjectileTexture = ResourceManager::getTexture("../res/textures/ninja_adventure/player/png/shuriken.png");

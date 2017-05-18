@@ -22,13 +22,13 @@ public:
 	const bool isButtonReleased(unsigned int buttonID) const;
 
 	//Mouse
-	inline void setMouseCoords(const float x, const float y)
+	void setMouseCoords(const float x, const float y)
 	{
 		mMouseCoords.x = x;
 		mMouseCoords.y = y;
 	}
 
-	inline const glm::vec2 Mouse::getMouseCoords() const { return mMouseCoords; }
+	const glm::vec2 Mouse::getMouseCoords() const { return mMouseCoords; }
 
 	void update();
 

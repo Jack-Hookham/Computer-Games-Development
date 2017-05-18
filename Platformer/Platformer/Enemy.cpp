@@ -153,14 +153,26 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 		mPosition.x + mDimensions.x * 0.5f - (player->getPosition().x + player->getDimensions().x * 0.5f),
 		mPosition.y + mDimensions.x * 0.5f - (player->getPosition().y + player->getDimensions().y * 0.5f));
 
-	//std::cout << glm::length(playerDistance) << std::endl;
-
-	//Player within range?
-	if (glm::length(playerDistance) < AGGRO_RANGE * mAggroRangeMods[player->getDifficulty()] && player->getHealth() > 0)
+	//if searching for player
+	if (mSearching)
 	{
-		mSearching = false;
+		//Player within range?
+		if (glm::length(playerDistance) < AGGRO_RANGE * mAggroRangeMods[player->getDifficulty()])
+		{
+			mSearching = false;
+		}
 	}
+	//if found player
 	else
+	{
+		//if player goes out of range * 1.5
+		if (glm::length(playerDistance) > AGGRO_RANGE * mAggroRangeMods[player->getDifficulty()] * 1.5f)
+		{
+			mSearching = true;
+		}
+	}
+
+	if (player->getDead())
 	{
 		mSearching = true;
 	}
@@ -171,30 +183,42 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	{
 		if (mDirectionTimer > 50)
 		{
-			for each (Marker* m in markerEntities)
+			//if near either x edge and searching turn around
+			if (mPosition.x < worldMinX * 0.9f)
 			{
-				if (mPosition.x < m->getPosition().x + mDimensions.x + m->getDimensions().x &&
-					mPosition.x + mDimensions.x * 0.5f + m->getDimensions().x * 0.5f > m->getPosition().x &&
-					mPosition.y < m->getPosition().y + mDimensions.y + m->getDimensions().y &&
-					mPosition.y + mDimensions.y * 0.5f + m->getDimensions().y * 0.5f > m->getPosition().y)
+				mDirection = 1;
+			}
+			else if (mPosition.x > worldMaxX * 0.9f)
+			{
+				mDirection = -1;
+			}
+			else
+			{
+				for each (Marker* m in markerEntities)
 				{
-					//Chance to jump
-					std::mt19937 randGenerator(std::rand());
-					std::uniform_real_distribution<float> jumpGen(0.0f, 5.0f);
-					if (jumpGen(randGenerator) > 4.0f && !mInAir && !mJumping)
+					if (mPosition.x < m->getPosition().x + mDimensions.x + m->getDimensions().x &&
+						mPosition.x + mDimensions.x * 0.5f + m->getDimensions().x * 0.5f > m->getPosition().x &&
+						mPosition.y < m->getPosition().y + mDimensions.y + m->getDimensions().y &&
+						mPosition.y + mDimensions.y * 0.5f + m->getDimensions().y * 0.5f > m->getPosition().y)
 					{
-						//Jump
-						mBody->ApplyLinearImpulse(b2Vec2(0.0f, JUMP_IMPULSE), b2Vec2(0.0f, 0.0f), true);
-						mJumping = true;
-						//mSounds[JUMP_SOUND].play();
-						mDirectionTimer = 0;
-					}
-					else
-					{
-						//Change direction
-						mDirection = -mDirection;
-						mDirectionTimer = 0;
-						break;
+						//Chance to jump
+						std::mt19937 randGenerator(std::rand());
+						std::uniform_real_distribution<float> jumpGen(0.0f, 5.0f);
+						if (jumpGen(randGenerator) > 3.0f && !mInAir && !mJumping)
+						{
+							//Jump
+							mBody->ApplyLinearImpulse(b2Vec2(0.0f, JUMP_IMPULSE), b2Vec2(0.0f, 0.0f), true);
+							mJumping = true;
+							//mSounds[JUMP_SOUND].play();
+							mDirectionTimer = 0;
+						}
+						else
+						{
+							//Change direction
+							mDirection = -mDirection;
+							mDirectionTimer = 0;
+							break;
+						}
 					}
 				}
 			}
@@ -218,8 +242,8 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 			}
 		}
 
-		//if player is > 2m above
-		if (player->getPosition().y > mPosition.y + 2.0f)
+		//if player is > 1.8m above
+		if (player->getPosition().y > mPosition.y + 1.8f)
 		{
 			for each (Marker* m in markerEntities)
 			{
@@ -234,6 +258,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 						//Jump
 						mBody->ApplyLinearImpulse(b2Vec2(0.0f, JUMP_IMPULSE), b2Vec2(0.0f, 0.0f), true);
 						mJumping = true;
+						//Turned this off - too many jump sounds
 						//mSounds[JUMP_SOUND].play();
 					}
 				}
@@ -255,39 +280,30 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//if player is attacking and enemy isn't already hurt
 	if (player->getAttacking() && !mIsHurt && !player->getDead())
 	{
-		//left of player
-		if (mPosition.x < player->getPosition().x)
-		{
-			int hitDirection = 1;
-			if (/*player->getAttacking() && !mIsHurt &&*/
-				mPosition.x < player->getAttackBox().x + mDimensions.x * 0.5f - player->getAttackBox().z * 0.5f &&
-				mPosition.x + mDimensions.x * 0.5f - player->getAttackBox().z * 0.5f > player->getAttackBox().x &&
-				mPosition.y < player->getAttackBox().y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f &&
-				mPosition.y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f > player->getAttackBox().y)
-			{
-				mIsHurt = true;
-				mHealth -= player->getSwordDamage();
-				mBody->ApplyForceToCenter(b2Vec2(-20000.0f * hitDirection, 1000.0f), true);
-			}
-		}
+		int hitDirection;
 		//right of player
+		if (mPosition.x > player->getPosition().x)
+		{
+			hitDirection = 1;
+		}
+		//left of player
 		else
 		{
-			int hitDirection = -1;
-			if (mPosition.x < player->getAttackBox().x + mDimensions.x * 0.5f + player->getAttackBox().z * 0.5f &&
-				mPosition.x + mDimensions.x * 0.5f + player->getAttackBox().z * 0.5f > player->getAttackBox().x &&
-				mPosition.y < player->getAttackBox().y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f &&
-				mPosition.y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f > player->getAttackBox().y)
-			{
-				mIsHurt = true;
-				mHealth -= player->getSwordDamage();
-				mBody->ApplyForceToCenter(b2Vec2(-20000.0f * hitDirection, 1000.0f), true);
-			}
+			hitDirection = -1;
+		}
+
+		if (mPosition.x < player->getAttackBox().x + mDimensions.x * 0.5f + player->getAttackBox().z * 0.5f * hitDirection &&
+			mPosition.x + mDimensions.x * 0.5f + player->getAttackBox().z * 0.5f * hitDirection > player->getAttackBox().x &&
+			mPosition.y < player->getAttackBox().y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f &&
+			mPosition.y + mDimensions.y * 0.5f + player->getAttackBox().w * 0.5f > player->getAttackBox().y)
+		{
+			mIsHurt = true;
+			mHealth -= player->getSwordDamage();
+			mBody->ApplyForceToCenter(b2Vec2(player->getMeleeForce().x * hitDirection, player->getMeleeForce().y), true);
 		}
 	}
 	
 	//*****Calculate whether to attack*****
-
 	if (!mAttacking && !mSearching)
 	{
 		//Update the attack box
@@ -334,8 +350,12 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				p->getPosition().y + mDimensions.y * 0.5f + p->getDimensions().y > mPosition.y)
 			{
 				//Calculate direction to apply force
-				int hitDirection = 1;
-				if (p->getVelocity().x < 0)
+				int hitDirection;
+				if (p->getVelocity().x > 0)
+				{
+					hitDirection = 1;
+				}
+				else
 				{
 					hitDirection = -1;
 				}
@@ -348,7 +368,7 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 				mIsHurt = true;
 				mHealth -= player->getShurikenDamage();
 					
-				mBody->ApplyForceToCenter(b2Vec2(2000.0f * hitDirection, 700.0f), true);
+				mBody->ApplyForceToCenter(b2Vec2(player->getRangedForce().x * hitDirection, player->getMeleeForce().y), true);
 			}
 		}
 	}

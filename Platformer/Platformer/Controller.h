@@ -24,8 +24,8 @@ public:
 	void update();
 
 	//Controller stick
-	inline const int getLeftStickDirection() const { return mLeftStickDirection; }
-	inline void setLeftStickDirection(const int direction) { mLeftStickDirection = direction; }
+	const int getLeftStickDirection() const { return mLeftStickDirection; }
+	void setLeftStickDirection(const int direction) { mLeftStickDirection = direction; }
 
 private:
 	//Was key down last frame

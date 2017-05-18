@@ -5,14 +5,16 @@
 #include <iostream>
 #include <sstream>
 
-//Saves the top 5 highscores
+//Saves the top 10 highscores
 class Highscores
 {
 public:
 	Highscores();
 	~Highscores();
 
+	//Write scores to file
 	void writeScores();
+
 	//if the score is high enough add it and return its index
 	const int addScore(const int score);
 
@@ -24,7 +26,7 @@ private:
 
 	std::string mPath = "../res/highscores/highscores.txt";
 
-	const int NUM_SCORES = 5;
-	int mScores[5] = { 0, 0, 0, 0, 0 };
+	const int NUM_SCORES = 10;
+	int mScores[10];
 };
 

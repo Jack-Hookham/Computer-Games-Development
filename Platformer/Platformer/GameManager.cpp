@@ -126,9 +126,6 @@ int GameManager::init()
 	mEnemySounds[0] = mAudioManager.loadSoundEffect("../res/sound/platformer_jumping/jump_01.wav");
 	mEnemySounds[1] = mAudioManager.loadSoundEffect("../res/sound/melee_sounds/sword_sound.wav");
 
-	mMenuTexture = ResourceManager::getTexture("../res/textures/menu/MenuImage.png");
-	mGameOverTexture = ResourceManager::getTexture("../res/textures/menu/GameOverImage.png");
-
 	return failedInits;
 }
 
@@ -172,17 +169,20 @@ int GameManager::gameLoop()
 
 void GameManager::menuLoop()
 {
+
+	mInputManager.update();
+
 	while (mGameState == MENU)
 	{
 		manageInput();
 
 		//Update graphics
 		mGraphicsManager.clearBuffers();
-		mGraphicsManager.drawMenu(mMenuTexture);
+		mGraphicsManager.drawMenu();
 		mGraphicsManager.swapBuffers();
 
 		//Select difficulty
-		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_1) || 
+		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_z) || 
 			mInputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_A))
 		{
 			mDifficulty = EASY;
@@ -191,16 +191,16 @@ void GameManager::menuLoop()
 		}		
 		
 		//Play game if space press
-		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_2) ||
+		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_x) ||
 			mInputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_X))
 		{
 			mDifficulty = NORMAL;
 			mGameState = PLAY;
 			break;
-		}		
+		}
 		
 		//Play game if space press
-		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_3) ||
+		if (mInputManager.getKeyboard()->isKeyPressed(SDLK_c) ||
 			mInputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_B))
 		{
 			mDifficulty = HARD;
@@ -221,6 +221,8 @@ void GameManager::menuLoop()
 
 void GameManager::gameOverLoop()
 {
+	mInputManager.update();
+
 	//Play the background music file
 	mMenuMusic.play(-1);
 
@@ -239,7 +241,9 @@ void GameManager::gameOverLoop()
 	{
 		aggression = (float)mKills / (float)mRoundTime * 5.0f;
 	}
-	int score = (int)(mRoundTime * aggression * mScoreMods[mDifficulty]);
+	//score = roundTime * aggression * difficulty
+	//score = kills * difficulty * 5
+	int score = mKills * mScoreMods[mDifficulty] * 5;
 
 	//Highscores stuff
 	Highscores highscores = Highscores();
@@ -266,7 +270,7 @@ void GameManager::gameOverLoop()
 		//Update graphics
 		mGraphicsManager.clearBuffers();
 		mGraphicsManager.drawGame(mPlayer, mBoxEntities, mGroundEntities, mEnemyEntities);
-		mGraphicsManager.drawGameOver(mGameOverTexture, mRoundTime, mKills, aggression, mScoreMods[mDifficulty], score, highscores, rank);
+		mGraphicsManager.drawGameOver(mRoundTime, mKills, aggression, mScoreMods[mDifficulty], score, highscores, rank);
 		mGraphicsManager.swapBuffers();
 
 		//Go to menu if buttons pressed
@@ -274,6 +278,7 @@ void GameManager::gameOverLoop()
 			mInputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_START))
 		{
 			mGameState = MENU;
+			break;
 		}
 
 		mInputManager.update();
@@ -291,6 +296,8 @@ void GameManager::gameOverLoop()
 
 void GameManager::playLoop()
 {
+	mInputManager.update();
+
 	//Play the background music file
 	mGameMusic.play(-1);
 
@@ -315,7 +322,7 @@ void GameManager::playLoop()
 		mFrameTimer.restart();
 
 		//Spawn enemies if below enemy limit
-		if (mEnemyEntities.size() < MAX_ENEMIES)
+		if (mEnemyEntities.size() <= MAX_ENEMIES)
 		{
 			spawnEnemy();
 		}

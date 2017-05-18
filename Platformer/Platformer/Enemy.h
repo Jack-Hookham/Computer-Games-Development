@@ -45,10 +45,10 @@ public:
 	//Animate, cull then add Enemy to SpriteBatch
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
-	inline const int getHealth() const { return mHealth; }
-	inline const bool getDead() const { return mDead; }
+	const int getHealth() const { return mHealth; }
+	const bool getDead() const { return mDead; }
 
-	inline const void setHealth(const int health) { mHealth = health; }
+	const void setHealth(const int health) { mHealth = health; }
 
 private:
 	AnimState mAnimState = IDLE;

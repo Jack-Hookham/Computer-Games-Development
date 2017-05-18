@@ -27,10 +27,10 @@ public:
 	//Cull then add Entity to SpriteBatch
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
-	inline const glm::vec2& getPosition() const { return mPosition; }
-	inline const glm::vec2& getDimensions() const { return mDimensions; }
-	inline const Colour& getColour() const { return mColour; }
-	inline const Texture& getTexture() const { return mTexture; }
+	const glm::vec2& getPosition() const { return mPosition; }
+	const glm::vec2& getDimensions() const { return mDimensions; }
+	const Colour& getColour() const { return mColour; }
+	const Texture& getTexture() const { return mTexture; }
 
 protected:
 

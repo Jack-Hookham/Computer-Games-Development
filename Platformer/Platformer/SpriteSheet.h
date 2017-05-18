@@ -11,8 +11,8 @@ class SpriteSheet
 public:
 	void init(const Texture& texture, const glm::ivec2& dimensions);
 
-	inline const Texture getTexture() const { return mTexture; }
-	inline const glm::ivec2 getDimensions() const { return mDimensions; }
+	const Texture getTexture() const { return mTexture; }
+	const glm::ivec2 getDimensions() const { return mDimensions; }
 	
 	//Calculate the texCoords depending on the current sprite index
 	const glm::vec4 getTexCoords(const int index) const;

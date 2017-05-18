@@ -52,7 +52,7 @@ private:
 	static void loadBox(std::unique_ptr<b2World>& world, std::vector<Box*>& boxEntities, const std::string line);
 	static void loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*>& enemyEntities, AudioManager& audioManager,
 		const std::string line);
-	static void loadMarker(std::vector<Marker*>& markerEntities, const std::string line);
+	static void loadMarker(std::vector<Marker*>& markerEntities, const std::string line, const Texture& texture);
 	static void addSpawnPos(std::vector<glm::vec2>& enemySpawnPositions, const std::string line);
 
 	//Used to generate random data for box entities which can then be put in a level file

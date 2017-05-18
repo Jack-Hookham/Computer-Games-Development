@@ -48,8 +48,8 @@ public:
 
 	void drawHUD(const float fps, const float roundTime, const int kills, const Player* player);
 
-	void drawMenu(Texture& menuTexture);
-	void drawGameOver(const Texture& gameOverTexture, const int roundTime, const int kills, const float aggression,
+	void drawMenu();
+	void drawGameOver(const int roundTime, const int kills, const float aggression,
 		const float difficulty, const int score, Highscores& highscores, const int rank);
 
 	void translateCamera(const glm::vec2 translation);
@@ -90,11 +90,23 @@ private:
 
 	//Fonts
 	SpriteFont* mHUDFont;
-	SpriteFont* mMenuFont;
+	SpriteFont* mMenuFont; 
+	SpriteFont* mSmallFont;
 
 	//Shader for the engine
 	Shader mTextureShader;
 
 	const float DEFAULT_CAMERA_SCALE = 32.0f;
+
+	//Menu textures
+	Texture mMenuTexture;
+	Texture mGameOverTexture;
+	Texture mEscTexture;
+	Texture mStartTexture;
+
+	//HUD textures
+	Texture mHealthTexture;
+	Texture mTimeTexture;
+	Texture mKillsTexture;
 };
 

@@ -1,21 +1,20 @@
 main function in Platformer.cpp
 
-Keyboard controls
-A - move left
+Keyboard  and mouse controls
+A & left arrow - move left
 
-D - move right
+D & right arrow - move right
 
-W - jump
+W & up arrow - jump
 
-Space - attack
-LMB - Create box
-RMB - Create ground
-Q - Zoom in
-E - Zoom out
-R - reset
+Space & z - melee attack
+LMB & x - ranged attack 1
+RMB & c - ranged attack 2
+k - kill
 
 Controller controls
+Left stick & dpad - move left & right
 A - jump
-X - attack
-Left bumper - zoom in
-Right bumper - zoom out
+X - melee attack
+B - ranged attack 1
+Y - ranged attack 2

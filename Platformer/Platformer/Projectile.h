@@ -16,14 +16,14 @@ public:
 
 	void update();
 
-	inline const glm::vec2 getVelocity() const { return mVelocity; }
-	inline Timer getLifeTimer() const { return mLifeTimer; }
-	inline const bool getDelete() const { return mDelete; }
-	inline const bool getActive() const { return mActive; }
+	const glm::vec2 getVelocity() const { return mVelocity; }
+	Timer getLifeTimer() const { return mLifeTimer; }
+	const bool getDelete() const { return mDelete; }
+	const bool getActive() const { return mActive; }
 
-	inline void setVelocity(const glm::vec2 velocity) { mVelocity = velocity; }
-	inline void setDelete(const bool value) { mDelete = value; }
-	inline void setActive(const bool value) { mActive = value; }
+	void setVelocity(const glm::vec2 velocity) { mVelocity = velocity; }
+	void setDelete(const bool value) { mDelete = value; }
+	void setActive(const bool value) { mActive = value; }
 
 private:
 	glm::vec2 mVelocity;

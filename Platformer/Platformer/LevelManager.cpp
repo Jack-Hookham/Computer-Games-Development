@@ -97,13 +97,14 @@ bool LevelManager::loadLevel(const std::string filePath, std::unique_ptr<b2World
 		//Markers used for enemy AI
 		else if (line == "STARTMARKER")
 		{
+			Texture texture = ResourceManager::getTexture("../res/textures/other/marker.png");
 			//Get the next line
 			std::getline(file, line);
 			//Load the marker entities
 			log("Loading markers");
 			while (line != "ENDMARKER")
 			{
-				loadMarker(markerEntities, line);
+				loadMarker(markerEntities, line, texture);
 				std::getline(file, line);
 			}
 			log("Markers loaded");
@@ -120,7 +121,7 @@ bool LevelManager::loadLevel(const std::string filePath, std::unique_ptr<b2World
 				addSpawnPos(enemySpawnPositions, line);
 				std::getline(file, line);
 			}
-			log("Markers loaded");
+			log("Spawn points loaded");
 		}
 	}
 
@@ -272,13 +273,12 @@ void LevelManager::loadEnemy(std::unique_ptr<b2World>& world, std::vector<Enemy*
 	enemyEntities.emplace_back(enemy);
 }
 
-void LevelManager::loadMarker(std::vector<Marker*>& markerEntities, const std::string line)
+void LevelManager::loadMarker(std::vector<Marker*>& markerEntities, const std::string line, const Texture& texture)
 {
 	//Box params
 	glm::vec2 position;
 	glm::vec2 dimensions;
 	Colour colour;
-	Texture texture;
 
 	std::istringstream iss(line);
 
@@ -286,7 +286,6 @@ void LevelManager::loadMarker(std::vector<Marker*>& markerEntities, const std::s
 	iss >> position.x >> position.y >> dimensions.x >> dimensions.y;
 
 	colour = Colour(255, 255, 255, 128);
-	texture = ResourceManager::getTexture("../res/textures/other/marker.png");
 	glm::vec4 texCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 	//Create the box entity

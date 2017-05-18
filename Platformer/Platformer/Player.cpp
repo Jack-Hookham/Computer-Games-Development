@@ -120,7 +120,7 @@ void Player::update()
 		Projectile* projectile = new Projectile;
 
 		glm::vec2 projectilePos = glm::vec2(
-			mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection,
+			mPosition.x - mDimensions.x * 0.5f + mDimensions.x * 0.5f * mDirection,
 			mPosition.y - mDimensions.y * 0.2f);
 		glm::vec2 projectileDims = mShurikenDims;
 		Colour projectileColour = { 255, 255, 255, 255 };
@@ -154,7 +154,7 @@ void Player::update()
 		Projectile* projectile = new Projectile;
 
 		glm::vec2 projectilePos = glm::vec2(
-			mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection,
+			mPosition.x - mDimensions.x * 0.5f + mDimensions.x * 0.5f * mDirection,
 			mPosition.y - mDimensions.y * 0.2f);
 		glm::vec2 projectileDims = mShurikenDims;
 		Colour projectileColour = { 255, 255, 255, 255 };
@@ -175,11 +175,11 @@ void Player::update()
 
 		mSpreadSpawnTimer.restart();
 		mSpreadProjectiles++;
-		mSpreadMultiplierY++;
+		mSpreadMultiplierY += 0.5f;
 	}
 
 	//Stop spawning projectiles and reset variables once max reached
-	if (mSpreadProjectiles >= 3)
+	if (mSpreadProjectiles >= 5)
 	{
 		mSpreadSpawnTimer.stop();
 		mSpreadProjectiles = 0;
@@ -464,14 +464,20 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 void Player::input(InputManager& inputManager)
 {
 	//Left and right movement
-	if ((inputManager.getKeyboard()->isKeyDown(SDLK_a) || inputManager.getController()->getLeftStickDirection() < 0) &&
+	if ((inputManager.getKeyboard()->isKeyDown(SDLK_LEFT) ||
+		inputManager.getKeyboard()->isKeyDown(SDLK_a) || 
+		inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_DPAD_LEFT) ||
+		inputManager.getController()->getLeftStickDirection() < 0) &&
 		mAnimState != ATTACK && mAnimState != THROW)
 	{
 		mBody->ApplyForceToCenter(b2Vec2(-MOVE_FORCE, 0.0f), true);
 		mDirection = -1;
 	}
-	else if ((inputManager.getKeyboard()->isKeyDown(SDLK_d) || inputManager.getController()->getLeftStickDirection() > 0) &&
-		mAnimState != ATTACK && mAnimState != THROW)
+	else if ((inputManager.getKeyboard()->isKeyDown(SDLK_RIGHT) || 
+			inputManager.getKeyboard()->isKeyDown(SDLK_d) ||
+		inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_DPAD_RIGHT) ||
+			inputManager.getController()->getLeftStickDirection() > 0) &&
+			mAnimState != ATTACK && mAnimState != THROW)
 	{
 		mDirection = 1;
 		mBody->ApplyForceToCenter(b2Vec2(MOVE_FORCE, 0.0f), true);
@@ -510,7 +516,9 @@ void Player::input(InputManager& inputManager)
 			if (!mInAir)
 			{
 				//Can jump
-				if (inputManager.getKeyboard()->isKeyPressed(SDLK_w) ||
+				if (inputManager.getKeyboard()->isKeyPressed(SDLK_UP) ||
+					inputManager.getKeyboard()->isKeyPressed(SDLK_w) ||
+					inputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_DPAD_UP) ||
 					inputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_A))
 				{
 					//Jump
@@ -524,8 +532,10 @@ void Player::input(InputManager& inputManager)
 	}
 
 	//Attack
-	if (!mAttacking && !mThrowing && (inputManager.getKeyboard()->isKeyPressed(SDLK_SPACE) ||
-		inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_X)))
+	if (!mAttacking && !mThrowing && (
+		inputManager.getKeyboard()->isKeyPressed(SDLK_z) ||
+		inputManager.getKeyboard()->isKeyPressed(SDLK_SPACE) ||
+		inputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_X)))
 	{
 		mSounds[ATTACK_SOUND].play();
 		mAttacking = true;
@@ -533,7 +543,9 @@ void Player::input(InputManager& inputManager)
 
 	if (!mThrowing && !mAttacking)
 	{
-		if (inputManager.getMouse()->isButtonPressed(SDL_BUTTON_LEFT) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_B))
+		if (inputManager.getKeyboard()->isKeyPressed(SDLK_x) ||
+			inputManager.getMouse()->isButtonPressed(SDL_BUTTON_LEFT) || 
+			inputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_B))
 		{
 			mSounds[THROW_SOUND].play();
 			mThrowing = true;
@@ -541,7 +553,7 @@ void Player::input(InputManager& inputManager)
 			Projectile* projectile = new Projectile;
 
 			glm::vec2 projectilePos = glm::vec2(
-				mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection,
+				mPosition.x - mDimensions.x * 0.5f + mDimensions.x * 0.5f * mDirection,
 				mPosition.y - mDimensions.y * 0.2f);
 			glm::vec2 projectileDims = mShurikenDims;
 			Colour projectileColour = { 255, 255, 255, 255 };
@@ -564,7 +576,9 @@ void Player::input(InputManager& inputManager)
 			mLineProjectiles++;
 		}
 
-		else if (inputManager.getMouse()->isButtonPressed(SDL_BUTTON_RIGHT) || inputManager.getController()->isButtonDown(SDL_CONTROLLER_BUTTON_Y))
+		else if (inputManager.getKeyboard()->isKeyPressed(SDLK_c) ||
+				inputManager.getMouse()->isButtonPressed(SDL_BUTTON_RIGHT) || 
+				inputManager.getController()->isButtonPressed(SDL_CONTROLLER_BUTTON_Y))
 		{
 			mSounds[THROW_SOUND].play();
 			mThrowing = true;
@@ -572,7 +586,7 @@ void Player::input(InputManager& inputManager)
 			Projectile* projectile = new Projectile;
 
 			glm::vec2 projectilePos = glm::vec2(
-				mPosition.x - mDimensions.x * 0.5f + mDimensions.x * mDirection,
+				mPosition.x - mDimensions.x * 0.5f + mDimensions.x * 0.5f * mDirection,
 				mPosition.y - mDimensions.y * 0.2f);
 			glm::vec2 projectileDims = mShurikenDims;
 			Colour projectileColour = { 255, 255, 255, 255 };
@@ -593,7 +607,7 @@ void Player::input(InputManager& inputManager)
 
 			mSpreadSpawnTimer.start();
 			mSpreadProjectiles++;
-			mSpreadMultiplierY++;
+			mSpreadMultiplierY += 0.5f;
 		}
 	}
 

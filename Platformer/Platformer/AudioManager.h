@@ -33,8 +33,6 @@ public:
 	//Set the volume for both music and sound effect
 	void setVolume(const int volume);
 
-	const int getVolume() const { return mVolume; }
-
 private:
 	//Log for AudioManager
 	void log(const std::string text);

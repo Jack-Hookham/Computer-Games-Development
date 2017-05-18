@@ -119,9 +119,6 @@ private:
 
 	const std::string mMainLevelPath = "../res/levels/main_level.txt";
 
-	Texture mMenuTexture;
-	Texture mGameOverTexture;
-
 	//FPS timer
 	Timer mFPSTimer;
 
@@ -136,7 +133,7 @@ private:
 	int mScore = 0;
 	int mKills = 0;
 
-	float mScoreMods[NUM_DIFFICULTIES] = { 1.0f, 1.25f, 1.5f };
+	float mScoreMods[NUM_DIFFICULTIES] = { 1.0f, 2.0f, 3.0f };
 	Difficulty mDifficulty = EASY;
 
 	//Entities
@@ -149,7 +146,7 @@ private:
 
 	std::vector<glm::vec2> mEnemySpawnPositions;
 
-	const int MAX_ENEMIES = 80;
+	const int MAX_ENEMIES = 50;
 
 	//Analog joystick dead zone
 	const int JOYSTICK_DEAD_ZONE = 8000;

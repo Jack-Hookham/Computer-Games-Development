@@ -25,8 +25,8 @@ public:
 	//Cull then add Entity to SpriteBatch
 	virtual void add(SpriteBatch& spriteBatch, Camera& camera);
 
-	inline const b2Body* getBody() const { return mBody; };
-	inline const b2Fixture* getFixture() const { return mFixture; };
+	const b2Body* getBody() const { return mBody; };
+	const b2Fixture* getFixture() const { return mFixture; };
 
 protected:
 

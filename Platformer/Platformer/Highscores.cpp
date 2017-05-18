@@ -1,7 +1,14 @@
 #include "Highscores.h"
 
+//Open the highscore file and populate the highscores array
 Highscores::Highscores()
 {
+	//Initialise the scores array
+	for (int i = 0; i < NUM_SCORES; i++)
+	{
+		mScores[i] = 0;
+	}
+
 	std::ifstream file;
 	file.open(mPath);
 	if (file.fail())
@@ -26,11 +33,11 @@ Highscores::Highscores()
 	file.close();
 }
 
-
 Highscores::~Highscores()
 {
 }
 
+//Write highscores to file
 void Highscores::writeScores()
 {
 	std::ofstream file(mPath);
@@ -43,7 +50,7 @@ void Highscores::writeScores()
 	}
 }
 
-//Add the score and return the index
+//Add the score and return the index if it's high enough
 const int Highscores::addScore(const int score)
 {
 	for (int i = 0; i < NUM_SCORES; i++)
