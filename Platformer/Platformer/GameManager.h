@@ -133,7 +133,7 @@ private:
 	int mScore = 0;
 	int mKills = 0;
 
-	float mScoreMods[NUM_DIFFICULTIES] = { 1.0f, 2.0f, 3.0f };
+	int mScoreMods[NUM_DIFFICULTIES] = { 1, 2, 3 };
 	Difficulty mDifficulty = EASY;
 
 	//Entities

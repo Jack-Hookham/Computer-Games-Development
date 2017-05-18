@@ -50,7 +50,7 @@ public:
 
 	void drawMenu();
 	void drawGameOver(const int roundTime, const int kills, const float aggression,
-		const float difficulty, const int score, Highscores& highscores, const int rank);
+		const int difficulty, const int score, Highscores& highscores, const int rank);
 
 	void translateCamera(const glm::vec2 translation);
 	void setCameraScale(const float scale);

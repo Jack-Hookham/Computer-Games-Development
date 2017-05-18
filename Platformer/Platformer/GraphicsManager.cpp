@@ -166,7 +166,7 @@ void GraphicsManager::drawMenu()
 
 //Draw the game over screen
 void GraphicsManager::drawGameOver(const int roundTime, const int kills, const float aggression,
-	const float difficulty, const int score, Highscores& highscores, const int rank)
+	const int difficulty, const int score, Highscores& highscores, const int rank)
 {
 	//Reuse HUD camera for game over screen positioning
 	mHUDCamera.updateCamera();
@@ -237,7 +237,7 @@ void GraphicsManager::drawGameOver(const int roundTime, const int kills, const f
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.3f, mScreenHeight * 0.65f),
 		glm::vec2(1.0f), 0.0f, defaultColour, Justification::LEFT);
 
-	sprintf_s(buffer, "%.2fx", difficulty);
+	sprintf_s(buffer, "%dx", difficulty);
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.7f, mScreenHeight * 0.65f),
 		glm::vec2(1.0f), 0.0f, difficultyColour, Justification::RIGHT);
 
@@ -261,7 +261,7 @@ void GraphicsManager::drawGameOver(const int roundTime, const int kills, const f
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.6f, mScreenHeight * 0.6f),
 		glm::vec2(1.0f), 0.0f, defaultColour, Justification::MIDDLE);
 
-	sprintf_s(buffer, "%.2f", difficulty);
+	sprintf_s(buffer, "%d", difficulty);
 	mMenuFont->draw(mGameOverTextBatch, buffer, glm::vec2(mScreenWidth * 0.63f, mScreenHeight * 0.6f),
 		glm::vec2(1.0f), 0.0f, difficultyColour, Justification::MIDDLE);
 
