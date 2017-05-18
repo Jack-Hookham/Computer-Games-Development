@@ -376,7 +376,14 @@ void Enemy::update(Player* player, std::vector<Marker*>& markerEntities, std::ve
 	//Damage the player at the end of the attack animation
 	if (mAttacking && mAttackTimer >= mNumSprites[mAnimState])
 	{
-		player->setHealth(player->getHealth() - SWORD_DAMAGE * mDamageMods[player->getDifficulty()]);
+		int health = player->getHealth() - SWORD_DAMAGE * mDamageMods[player->getDifficulty()];
+		//Keep health >= 0
+		if (health < 0)
+		{
+			health = 0;
+		}
+		player->setHealth(health);
+
 	}
 
 	//Move if not hurt or attacking

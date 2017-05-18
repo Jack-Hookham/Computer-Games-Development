@@ -411,13 +411,11 @@ void GraphicsManager::drawGame(Player* player, std::vector<Box*>& boxEntities,
 	std::vector<Ground*>& groundEntities, std::vector<Enemy*>& enemyEntities)
 {
 	//Update cameras
-	glm::vec2 worldCameraPos;
 	if (player->getHealth() > 0)
 	{
-		worldCameraPos = glm::vec2(player->getBody()->GetPosition().x, player->getBody()->GetPosition().y);
-		mWorldCamera.setPosition(worldCameraPos);
-		mWorldCamera.updateCamera();
+		mWorldCamera.setPosition(glm::vec2(player->getBody()->GetPosition().x, player->getBody()->GetPosition().y));
 	}
+	mWorldCamera.updateCamera();
 
 	const glm::mat4 cameraMatrix = mWorldCamera.getCamerMatrix();
 	GLuint projMatrixLocation = mTextureShader.getUniformLocation("projMatrix");
