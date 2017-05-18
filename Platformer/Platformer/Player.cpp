@@ -95,12 +95,6 @@ void Player::update()
 		mBody->SetLinearVelocity(b2Vec2(-MAX_SPEED, mBody->GetLinearVelocity().y));
 	}
 
-	//Update each projectile
-	for each (Projectile* k in mProjectileEntities)
-	{
-		k->update();
-	}
-
 	//Delete projectile after period of time
 	for (auto it = mProjectileEntities.begin(); it != mProjectileEntities.end();)
 	{
@@ -186,24 +180,10 @@ void Player::update()
 		mSpreadMultiplierY = -1.0f;
 	}
 
-	//Delete projectiles that need deleting
-	for (auto it = mProjectileEntities.begin(); it != mProjectileEntities.end();)
-	{
-		if ((*it)->getDelete())
-		{
-			delete *it;
-			it = mProjectileEntities.erase(it);
-		}
-		else
-		{
-			it++;
-		}
-	}
-
 	if (mHealth < 0)
 	{
 		mHealth = 0;
-	}	
+	}
 
 	//if damaged set damaged texture alpha
 	//increase then decrease to fade in and out
@@ -453,11 +433,6 @@ void Player::add(SpriteBatch& spriteBatch, Camera& camera)
 
 		spriteBatch.addSprite(position, dimensions, texCoords, mSpriteSheets[mAnimState].getTexture().id, 
 			0.0f, mColour, mBody->GetAngle());
-	}
-
-	for each (Projectile* k in mProjectileEntities)
-	{
-		k->add(spriteBatch, camera);
 	}
 }
 

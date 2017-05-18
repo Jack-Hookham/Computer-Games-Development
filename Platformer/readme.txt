@@ -10,7 +10,7 @@ W & up arrow - jump
 Space & z - melee attack
 LMB & x - ranged attack 1
 RMB & c - ranged attack 2
-k - kill
+k - kill self
 
 Controller controls
 Left stick & dpad - move left & right

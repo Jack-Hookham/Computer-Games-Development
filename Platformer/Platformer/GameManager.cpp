@@ -231,6 +231,11 @@ void GameManager::gameOverLoop()
 	mPlayer->updateBody()->SetTransform(b2Vec2(1000.0f, 1000.0f), mPlayer->getBody()->GetAngle());
 	mPlayer->setDead(true);
 
+	for each (Projectile* p in mPlayer->getProjectileEntities())
+	{
+		p->setDelete(true);
+	}
+
 	//Count the number of frames to calculate fps
 	int frameCount = 0;
 

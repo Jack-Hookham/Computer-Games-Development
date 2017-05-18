@@ -40,6 +40,26 @@ void PhysicsManager::updatePhysics(std::unique_ptr<b2World>& world, Player* play
 		player->update();
 	}
 
+	//Update each projectile
+	for each (Projectile* p in player->getProjectileEntities())
+	{
+		p->update();
+	}
+
+	//Delete projectiles that need deleting
+	for (auto it = player->updateProjectileEntities().begin(); it != player->updateProjectileEntities().end();)
+	{
+		if ((*it)->getDelete())
+		{
+			delete *it;
+			it = player->updateProjectileEntities().erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
 	//Enemy logic update
 	for each (Enemy* e in enemyEntities)
 	{

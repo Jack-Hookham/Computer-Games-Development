@@ -90,8 +90,8 @@ private:
 	//Current game state
 	GameState mGameState = MENU;
 
-	int mScreenWidth = 1920;
-	int mScreenHeight= 1017;
+	int mScreenWidth = 1600;
+	int mScreenHeight= 900;
 
 	//Desired fps for the game
 	int mDesiredFPS = 60;

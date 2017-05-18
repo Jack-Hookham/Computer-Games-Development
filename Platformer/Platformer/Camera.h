@@ -32,8 +32,8 @@ public:
 	bool isOnCamera(const glm::vec2& position, const glm::vec2& dimensions);
 
 private:
-	int mScreenWidth = 1280;
-	int mScreenHeight = 720;
+	int mScreenWidth = 1600;
+	int mScreenHeight = 900;
 
 	//Whether the camera needs updating
 	bool mUpdateMatrix = true;
