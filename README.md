@@ -17,3 +17,5 @@ Controller controls
 * X - melee attack
 * B - ranged attack 1
 * Y - ranged attack 2
+
+Youtube video: https://www.youtube.com/watch?v=1FLemWXiJrc
